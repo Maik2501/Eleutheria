@@ -1,0 +1,297 @@
+import 'package:confetti/confetti.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_typography.dart';
+import '../../data/models/achievement.dart';
+import '../../data/models/game_session.dart';
+import '../../shared/widgets/chapter_heading.dart';
+import '../../shared/widgets/parchment_background.dart';
+import '../../shared/widgets/primary_button.dart';
+import '../../shared/widgets/wax_seal.dart';
+
+/// Final summary after a session.
+class ResultScreen extends ConsumerStatefulWidget {
+  const ResultScreen({
+    super.key,
+    required this.session,
+    required this.xpGained,
+    required this.unlockedAchievements,
+  });
+
+  final GameSession session;
+  final int xpGained;
+  final List<String> unlockedAchievements;
+
+  @override
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends ConsumerState<ResultScreen> {
+  late final ConfettiController _confetti;
+
+  @override
+  void initState() {
+    super.initState();
+    _confetti = ConfettiController(duration: const Duration(seconds: 2));
+    final flawless =
+        widget.session.correctCount == widget.session.questions.length;
+    if (flawless) _confetti.play();
+  }
+
+  @override
+  void dispose() {
+    _confetti.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final correct = widget.session.correctCount;
+    final total = widget.session.questions.length;
+    final score = widget.session.totalScore;
+    final percent = total == 0 ? 0 : (correct / total * 100).round();
+
+    final headline = _headlineFor(percent);
+    final unlocked = widget.unlockedAchievements
+        .map((id) => kAchievements.firstWhere((a) => a.id == id))
+        .toList();
+
+    return Scaffold(
+      body: ParchmentBackground(
+        child: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: WaxSeal(
+                        symbol: percent >= 80
+                            ? '✪'
+                            : percent >= 50
+                                ? '✦'
+                                : '✧',
+                        size: 86,
+                      ),
+                    ).animate().scale(
+                          duration: 520.ms,
+                          curve: Curves.elasticOut,
+                          begin: const Offset(0.6, 0.6),
+                          end: const Offset(1, 1),
+                        ),
+                    const SizedBox(height: 22),
+                    ChapterHeading(
+                      eyebrow: widget.session.mode.title,
+                      title: headline,
+                      alignment: CrossAxisAlignment.center,
+                      subtitle: switch (widget.session.mode) {
+                        GameMode.suddenDeath =>
+                          '$correct Fragen am Stück.',
+                        _ => '$correct von $total richtig.',
+                      },
+                    ),
+                    const SizedBox(height: 28),
+                    const DecorativeRule(),
+                    const SizedBox(height: 28),
+                    _ScoreRow(score: score, xp: widget.xpGained),
+                    const SizedBox(height: 28),
+                    _AnswerHistogram(session: widget.session),
+                    if (unlocked.isNotEmpty) ...[
+                      const SizedBox(height: 28),
+                      Text(
+                        'NEU FREIGESCHALTET',
+                        textAlign: TextAlign.center,
+                        style: AppTypography.eyebrow(palette.gold),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 14,
+                        runSpacing: 14,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (final a in unlocked)
+                            _AchievementChip(achievement: a),
+                        ],
+                      ),
+                    ],
+                    const SizedBox(height: 32),
+                    PrimaryButton(
+                      label: 'Erneut spielen',
+                      icon: Icons.replay_rounded,
+                      onPressed: () => context.pushReplacement('/'),
+                    ),
+                    const SizedBox(height: 12),
+                    SecondaryButton(
+                      label: 'Zurück zum Menü',
+                      onPressed: () => context.go('/'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _confetti,
+                blastDirectionality: BlastDirectionality.explosive,
+                shouldLoop: false,
+                emissionFrequency: 0.06,
+                numberOfParticles: 16,
+                gravity: 0.25,
+                colors: [
+                  palette.gold,
+                  palette.burgundy,
+                  AppColors.terracotta,
+                  palette.correct,
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _headlineFor(int percent) {
+    if (percent == 100) return 'Tabula perfecta.';
+    if (percent >= 80) return 'Bravissimo.';
+    if (percent >= 60) return 'Solide Lektüre.';
+    if (percent >= 40) return 'Mehr Lektüre wartet.';
+    return 'Ein nächstes Kapitel.';
+  }
+}
+
+class _ScoreRow extends StatelessWidget {
+  const _ScoreRow({required this.score, required this.xp});
+  final int score;
+  final int xp;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    Widget col(String label, String value, {Color? color}) => Expanded(
+          child: Column(
+            children: [
+              Text(label.toUpperCase(),
+                  style: AppTypography.eyebrow(palette.inkMuted)),
+              const SizedBox(height: 6),
+              Text(
+                value,
+                style: AppTypography.serif(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                  color: color ?? palette.ink,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ],
+          ),
+        );
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+      decoration: BoxDecoration(
+        color: palette.page,
+        border: Border.all(color: palette.divider),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          col('Punkte', '$score'),
+          Container(
+            width: 1,
+            height: 50,
+            color: palette.divider,
+          ),
+          col('Erfahrung', '+$xp', color: palette.gold),
+        ],
+      ),
+    );
+  }
+}
+
+class _AnswerHistogram extends StatelessWidget {
+  const _AnswerHistogram({required this.session});
+  final GameSession session;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: palette.page,
+        border: Border.all(color: palette.divider),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Verlauf', style: AppTypography.eyebrow(palette.inkMuted)),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              for (final a in session.answers)
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: a.wasCorrect
+                          ? palette.correct
+                          : palette.incorrect.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AchievementChip extends StatelessWidget {
+  const _AchievementChip({required this.achievement});
+  final Achievement achievement;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      width: 140,
+      padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+      decoration: BoxDecoration(
+        color: palette.page,
+        border: Border.all(color: palette.gold.withValues(alpha: 0.5), width: 1.2),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          WaxSeal(symbol: achievement.symbol, size: 38, color: palette.gold),
+          const SizedBox(height: 10),
+          Text(
+            achievement.title,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.serif(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: palette.ink,
+              height: 1.25,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

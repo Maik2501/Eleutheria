@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Sophia — ein warmes, akademisches Quiz der Philosophie.">
+  <meta name="theme-color" content="#F5EFE6">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Sophia">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Sophia — Philosophie Quiz</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #F5EFE6; }
+    #loader {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: #F5EFE6;
+      transition: opacity .4s ease;
+    }
+    #loader.fade { opacity: 0; pointer-events: none; }
+    #loader .seal {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #8C3A4D, #6B2737 60%, #4A1A26);
+      display: flex; align-items: center; justify-content: center;
+      color: #F5EFE6;
+      font-family: serif; font-size: 32px; font-weight: 700;
+      box-shadow: 0 8px 24px rgba(107,39,55,0.25);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50%     { transform: scale(1.06); }
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div id="loader"><div class="seal">Σ</div></div>
+  <script src="flutter_bootstrap.js" async></script>
+  <script>
+    window.addEventListener('flutter-first-frame', () => {
+      const l = document.getElementById('loader');
+      if (l) { l.classList.add('fade'); setTimeout(() => l.remove(), 500); }
+    });
+  </script>
+</body>
+</html>

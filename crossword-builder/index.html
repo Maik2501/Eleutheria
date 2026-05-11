@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sophia · Kreuzworträtsel-Werkstatt</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="data/data.js"></script>
+  <script src="data/crossword_terms.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">∴</span>
+      <div>
+        <h1>Sophia · Kreuzworträtsel-Werkstatt</h1>
+        <p class="subtitle">Entwicklungswerkzeug — keine Produktionsumgebung</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="builder" role="tab">Werkstatt</button>
+      <button class="tab" data-tab="info" role="tab">Hinweise &amp; Best Practices</button>
+    </nav>
+  </header>
+
+  <!-- ───────────────── BUILDER ───────────────── -->
+  <section class="panel builder" data-panel="builder">
+    <div class="toolbar">
+      <div class="tool-group">
+        <label>Zeilen <input type="number" id="rowsInput" min="5" max="30" value="15"></label>
+        <label>Spalten <input type="number" id="colsInput" min="5" max="30" value="15"></label>
+        <button id="resizeBtn" class="btn">Anwenden</button>
+      </div>
+      <div class="tool-group">
+        <button id="symmetryBtn" class="btn ghost" title="Spiegelt Sperrfelder am Mittelpunkt, wenn bewusst eingeschaltet">Symmetrie: <span id="symmetryState">aus</span></button>
+        <button id="numberBtn" class="btn ghost">Nummerierung neu</button>
+        <button id="clearBtn" class="btn ghost danger">Alles leeren</button>
+      </div>
+      <div class="tool-group">
+        <button id="manualSaveBtn" class="btn">Speichern</button>
+        <button id="manualLoadBtn" class="btn ghost">Laden</button>
+        <button id="exportBtn" class="btn ghost">JSON exportieren</button>
+        <label class="btn ghost file-btn">JSON importieren<input type="file" id="importInput" accept="application/json" hidden></label>
+        <button id="printBtn" class="btn ghost">Drucken</button>
+      </div>
+    </div>
+
+    <div class="workspace">
+      <!-- Wortliste -->
+      <aside class="words">
+        <h2>Wortbank</h2>
+        <div class="words-controls">
+          <input type="search" id="wordSearch" placeholder="Suche…">
+          <button id="suggestionModeBtn" class="btn ghost suggestion-btn" type="button">Vorschläge</button>
+          <div id="suggestionSummary" class="suggestion-summary"></div>
+          <div id="categoryFilter" class="category-filter" aria-label="Kategorien"></div>
+          <select id="sortMode">
+            <option value="alpha">A–Z</option>
+            <option value="length-desc">Längste zuerst</option>
+            <option value="length-asc">Kürzeste zuerst</option>
+            <option value="category">Kategorie</option>
+          </select>
+        </div>
+        <details class="custom-word">
+          <summary>+ Eigenes Wort</summary>
+          <form id="customWordForm">
+            <input type="text" id="customWordInput" placeholder="Wort" required>
+            <input type="text" id="customClueInput" placeholder="Frage / Hinweis (optional)">
+            <select id="customCategoryInput">
+              <option value="Eigene">Eigene</option>
+            </select>
+            <button class="btn" type="submit">Hinzufügen</button>
+          </form>
+        </details>
+        <ul id="wordList" class="word-list"></ul>
+        <p class="hint">Klick auf ein Wort, dann auf das Startfeld — Richtung mit Pfeiltaste oder Klick wechseln.</p>
+      </aside>
+
+      <!-- Grid -->
+      <main class="grid-wrap">
+        <div class="grid-toolbar">
+          <span class="hint" id="placementHint">Modus: Buchstaben tippen. Wörter aus der Bank oder aus dem Gitter ziehen. Rechtsklick wechselt die Richtung.</span>
+          <span class="dir-indicator">Richtung:
+            <button class="dir-btn active" data-dir="across">→ horizontal</button>
+            <button class="dir-btn" data-dir="down">↓ vertikal</button>
+          </span>
+        </div>
+        <div id="gridHost" class="grid-host"></div>
+      </main>
+
+      <!-- Hinweise -->
+      <aside class="clues">
+        <h2>Hinweise</h2>
+        <div class="clue-section">
+          <h3>Waagerecht (→)</h3>
+          <ol id="acrossList" class="clue-list"></ol>
+        </div>
+        <div class="clue-section">
+          <h3>Senkrecht (↓)</h3>
+          <ol id="downList" class="clue-list"></ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ───────────────── INFO ───────────────── -->
+  <section class="panel info" data-panel="info" hidden>
+    <article class="prose">
+      <h2>Best Practices für Kreuzworträtsel</h2>
+      <p class="lead">Eine kompakte Sammlung der wichtigsten Konventionen — gedacht als Checkliste, während ihr in der Werkstatt arbeitet.</p>
+
+      <h3>Gitterstruktur</h3>
+      <ul>
+        <li><strong>Gerade Größe vermeiden.</strong> Klassische Größen sind 11×11, 13×13, 15×15 und 21×21 (Sonntags-Rätsel). Eine ungerade Kantenlänge erlaubt eine Mittelachsen-Symmetrie.</li>
+        <li><strong>180°-Rotationssymmetrie.</strong> Standard im US-Stil: das Schwarzfeld-Muster ist punktsymmetrisch zum Mittelpunkt. Wir machen das im Tool optional verfügbar (Schalter „Symmetrie").</li>
+        <li><strong>Maximal ~16 % schwarze Felder</strong> bei 15×15. Mehr wirkt zerstückelt, weniger ist sehr schwierig zu konstruieren.</li>
+        <li><strong>Keine isolierten Bereiche.</strong> Jedes weiße Feld muss von jedem anderen über weiße Felder erreichbar sein. Sonst zerfällt das Rätsel in zwei Mini-Rätsel.</li>
+        <li><strong>Keine Wörter unter drei Buchstaben.</strong> Zwei-Buchstaben-Einträge sind in fast allen Stilen verboten, sie sind keine echten Wörter.</li>
+      </ul>
+
+      <h3>Wortauswahl</h3>
+      <ul>
+        <li><strong>Jeder Buchstabe gehört zu zwei Wörtern.</strong> Beim US-Stil (criss-cross) gibt es keine isolierten Buchstaben — jedes weiße Feld kreuzt waagerecht und senkrecht.</li>
+        <li><strong>Mit langen Eckpfeilern beginnen.</strong> Setzt zuerst eure thematischen Hauptwörter (z. B. ARISTOTELES, NIETZSCHE) — sie diktieren das Skelett, kurze Füllwörter folgen.</li>
+        <li><strong>Selten verdoppeln.</strong> Kein Wort sollte zweimal im Rätsel stehen, auch keine offensichtlichen Wortstämme.</li>
+        <li><strong>Keine Buchstabenketten ohne Sinn.</strong> Vermeidet Kunstwörter oder Abkürzungen, die niemand kennt — bei einem philosophischen Rätsel sind echte Eigennamen aber willkommen.</li>
+        <li><strong>Schwierigkeit mischen.</strong> Setzt 70 % alltägliche Begriffe und 30 % „Genuss"-Begriffe (für Sophia: zentrale Werke, prägnante Schulenamen).</li>
+      </ul>
+
+      <h3>Hinweise / Fragen</h3>
+      <ul>
+        <li><strong>Wortart und Numerus müssen passen.</strong> Singular-Hinweis → Singular-Antwort, Verb → Verb. Sonst fühlt es sich falsch an, auch wenn es theoretisch stimmt.</li>
+        <li><strong>Vermeidet das gesuchte Wort im Hinweis.</strong> „Was Kant über die Vernunft sagte" für VERNUNFT ist tabu.</li>
+        <li><strong>Einheitlicher Schwierigkeitsgrad pro Rätsel.</strong> Setzt nicht eine ultra-schwere und neunzehn triviale Hinweise.</li>
+        <li><strong>Stilkonsistenz.</strong> Entscheidet euch früh: trockene Definitionen, kryptische Anspielungen oder zitatbasierte Hinweise — und bleibt dabei.</li>
+        <li><strong>Themabezug nutzen.</strong> Für ein Philosophie-Rätsel sind Zitate, Werktitel oder Schulen-Begriffe stärker als generische Lexikon-Definitionen.</li>
+      </ul>
+
+      <h3>Konstruktionsablauf (Empfehlung)</h3>
+      <ol>
+        <li><strong>Thema festlegen.</strong> z. B. „Stoa &amp; Spätantike", „Aufklärung", „Existenzphilosophie".</li>
+        <li><strong>Themenwörter sammeln.</strong> 4–8 lange Begriffe, die das Rätsel tragen sollen.</li>
+        <li><strong>Skelett platzieren.</strong> Themenwörter symmetrisch ins Gitter setzen (oben, Mitte, unten).</li>
+        <li><strong>Füllen.</strong> Mit kürzeren Wörtern auffüllen — pro Buchstaben prüfen, ob alle Kreuzungen valide Wörter ergeben.</li>
+        <li><strong>Hinweise zuletzt.</strong> Erst nach finaler Wortauswahl die Hinweise schreiben — sonst werdet ihr verliebt in eine Formulierung und blockiert spätere Anpassungen.</li>
+        <li><strong>Testlöser.</strong> Mindestens eine Person, die das Rätsel nicht konstruiert hat, soll es lösen, bevor es ausgeliefert wird.</li>
+      </ol>
+
+      <h3>Sonderfälle (Deutsch &amp; Sophia)</h3>
+      <ul>
+        <li><strong>Umlaute &amp; ß.</strong> Klassische Konvention im Deutschen: Umlaute werden als <code>AE/OE/UE</code> aufgelöst, ß als <code>SS</code>. Wir akzeptieren beides — entscheidet euch projektweit.</li>
+        <li><strong>Eigennamen.</strong> Diese sind in einem thematischen Rätsel zentral. Achtet darauf, dass sie nicht alle in derselben Ecke landen.</li>
+        <li><strong>Begriffe mit Leerzeichen.</strong> „Marc Aurel", „Frankfurter Schule" — entweder Leerzeichen entfernen (MARCAUREL) oder in zwei Wörter splitten und über den Hinweis zusammenbinden.</li>
+        <li><strong>Zitate.</strong> Eignen sich nicht als Antwortwort, sondern als <em>Hinweis</em> für ein Schlüsselwort des Zitats oder den Urheber.</li>
+      </ul>
+
+      <h3>Werkstatt-Tipps zu diesem Tool</h3>
+      <ul>
+        <li>Ziehe ein Wort aus der Wortbank ins Gitter oder klicke es an und wähle anschließend ein Startfeld. Bereits platzierte Wörter kannst du direkt im Gitter erneut greifen.</li>
+        <li>Rechtsklick auf Gitter oder Wortbank wechselt die aktuelle Richtung; das funktioniert auch während du ein Wort ziehst.</li>
+        <li>Doppelklick auf ein Feld blockiert es (Schwarzes Feld). Bei aktiver Symmetrie wird das gespiegelte Feld automatisch gesetzt.</li>
+        <li>Ein rotes Feld zeigt an, dass ein Buchstabe in Konflikt mit einem bestehenden steht.</li>
+        <li>Speichert oft. Der Export ist eine kleine JSON-Datei — bewahrt Versionsstände auf wie Skizzen.</li>
+        <li>Drucken erzeugt eine clean Version: nur Gitter und Hinweisliste, ohne UI-Chrome.</li>
+      </ul>
+    </article>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

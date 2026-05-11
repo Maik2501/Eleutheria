@@ -29,8 +29,7 @@ class SettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
           children: [
-            Text('DARSTELLUNG',
-                style: AppTypography.eyebrow(palette.inkMuted)),
+            Text('DARSTELLUNG', style: AppTypography.eyebrow(palette.inkMuted)),
             const SizedBox(height: 10),
             _SegmentedRow(
               value: p.themeMode,
@@ -42,15 +41,15 @@ class SettingsScreen extends ConsumerWidget {
               onChanged: notifier.setThemeMode,
             ),
             const SizedBox(height: 32),
-            Text('SPRACHE',
-                style: AppTypography.eyebrow(palette.inkMuted)),
+            Text('SPRACHE', style: AppTypography.eyebrow(palette.inkMuted)),
             const SizedBox(height: 10),
             _SegmentedRow(
-              value: p.locale,
+              value: p.locale == 'de' ? p.locale : 'de',
               entries: const {
                 'de': 'Deutsch',
                 'en': 'English',
               },
+              disabledEntries: const {'en'},
               onChanged: notifier.setLocale,
             ),
             const SizedBox(height: 32),
@@ -65,7 +64,20 @@ class SettingsScreen extends ConsumerWidget {
               onChanged: notifier.setSounds,
             ),
             const SizedBox(height: 32),
-            Text('ÜBER SOPHIA',
+            Text('JOKER', style: AppTypography.eyebrow(palette.inkMuted)),
+            const SizedBox(height: 10),
+            _SegmentedRow(
+              value: p.jokerAvailability.key,
+              entries: const {
+                'off': 'Aus',
+                'one': '1 Joker',
+                'three': '3 Joker',
+                'always': 'Immer',
+              },
+              onChanged: notifier.setJokerAvailability,
+            ),
+            const SizedBox(height: 32),
+            Text('ÜBER ELEUTHERIA',
                 style: AppTypography.eyebrow(palette.inkMuted)),
             const SizedBox(height: 10),
             Container(
@@ -76,9 +88,10 @@ class SettingsScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                'Sophia ist ein liebevoll handgepflegtes Quiz für die Freundinnen und Freunde der Philosophie. '
+                'Eleutheria ist ein liebevoll handgepflegtes Quiz für die Freundinnen und Freunde der Philosophie. '
                 'Die Fragen wurden kuratiert; Quellen und Erläuterungen finden sich nach jeder Antwort.',
-                style: TextStyle(color: palette.inkSoft, height: 1.55, fontSize: 14),
+                style: TextStyle(
+                    color: palette.inkSoft, height: 1.55, fontSize: 14),
               ),
             ),
           ],
@@ -93,11 +106,13 @@ class _SegmentedRow extends StatelessWidget {
     required this.value,
     required this.entries,
     required this.onChanged,
+    this.disabledEntries = const {},
   });
 
   final String value;
   final Map<String, String> entries;
   final ValueChanged<String> onChanged;
+  final Set<String> disabledEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -110,15 +125,18 @@ class _SegmentedRow extends StatelessWidget {
       ),
       child: Row(
         children: entries.entries.map((e) {
+          final disabled = disabledEntries.contains(e.key);
           final selected = e.key == value;
           return Expanded(
             child: GestureDetector(
-              onTap: () => onChanged(e.key),
+              onTap: disabled ? null : () => onChanged(e.key),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: selected ? palette.burgundy : Colors.transparent,
+                  color: selected && !disabled
+                      ? palette.burgundy
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(
@@ -128,7 +146,11 @@ class _SegmentedRow extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontSize: 14.5,
                     letterSpacing: 0.1,
-                    color: selected ? AppColors.page : palette.ink,
+                    color: disabled
+                        ? palette.inkMuted.withValues(alpha: 0.42)
+                        : selected
+                            ? AppColors.page
+                            : palette.ink,
                   ),
                 ),
               ),

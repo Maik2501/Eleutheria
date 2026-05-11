@@ -30,7 +30,7 @@ class QuizProgressBar extends StatelessWidget {
           ),
         ),
         FractionallySizedBox(
-          widthFactor: progress.clamp(0, 1),
+          widthFactor: progress.clamp(0, 1).toDouble(),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 360),
             curve: Curves.easeOutCubic,
@@ -50,7 +50,8 @@ class QuizProgressBar extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: FractionallySizedBox(
-                  widthFactor: (1 - timerProgress!.clamp(0, 1)),
+                  widthFactor:
+                      (1 - timerProgress!.clamp(0, 1)).toDouble(),
                   child: Container(
                     color: palette.incorrect.withValues(alpha: 0.12),
                   ),

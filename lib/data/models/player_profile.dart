@@ -1,3 +1,5 @@
+import 'answer_input_style.dart';
+
 /// Local player profile — no auth required for solo play.
 /// Persisted in Hive.
 class PlayerProfile {
@@ -19,6 +21,8 @@ class PlayerProfile {
     required this.themeMode,
     required this.soundsEnabled,
     required this.hapticsEnabled,
+    required this.jokerAvailability,
+    required this.preferredInputStyle,
   });
 
   factory PlayerProfile.fresh({
@@ -43,6 +47,8 @@ class PlayerProfile {
         themeMode: 'system',
         soundsEnabled: false,
         hapticsEnabled: true,
+        jokerAvailability: JokerAvailability.always,
+        preferredInputStyle: AnswerInputStyle.multipleChoice,
       );
 
   final String id;
@@ -64,6 +70,8 @@ class PlayerProfile {
   String themeMode; // 'light' | 'dark' | 'system'
   bool soundsEnabled;
   bool hapticsEnabled;
+  JokerAvailability jokerAvailability;
+  AnswerInputStyle preferredInputStyle;
 
   /// XP curve: each level requires 250 + 100 × level XP.
   int get level {
@@ -98,4 +106,23 @@ class PlayerProfile {
         < 40 => 'Professor',
         _ => 'Weiser',
       };
+}
+
+enum JokerAvailability {
+  disabled('off', 'Aus', 0),
+  one('one', '1 Joker', 1),
+  three('three', '3 Joker', 3),
+  always('always', 'Immer', null);
+
+  const JokerAvailability(this.key, this.label, this.sessionLimit);
+
+  final String key;
+  final String label;
+  final int? sessionLimit;
+
+  static JokerAvailability fromKey(String? key) =>
+      JokerAvailability.values.firstWhere(
+        (value) => value.key == key,
+        orElse: () => JokerAvailability.always,
+      );
 }

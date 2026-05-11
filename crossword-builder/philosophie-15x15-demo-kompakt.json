@@ -1,0 +1,1611 @@
+{
+  "version": 2,
+  "savedAt": "2026-05-09T00:00:00.000Z",
+  "title": "Philosophie 15x15 Demo kompakt",
+  "rows": 15,
+  "cols": 15,
+  "symmetry": false,
+  "cells": [
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "W",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "G",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "N",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "K",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "V",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "L",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "K",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "U",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "M",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "L",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "K",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "U",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "U",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "M",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "N",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "F",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "F",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "N",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "F",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "U",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "I",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "L",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "N",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "N",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "M",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "G",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "F",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "P",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "Z",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "I",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "Y",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "M",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "I",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "Z",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "N",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "D",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "D",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "H",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "C",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "T",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "U",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "H",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "Y",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "L",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "C",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "U",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "I",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "S",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "C",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "H",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "A",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "M",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "V",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "I",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      }
+    ],
+    [
+      {
+        "letter": "D",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "I",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "K",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "E",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "",
+        "block": true,
+        "num": null
+      },
+      {
+        "letter": "N",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "O",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "R",
+        "block": false,
+        "num": null
+      },
+      {
+        "letter": "M",
+        "block": false,
+        "num": null
+      }
+    ]
+  ],
+  "words": [
+    {
+      "word": "VERNUNFT",
+      "displayWord": "VERNUNFT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Vermögen des begründenden Denkens.",
+      "source": "custom",
+      "placed": {
+        "r": 1,
+        "c": 7,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "VOLK",
+      "displayWord": "VOLK",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Politisches Kollektiv; in Demokratien souverän.",
+      "source": "custom",
+      "placed": {
+        "r": 1,
+        "c": 7,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "NAME",
+      "displayWord": "NAME",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Sprachlicher Bezug auf eine Person oder Sache.",
+      "source": "custom",
+      "placed": {
+        "r": 6,
+        "c": 7,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "MITTE",
+      "displayWord": "MITTE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Bei Aristoteles liegt die Tugend oft dort.",
+      "source": "custom",
+      "placed": {
+        "r": 8,
+        "c": 5,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "IMPERATIV",
+      "displayWord": "IMPERATIV",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Bei Kant gibt es ihn kategorisch.",
+      "source": "custom",
+      "placed": {
+        "r": 5,
+        "c": 9,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "FORM",
+      "displayWord": "FORM",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Gegenstück zum Stoff, besonders bei Aristoteles.",
+      "source": "custom",
+      "placed": {
+        "r": 5,
+        "c": 5,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "TERM",
+      "displayWord": "TERM",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Ausdruck oder Baustein in der Logik.",
+      "source": "custom",
+      "placed": {
+        "r": 3,
+        "c": 5,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "ACTUS",
+      "displayWord": "ACTUS",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Lateinisch: Wirklichkeit oder Vollzug.",
+      "source": "custom",
+      "placed": {
+        "r": 11,
+        "c": 7,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "SEIN",
+      "displayWord": "SEIN",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Grundbegriff der Ontologie.",
+      "source": "custom",
+      "placed": {
+        "r": 11,
+        "c": 11,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "DASEIN",
+      "displayWord": "DASEIN",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Heideggers Wort für menschliche Existenz.",
+      "source": "custom",
+      "placed": {
+        "r": 9,
+        "c": 11,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "REDE",
+      "displayWord": "REDE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Gesprochenes Wort; wichtig im Dialog.",
+      "source": "custom",
+      "placed": {
+        "r": 9,
+        "c": 9,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "NORM",
+      "displayWord": "NORM",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Maßstab dafür, was gelten oder geschehen soll.",
+      "source": "custom",
+      "placed": {
+        "r": 14,
+        "c": 11,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "WELT",
+      "displayWord": "WELT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Bei Wittgenstein: alles, was der Fall ist.",
+      "source": "custom",
+      "placed": {
+        "r": 0,
+        "c": 5,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "MORAL",
+      "displayWord": "MORAL",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Regeln und Maßstäbe des Handelns.",
+      "source": "custom",
+      "placed": {
+        "r": 2,
+        "c": 1,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "LEERE",
+      "displayWord": "LEERE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Wichtiges Motiv im Buddhismus.",
+      "source": "custom",
+      "placed": {
+        "r": 5,
+        "c": 12,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "RAUM",
+      "displayWord": "RAUM",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Bei Kant eine Form der Anschauung.",
+      "source": "custom",
+      "placed": {
+        "r": 10,
+        "c": 7,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "MUT",
+      "displayWord": "MUT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Tugend im Umgang mit Gefahr.",
+      "source": "custom",
+      "placed": {
+        "r": 2,
+        "c": 1,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "KRAFT",
+      "displayWord": "KRAFT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Vermögen zu wirken.",
+      "source": "custom",
+      "placed": {
+        "r": 1,
+        "c": 3,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "STOFF",
+      "displayWord": "STOFF",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Materielles Prinzip im Gegensatz zur Form.",
+      "source": "custom",
+      "placed": {
+        "r": 4,
+        "c": 0,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "SORGE",
+      "displayWord": "SORGE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Grundstruktur des Daseins bei Heidegger.",
+      "source": "custom",
+      "placed": {
+        "r": 4,
+        "c": 0,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "ZEIT",
+      "displayWord": "ZEIT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Grundform der Erfahrung neben dem Raum.",
+      "source": "custom",
+      "placed": {
+        "r": 7,
+        "c": 11,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "SATZ",
+      "displayWord": "SATZ",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Aussage aus Wörtern; in der Logik wichtig.",
+      "source": "custom",
+      "placed": {
+        "r": 5,
+        "c": 14,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "KANT",
+      "displayWord": "KANT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Philosoph des kategorischen Imperativs.",
+      "source": "custom",
+      "placed": {
+        "r": 1,
+        "c": 10,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "AKT",
+      "displayWord": "AKT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Vollzug im Gegensatz zur Möglichkeit.",
+      "source": "custom",
+      "placed": {
+        "r": 2,
+        "c": 10,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "SCHAM",
+      "displayWord": "SCHAM",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Moralischer Affekt der Selbstbewertung.",
+      "source": "custom",
+      "placed": {
+        "r": 13,
+        "c": 3,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "THESE",
+      "displayWord": "THESE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Behauptung oder Ausgangssatz.",
+      "source": "custom",
+      "placed": {
+        "r": 10,
+        "c": 3,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "SYNTHESE",
+      "displayWord": "SYNTHESE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Zusammenführung von Gegensätzen.",
+      "source": "custom",
+      "placed": {
+        "r": 7,
+        "c": 3,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "ARCHE",
+      "displayWord": "ARCHE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Griechisch: Anfang oder Urprinzip.",
+      "source": "custom",
+      "placed": {
+        "r": 10,
+        "c": 5,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "STOA",
+      "displayWord": "STOA",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Antike Schule der Gelassenheit.",
+      "source": "custom",
+      "placed": {
+        "r": 10,
+        "c": 2,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "HYLE",
+      "displayWord": "HYLE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Griechisch: Stoff oder Materie.",
+      "source": "custom",
+      "placed": {
+        "r": 12,
+        "c": 0,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "EROS",
+      "displayWord": "EROS",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Bei Platon: Liebe oder Begehren.",
+      "source": "custom",
+      "placed": {
+        "r": 12,
+        "c": 11,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "DIKE",
+      "displayWord": "DIKE",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Griechisch: Recht oder Gerechtigkeit.",
+      "source": "custom",
+      "placed": {
+        "r": 14,
+        "c": 0,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "GUT",
+      "displayWord": "GUT",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Zentraler Wertbegriff der Ethik.",
+      "source": "custom",
+      "placed": {
+        "r": 0,
+        "c": 12,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "AGON",
+      "displayWord": "AGON",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Griechisch: Streit oder Wettkampf.",
+      "source": "custom",
+      "placed": {
+        "r": 0,
+        "c": 11,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "REN",
+      "displayWord": "REN",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Konfuzianische Menschlichkeit.",
+      "source": "custom",
+      "placed": {
+        "r": 6,
+        "c": 0,
+        "dir": "across"
+      }
+    },
+    {
+      "word": "DAO",
+      "displayWord": "DAO",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Weg oder Grundprinzip im Daoismus.",
+      "source": "custom",
+      "placed": {
+        "r": 10,
+        "c": 13,
+        "dir": "down"
+      }
+    },
+    {
+      "word": "NOUS",
+      "displayWord": "NOUS",
+      "category": "Philosophie-Demo kompakt",
+      "clue": "Griechisch für Geist oder Vernunft.",
+      "source": "custom",
+      "placed": {
+        "r": 0,
+        "c": 14,
+        "dir": "down"
+      }
+    }
+  ]
+}

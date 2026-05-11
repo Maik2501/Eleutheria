@@ -1,4 +1,4 @@
-# Sophia — Philosophie Quiz
+# Eleutheria
 
 Eine warme, akademische iOS-App für ein Quiz rund um Philosophie. Built with Flutter.
 
@@ -11,8 +11,8 @@ Eine warme, akademische iOS-App für ein Quiz rund um Philosophie. Built with Fl
 ### Spielmodi
 - **Klassisch** — 10 gemischte Fragen, voller Score
 - **Sudden Death** — bis zum ersten Fehler, Bestleistungen werden festgehalten
-- **Tägliche Frage** — fünf Fragen, dieselben für alle Spielerinnen weltweit am gleichen Tag, mit Tagesrangliste
-- **Duell (online, live)** — sechsstelliger Code, beide spielen dieselben Fragen, schnellere richtige Antwort gewinnt
+- **Tägliche Frage** — fünf Fragen, dieselben für alle Spielerinnen weltweit am gleichen Tag, mit Tagesrangliste *(coming soon)*
+- **Duell (online, live)** — sechsstelliger Code, beide spielen dieselben Fragen, schnellere richtige Antwort gewinnt *(coming soon)*
 - **Studierkammer** — Übungsmodus ohne Zeitdruck, mit allen Erläuterungen
 - **Sammlung** — eine bestimmte Kategorie üben
 
@@ -32,7 +32,7 @@ Eine warme, akademische iOS-App für ein Quiz rund um Philosophie. Built with Fl
 - **Bookmarks** für Lieblingszitate
 - **Haptisches Feedback** auf iOS
 - **Hell- / Dunkel-Modus** (warmer „Salon" am Abend, Pergament am Tag)
-- **Lokalisierung** Deutsch und Englisch
+- **Lokalisierung** Deutsch; Englisch ist vorbereitet, aber für den ersten Test ausgegraut
 - **Erläuterungen** nach jeder Antwort — die App ist auch zum Lernen gemacht
 - **Animierter Konfetti-Regen** bei Tabula perfecta
 
@@ -72,7 +72,7 @@ flutter doctor
 ### 2. Plattform-Ordner generieren
 Im Projektverzeichnis:
 ```powershell
-flutter create . --project-name philosophie_quiz --org com.sophia.philosophiequiz --platforms=ios,android
+flutter create . --project-name philosophie_quiz --org de.deinname.eleutheria --platforms=ios,android
 flutter pub get
 ```
 > `flutter create .` legt nur die fehlenden `ios/`, `android/` und `web/` Ordner an, ohne `lib/` zu überschreiben.
@@ -185,11 +185,11 @@ Für **iOS-Live-Preview auf einem echten iPhone von Windows aus** brauchst du **
    - Codemagic generiert/verwaltet Profile automatisch
 6. **Distribution**: TestFlight aktivieren.
 7. „Start new build" → nach ~12 Minuten landet die App in TestFlight.
-8. Auf dem iPhone: TestFlight-App installieren, Sophia testen.
+8. Auf dem iPhone: TestFlight-App installieren, Eleutheria testen.
 
 ### B. App Store Connect (für die echte Veröffentlichung)
 1. <https://appstoreconnect.apple.com> → „Mein Apps" → „+" → Neue App.
-2. Bundle-ID: `com.sophia.philosophiequiz` (muss mit `--org`-Wert übereinstimmen).
+2. Bundle-ID: eine eindeutige ID aus deinem Developer-Account, z. B. `de.deinname.eleutheria`.
 3. Metadaten ausfüllen (Beschreibung, Screenshots, Datenschutz).
 4. In Codemagic „Submit to App Store Review" aktivieren.
 
@@ -204,7 +204,7 @@ lib/
 ├── main.dart              # Bootstrap
 ├── env.dart               # Environment via --dart-define
 ├── app/
-│   ├── sophia_app.dart    # MaterialApp + Router
+│   ├── eleutheria_app.dart # MaterialApp + Router
 │   ├── providers.dart     # Riverpod-Provider, ProfileNotifier
 │   └── router.dart        # GoRouter-Konfiguration
 ├── core/theme/            # Warm-Academia-Designsystem

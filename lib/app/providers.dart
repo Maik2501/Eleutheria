@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/models/answer_input_style.dart';
 import '../data/models/player_profile.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_repository.dart';
@@ -77,6 +78,20 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     final p = state.value;
     if (p == null) return;
     p.soundsEnabled = enabled;
+    await _persist(p);
+  }
+
+  Future<void> setJokerAvailability(String key) async {
+    final p = state.value;
+    if (p == null) return;
+    p.jokerAvailability = JokerAvailability.fromKey(key);
+    await _persist(p);
+  }
+
+  Future<void> setPreferredInputStyle(AnswerInputStyle style) async {
+    final p = state.value;
+    if (p == null) return;
+    p.preferredInputStyle = style;
     await _persist(p);
   }
 

@@ -6,15 +6,13 @@ import '../data/models/game_session.dart';
 import '../data/models/question.dart';
 import '../features/categories/categories_screen.dart';
 import '../features/crossword/crossword_screen.dart';
-import '../features/duel/duel_lobby_screen.dart';
-import '../features/duel/duel_match_screen.dart';
 import '../features/home/home_screen.dart';
-import '../features/leaderboard/leaderboard_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/quiz/game_session_controller.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/result/result_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../shared/widgets/coming_soon_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -34,11 +32,22 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/leaderboard',
-        builder: (_, __) => const LeaderboardScreen(),
+        builder: (_, __) => const ComingSoonScreen(
+          title: 'Rangliste',
+          message:
+              'Die Tagesrangliste wird nach dem ersten TestFlight-Lauf freigeschaltet.',
+          icon: Icons.leaderboard_rounded,
+        ),
       ),
       GoRoute(
         path: '/categories',
         builder: (_, __) => const CategoriesScreen(),
+      ),
+      GoRoute(
+        path: '/play',
+        builder: (_, state) => QuizScreen(
+          config: (state.extra as GameConfig?) ?? GameConfig.classicDefault,
+        ),
       ),
       GoRoute(
         path: '/play/classic',
@@ -64,14 +73,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/practice',
-        builder: (_, __) => const QuizScreen(config: GameConfig.practiceDefault),
+        builder: (_, __) =>
+            const QuizScreen(config: GameConfig.practiceDefault),
       ),
       GoRoute(
         path: '/play/category/:cat',
         builder: (_, state) {
           final name = state.pathParameters['cat']!;
-          final cat = QuestionCategory.values
-              .firstWhere((c) => c.name == name, orElse: () => QuestionCategory.quoteToPhilosopher);
+          final cat = QuestionCategory.values.firstWhere((c) => c.name == name,
+              orElse: () => QuestionCategory.quoteToPhilosopher);
           return QuizScreen(
             config: GameConfig(
               mode: GameMode.category,
@@ -83,12 +93,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/duel',
-        builder: (_, __) => const DuelLobbyScreen(),
+        builder: (_, __) => const ComingSoonScreen(
+          title: 'Duell',
+          message:
+              'Der Online-Modus ist vorbereitet, bleibt für den ersten TestFlight-Test aber noch geschlossen.',
+          icon: Icons.compare_arrows_rounded,
+        ),
       ),
       GoRoute(
         path: '/duel/:code',
-        builder: (_, state) =>
-            DuelMatchScreen(code: state.pathParameters['code']!),
+        builder: (_, __) => const ComingSoonScreen(
+          title: 'Duell',
+          message:
+              'Der Online-Modus ist vorbereitet, bleibt für den ersten TestFlight-Test aber noch geschlossen.',
+          icon: Icons.compare_arrows_rounded,
+        ),
       ),
       GoRoute(
         path: '/result',

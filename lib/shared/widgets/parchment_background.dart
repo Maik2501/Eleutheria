@@ -15,28 +15,38 @@ class ParchmentBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    return Container(
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
-          center: const Alignment(-0.4, -0.6),
-          radius: 1.4,
-          colors: [
-            palette.page,
-            palette.parchment,
-          ],
-          stops: const [0.0, 0.85],
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        RepaintBoundary(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: const Alignment(-0.4, -0.6),
+                radius: 1.4,
+                colors: [
+                  palette.page,
+                  palette.parchment,
+                ],
+                stops: const [0.0, 0.85],
+              ),
+            ),
+            child: CustomPaint(
+              isComplex: true,
+              willChange: false,
+              painter: const _GrainPainter(seed: 7, opacity: 0.025),
+              child: const SizedBox.expand(),
+            ),
+          ),
         ),
-      ),
-      child: CustomPaint(
-        painter: _GrainPainter(seed: 7, opacity: 0.025),
-        child: child,
-      ),
+        if (child != null) child!,
+      ],
     );
   }
 }
 
 class _GrainPainter extends CustomPainter {
-  _GrainPainter({required this.seed, required this.opacity});
+  const _GrainPainter({required this.seed, required this.opacity});
 
   final int seed;
   final double opacity;

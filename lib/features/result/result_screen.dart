@@ -52,7 +52,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   Widget build(BuildContext context) {
     final palette = context.palette;
     final correct = widget.session.correctCount;
-    final total = widget.session.questions.length;
+    final total = widget.session.mode == GameMode.quizRush
+        ? widget.session.answers.length
+        : widget.session.questions.length;
     final score = widget.session.totalScore;
     final percent = total == 0 ? 0 : (correct / total * 100).round();
 
@@ -92,11 +94,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                       eyebrow: widget.session.mode.title,
                       title: headline,
                       alignment: CrossAxisAlignment.center,
-                      subtitle: switch (widget.session.mode) {
-                        GameMode.suddenDeath =>
-                          '$correct Fragen am Stück.',
-                        _ => '$correct von $total richtig.',
-                      },
+                      subtitle: _subtitle(correct, total),
                     ),
                     const SizedBox(height: 28),
                     const DecorativeRule(),
@@ -167,6 +165,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     if (percent >= 40) return 'Mehr Lektüre wartet.';
     return 'Ein nächstes Kapitel.';
   }
+
+  String _subtitle(int correct, int total) => switch (widget.session.mode) {
+        GameMode.suddenDeath => '$correct Fragen am Stück.',
+        GameMode.quizRush =>
+          '$correct richtig in ${widget.session.answers.length} Versuchen.',
+        _ => '$correct von $total richtig.',
+      };
 }
 
 class _ScoreRow extends StatelessWidget {

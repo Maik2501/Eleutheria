@@ -1,20 +1,16 @@
+import 'dart:math' as math;
+
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../app/providers.dart';
+import '../../data/models/answer_input_style.dart';
 import '../../data/models/game_session.dart';
+import '../../data/models/player_profile.dart';
 import '../../data/models/question.dart';
 import '../letterbox/answer_normalization.dart';
-
-/// How the player answers each question.
-enum AnswerInputStyle {
-  /// Tap one of four options.
-  multipleChoice,
-
-  /// Type the answer into letter boxes whose count matches the answer length.
-  letterbox,
-}
+import '../letterbox/letterbox_joker.dart';
 
 /// Configuration for starting a new session.
 class GameConfig {
@@ -25,7 +21,10 @@ class GameConfig {
     this.difficultyMin = 1,
     this.difficultyMax = 5,
     this.perQuestionTimeLimit = const Duration(seconds: 20),
+    this.sessionTimeLimit,
+    this.lifeLimit,
     this.inputStyle = AnswerInputStyle.multipleChoice,
+    this.sessionLabel,
   });
 
   final GameMode mode;
@@ -34,9 +33,43 @@ class GameConfig {
   final int difficultyMin;
   final int difficultyMax;
   final Duration perQuestionTimeLimit;
+  final Duration? sessionTimeLimit;
+  final int? lifeLimit;
   final AnswerInputStyle inputStyle;
+  final String? sessionLabel;
 
-  static const classicDefault = GameConfig(mode: GameMode.classic);
+  static const classicDefault = GameConfig(
+    mode: GameMode.classic,
+    perQuestionTimeLimit: Duration.zero,
+  );
+  static const quizRushOneMinute = GameConfig(
+    mode: GameMode.quizRush,
+    questionCount: 200,
+    perQuestionTimeLimit: Duration.zero,
+    sessionTimeLimit: Duration(minutes: 1),
+    sessionLabel: 'Best of 1 Minute',
+  );
+  static const quizRushThreeMinutes = GameConfig(
+    mode: GameMode.quizRush,
+    questionCount: 200,
+    perQuestionTimeLimit: Duration.zero,
+    sessionTimeLimit: Duration(minutes: 3),
+    sessionLabel: 'Best of 3 Minuten',
+  );
+  static const quizRushFiveMinutes = GameConfig(
+    mode: GameMode.quizRush,
+    questionCount: 200,
+    perQuestionTimeLimit: Duration.zero,
+    sessionTimeLimit: Duration(minutes: 5),
+    sessionLabel: 'Best of 5 Minuten',
+  );
+  static const quizRushEndless = GameConfig(
+    mode: GameMode.quizRush,
+    questionCount: 200,
+    perQuestionTimeLimit: Duration.zero,
+    lifeLimit: 3,
+    sessionLabel: 'Endless',
+  );
   static const suddenDeathDefault = GameConfig(
     mode: GameMode.suddenDeath,
     questionCount: 50,
@@ -52,14 +85,38 @@ class GameConfig {
   );
 
   /// Same length as classic, but the player types the answer into boxes
-  /// instead of picking from four options. Time limit is generous because
-  /// typing is slower than tapping.
+  /// instead of picking from four options. Classic sessions are untimed.
   static const letterboxDefault = GameConfig(
     mode: GameMode.classic,
     questionCount: 10,
     inputStyle: AnswerInputStyle.letterbox,
-    perQuestionTimeLimit: Duration(seconds: 45),
+    perQuestionTimeLimit: Duration.zero,
   );
+
+  GameConfig copyWith({
+    GameMode? mode,
+    int? questionCount,
+    Set<QuestionCategory>? categories,
+    int? difficultyMin,
+    int? difficultyMax,
+    Duration? perQuestionTimeLimit,
+    Duration? sessionTimeLimit,
+    int? lifeLimit,
+    AnswerInputStyle? inputStyle,
+    String? sessionLabel,
+  }) =>
+      GameConfig(
+        mode: mode ?? this.mode,
+        questionCount: questionCount ?? this.questionCount,
+        categories: categories ?? this.categories,
+        difficultyMin: difficultyMin ?? this.difficultyMin,
+        difficultyMax: difficultyMax ?? this.difficultyMax,
+        perQuestionTimeLimit: perQuestionTimeLimit ?? this.perQuestionTimeLimit,
+        sessionTimeLimit: sessionTimeLimit ?? this.sessionTimeLimit,
+        lifeLimit: lifeLimit ?? this.lifeLimit,
+        inputStyle: inputStyle ?? this.inputStyle,
+        sessionLabel: sessionLabel ?? this.sessionLabel,
+      );
 }
 
 /// Holds an ongoing [GameSession] and per-question UI state.
@@ -70,6 +127,9 @@ class GameSessionState {
     required this.selectedIndex,
     required this.revealed,
     required this.eliminatedIndices,
+    required this.revealedLetterIndices,
+    required this.fiftyFiftyUses,
+    required this.jokerAvailability,
     required this.questionStartedAt,
     required this.unlockedAchievements,
   });
@@ -81,6 +141,9 @@ class GameSessionState {
   final int selectedIndex;
   final bool revealed;
   final Set<int> eliminatedIndices;
+  final Set<int> revealedLetterIndices;
+  final int fiftyFiftyUses;
+  final JokerAvailability jokerAvailability;
   final DateTime questionStartedAt;
   final List<String> unlockedAchievements;
 
@@ -88,6 +151,8 @@ class GameSessionState {
     int? selectedIndex,
     bool? revealed,
     Set<int>? eliminatedIndices,
+    Set<int>? revealedLetterIndices,
+    int? fiftyFiftyUses,
     DateTime? questionStartedAt,
     List<String>? unlockedAchievements,
   }) =>
@@ -97,6 +162,10 @@ class GameSessionState {
         selectedIndex: selectedIndex ?? this.selectedIndex,
         revealed: revealed ?? this.revealed,
         eliminatedIndices: eliminatedIndices ?? this.eliminatedIndices,
+        revealedLetterIndices:
+            revealedLetterIndices ?? this.revealedLetterIndices,
+        fiftyFiftyUses: fiftyFiftyUses ?? this.fiftyFiftyUses,
+        jokerAvailability: jokerAvailability,
         questionStartedAt: questionStartedAt ?? this.questionStartedAt,
         unlockedAchievements: unlockedAchievements ?? this.unlockedAchievements,
       );
@@ -141,20 +210,63 @@ class GameSessionController extends StateNotifier<GameSessionState> {
       selectedIndex: -1,
       revealed: false,
       eliminatedIndices: const {},
+      revealedLetterIndices: const {},
+      fiftyFiftyUses: 0,
+      jokerAvailability:
+          ref.read(profileNotifierProvider).value?.jokerAvailability ??
+              JokerAvailability.always,
       questionStartedAt: DateTime.now(),
       unlockedAchievements: const [],
     );
   }
 
   // ─── Power-ups ───
+  bool get canUseFiftyFifty {
+    final q = state.session.currentQuestion;
+    if (q == null || state.revealed || _fiftyFiftyUsedOnCurrentQuestion) {
+      return false;
+    }
+    final limit = state.jokerAvailability.sessionLimit;
+    if (limit != null && state.fiftyFiftyUses >= limit) return false;
+    if (state.config.inputStyle == AnswerInputStyle.letterbox) {
+      return letterboxFiftyFiftyRevealCount(q.correctAnswer) > 0;
+    }
+    return q.options.length > 2;
+  }
+
+  int? get fiftyFiftyRemaining {
+    final limit = state.jokerAvailability.sessionLimit;
+    if (limit == null) return null;
+    return math.max(0, limit - state.fiftyFiftyUses);
+  }
+
+  bool get _fiftyFiftyUsedOnCurrentQuestion =>
+      state.eliminatedIndices.isNotEmpty ||
+      state.revealedLetterIndices.isNotEmpty;
+
   void useFiftyFifty() {
     final q = state.session.currentQuestion;
-    if (q == null || state.revealed || state.eliminatedIndices.isNotEmpty) return;
+    if (q == null || !canUseFiftyFifty) return;
+
+    if (state.config.inputStyle == AnswerInputStyle.letterbox) {
+      final revealed = pickLetterboxFiftyFiftyIndices(q.correctAnswer);
+      if (revealed.isEmpty) return;
+      state = state.copyWith(
+        revealedLetterIndices: revealed,
+        fiftyFiftyUses: state.fiftyFiftyUses + 1,
+      );
+      HapticFeedback.lightImpact();
+      return;
+    }
+
     final wrong = <int>[
       for (var i = 0; i < q.options.length; i++)
         if (i != q.correctIndex) i,
     ]..shuffle();
-    state = state.copyWith(eliminatedIndices: {wrong[0], wrong[1]});
+    state = state.copyWith(
+      eliminatedIndices: {wrong[0], wrong[1]},
+      fiftyFiftyUses: state.fiftyFiftyUses + 1,
+    );
     HapticFeedback.lightImpact();
   }
 
@@ -209,12 +321,17 @@ class GameSessionController extends StateNotifier<GameSessionState> {
 
   /// Move on to the next question, or finish the session.
   void next() {
+    if (rushOutOfLives) {
+      finishNow();
+      return;
+    }
     if (state.session.isFinished) return;
     state.session.currentIndex++;
     state = state.copyWith(
       selectedIndex: -1,
       revealed: false,
       eliminatedIndices: const {},
+      revealedLetterIndices: const {},
       questionStartedAt: DateTime.now(),
     );
   }
@@ -225,15 +342,33 @@ class GameSessionController extends StateNotifier<GameSessionState> {
       state.revealed &&
       !(state.session.answers.lastOrNull?.wasCorrect ?? true);
 
+  bool get rushOutOfLives {
+    final limit = state.config.lifeLimit;
+    if (state.session.mode != GameMode.quizRush || limit == null) {
+      return false;
+    }
+    return state.session.answers.where((a) => !a.wasCorrect).length >= limit;
+  }
+
+  int? get livesRemaining {
+    final limit = state.config.lifeLimit;
+    if (limit == null) return null;
+    final mistakes = state.session.answers.where((a) => !a.wasCorrect).length;
+    return (limit - mistakes).clamp(0, limit).toInt();
+  }
+
+  void finishNow() {
+    state.session.currentIndex = state.session.questions.length;
+    state = state.copyWith();
+  }
+
   int _scoreFor(Question q, bool wasCorrect, Duration t) {
     if (!wasCorrect) return 0;
     final base = 100 + (q.difficulty - 1) * 25;
+    final limitMs = state.config.perQuestionTimeLimit.inMilliseconds;
+    if (limitMs <= 0) return base;
     final speedBonus =
-        ((state.config.perQuestionTimeLimit.inMilliseconds - t.inMilliseconds)
-                    .clamp(0, state.config.perQuestionTimeLimit.inMilliseconds) /
-                state.config.perQuestionTimeLimit.inMilliseconds *
-                50)
-            .round();
+        ((limitMs - t.inMilliseconds).clamp(0, limitMs) / limitMs * 50).round();
     return base + speedBonus;
   }
 

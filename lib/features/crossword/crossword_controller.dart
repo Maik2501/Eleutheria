@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../letterbox/answer_normalization.dart';
 import 'models/crossword_puzzle.dart';
 
 /// Per-puzzle UI state: typed grid, focused cell, focus direction, solved
@@ -69,9 +68,24 @@ class CrosswordController extends StateNotifier<CrosswordState> {
     final cell = state.puzzle.grid[row][col];
     if (cell == null) return;
 
-    var dir = direction ?? state.focusDirection;
-    // If clicking a cell that only belongs to one direction, snap to that.
-    if (cell.words.length == 1) dir = cell.words.single.direction;
+    final directions = {for (final word in cell.words) word.direction};
+    final isSameCell = state.focusRow == row && state.focusCol == col;
+    var dir = direction;
+    if (dir == null) {
+      if (directions.length == 1) {
+        dir = directions.single;
+      } else if (isSameCell) {
+        dir = state.focusDirection == WordDirection.across
+            ? WordDirection.down
+            : WordDirection.across;
+      } else if (directions.contains(state.focusDirection)) {
+        dir = state.focusDirection;
+      } else {
+        dir = cell.words.first.direction;
+      }
+    } else if (!directions.contains(dir)) {
+      dir = cell.words.first.direction;
+    }
 
     state = state.copyWith(focusRow: row, focusCol: col, focusDirection: dir);
   }
@@ -139,8 +153,7 @@ class CrosswordController extends StateNotifier<CrosswordState> {
     final ordered = state.puzzle.numberedWords;
     final current = _activeWord();
     final idx = ordered.indexWhere((nw) => nw.word == current);
-    final prev =
-        ordered[(idx - 1 + ordered.length) % ordered.length].word;
+    final prev = ordered[(idx - 1 + ordered.length) % ordered.length].word;
     focusWord(prev);
   }
 
@@ -154,6 +167,8 @@ class CrosswordController extends StateNotifier<CrosswordState> {
       orElse: () => cell.words.first,
     );
   }
+
+  CrosswordWord? get activeWord => _activeWord();
 
   // ─── Input ───
   void typeLetter(String letter) {
@@ -191,6 +206,11 @@ class CrosswordController extends StateNotifier<CrosswordState> {
   void revealActiveWord() {
     final w = _activeWord();
     if (w == null) return;
+    _fillWord(w);
+    HapticFeedback.mediumImpact();
+  }
+
+  void _fillWord(CrosswordWord w) {
     final newTyped = _cloneGrid(state.typed);
     var i = 0;
     for (final (r, c) in w.cells()) {
@@ -199,13 +219,9 @@ class CrosswordController extends StateNotifier<CrosswordState> {
     }
     final solved = state.puzzle.isSolved(newTyped);
     state = state.copyWith(typed: newTyped, completed: solved);
-    HapticFeedback.mediumImpact();
   }
 
-  static List<List<String>> _cloneGrid(List<List<String>> g) =>
-      [for (final row in g) [...row]];
+  static List<List<String>> _cloneGrid(List<List<String>> g) => [
+        for (final row in g) [...row]
+      ];
 }
-
-// Keeps `canonicalize` in scope for any future cell-by-cell verification UI.
-// ignore: unused_element
-String _canonicalShim(String s) => canonicalize(s);

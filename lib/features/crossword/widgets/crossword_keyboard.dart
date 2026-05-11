@@ -10,6 +10,7 @@ class CrosswordKeyboard extends StatelessWidget {
     required this.onLetter,
     required this.onBackspace,
     required this.onReveal,
+    this.compact = false,
   });
 
   final ValueChanged<String> onLetter;
@@ -17,6 +18,7 @@ class CrosswordKeyboard extends StatelessWidget {
 
   /// Long-press the backspace = reveal active word.
   final VoidCallback onReveal;
+  final bool compact;
 
   static const _rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'Ü'],
@@ -27,15 +29,17 @@ class CrosswordKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final keyHeight = compact ? 36.0 : 44.0;
+    final rowGap = compact ? 4.0 : 6.0;
     return Container(
-      padding: const EdgeInsets.fromLTRB(6, 6, 6, 8),
+      padding: EdgeInsets.fromLTRB(6, compact ? 5 : 6, 6, compact ? 6 : 8),
       color: palette.parchment.withValues(alpha: 0.96),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           for (final row in _rows)
             Padding(
-              padding: const EdgeInsets.only(bottom: 6),
+              padding: EdgeInsets.only(bottom: rowGap),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -44,6 +48,8 @@ class CrosswordKeyboard extends StatelessWidget {
                       child: _Key(
                         label: letter,
                         onTap: () => onLetter(letter),
+                        height: keyHeight,
+                        compact: compact,
                       ),
                     ),
                 ],
@@ -54,9 +60,11 @@ class CrosswordKeyboard extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: _Key(
-                  label: 'Aufgeben',
+                  label: 'Hint',
                   onTap: onReveal,
                   ghost: true,
+                  height: keyHeight,
+                  compact: compact,
                 ),
               ),
               Expanded(
@@ -65,6 +73,8 @@ class CrosswordKeyboard extends StatelessWidget {
                   label: '⌫',
                   onTap: onBackspace,
                   emphasis: true,
+                  height: keyHeight,
+                  compact: compact,
                 ),
               ),
             ],
@@ -79,12 +89,16 @@ class _Key extends StatelessWidget {
   const _Key({
     required this.label,
     required this.onTap,
+    required this.height,
+    required this.compact,
     this.emphasis = false,
     this.ghost = false,
   });
 
   final String label;
   final VoidCallback onTap;
+  final double height;
+  final bool compact;
   final bool emphasis;
   final bool ghost;
 
@@ -99,15 +113,15 @@ class _Key extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           onTap: onTap,
           child: Container(
-            height: 44,
+            height: height,
             decoration: BoxDecoration(
               color: ghost
                   ? Colors.transparent
-                  : (emphasis
-                      ? palette.burgundy
-                      : palette.page),
+                  : (emphasis ? palette.burgundy : palette.page),
               border: Border.all(
-                color: ghost ? palette.divider : palette.ink.withValues(alpha: 0.3),
+                color: ghost
+                    ? palette.divider
+                    : palette.ink.withValues(alpha: 0.3),
                 width: ghost ? 1 : 0.6,
               ),
               borderRadius: BorderRadius.circular(8),
@@ -124,7 +138,8 @@ class _Key extends StatelessWidget {
                     )
                   : AppTypography.serif(
                       fontWeight: FontWeight.w700,
-                      fontSize: emphasis ? 18 : 17,
+                      fontSize:
+                          compact ? (emphasis ? 17 : 15) : (emphasis ? 18 : 17),
                       color: emphasis ? AppColors.page : palette.ink,
                       height: 1.0,
                     ),

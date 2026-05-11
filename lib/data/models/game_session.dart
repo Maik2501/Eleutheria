@@ -50,6 +50,7 @@ class GameSession {
 }
 
 enum GameMode {
+  quizRush('Quiz-Rush', 'Bestzeit, Serien und Leben'),
   classic('Klassisch', 'Zehn Fragen, gemischte Kategorien'),
   suddenDeath('Sudden Death', 'Bis zum ersten Fehler'),
   daily('Tägliche Frage', 'Fünf Fragen, derselbe Pool für alle'),

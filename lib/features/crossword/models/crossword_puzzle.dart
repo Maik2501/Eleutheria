@@ -44,9 +44,7 @@ class CrosswordWord {
   /// Iterates the (row, col) cells covered by this word.
   Iterable<(int, int)> cells() sync* {
     for (var i = 0; i < answer.length; i++) {
-      yield direction == WordDirection.across
-          ? (row, col + i)
-          : (row + i, col);
+      yield direction == WordDirection.across ? (row, col + i) : (row + i, col);
     }
   }
 }
@@ -60,6 +58,9 @@ class CrosswordPuzzle {
     required this.gridRows,
     required this.gridCols,
     required this.words,
+    this.difficulty = 'Mittel',
+    this.estimatedMinutes = 8,
+    this.sourceLabel = 'Eleutheria',
   });
 
   final String id;
@@ -68,6 +69,9 @@ class CrosswordPuzzle {
   final int gridRows;
   final int gridCols;
   final List<CrosswordWord> words;
+  final String difficulty;
+  final int estimatedMinutes;
+  final String sourceLabel;
 
   /// Lazily computed: which letter belongs in each (row, col), and which
   /// words pass through that cell. Cells with `letter == null` are blocked.
@@ -114,9 +118,7 @@ class CrosswordPuzzle {
         if (grid[r][c] == null) continue;
         final startsAcross = words.any(
           (w) =>
-              w.direction == WordDirection.across &&
-              w.row == r &&
-              w.col == c,
+              w.direction == WordDirection.across && w.row == r && w.col == c,
         );
         final startsDown = words.any(
           (w) => w.direction == WordDirection.down && w.row == r && w.col == c,
@@ -162,6 +164,32 @@ class CrosswordPuzzle {
       i++;
     }
     return true;
+  }
+
+  int get playableCellCount {
+    var count = 0;
+    for (final row in grid) {
+      for (final cell in row) {
+        if (cell != null) count++;
+      }
+    }
+    return count;
+  }
+
+  int filledCellCount(List<List<String>> typed) {
+    var count = 0;
+    for (var r = 0; r < gridRows; r++) {
+      for (var c = 0; c < gridCols; c++) {
+        if (grid[r][c] != null && typed[r][c].trim().isNotEmpty) count++;
+      }
+    }
+    return count;
+  }
+
+  double progress(List<List<String>> typed) {
+    final total = playableCellCount;
+    if (total == 0) return 0;
+    return filledCellCount(typed) / total;
   }
 }
 

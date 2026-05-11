@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../models/answer_input_style.dart';
 import '../models/player_profile.dart';
 
 /// Persists [PlayerProfile] in SharedPreferences as JSON. Lightweight enough
@@ -44,11 +45,16 @@ class ProfileRepository {
         'unlockedAchievements': p.unlockedAchievements.toList(),
         'bookmarkedQuoteIds': p.bookmarkedQuoteIds.toList(),
         'preferredCategories': p.preferredCategories.toList(),
-        'preferredDifficulty': [p.preferredDifficulty.$1, p.preferredDifficulty.$2],
+        'preferredDifficulty': [
+          p.preferredDifficulty.$1,
+          p.preferredDifficulty.$2
+        ],
         'locale': p.locale,
         'themeMode': p.themeMode,
         'soundsEnabled': p.soundsEnabled,
         'hapticsEnabled': p.hapticsEnabled,
+        'jokerAvailability': p.jokerAvailability.key,
+        'preferredInputStyle': p.preferredInputStyle.key,
       };
 
   static PlayerProfile _fromJson(Map<String, dynamic> j) => PlayerProfile(
@@ -64,18 +70,28 @@ class ProfileRepository {
         totalCorrect: (j['totalCorrect'] as num).toInt(),
         bestSuddenDeath: (j['bestSuddenDeath'] as num).toInt(),
         unlockedAchievements:
-            ((j['unlockedAchievements'] as List?)?.cast<String>() ?? const []).toSet(),
+            ((j['unlockedAchievements'] as List?)?.cast<String>() ?? const [])
+                .toSet(),
         bookmarkedQuoteIds:
-            ((j['bookmarkedQuoteIds'] as List?)?.cast<String>() ?? const []).toSet(),
+            ((j['bookmarkedQuoteIds'] as List?)?.cast<String>() ?? const [])
+                .toSet(),
         preferredCategories:
-            ((j['preferredCategories'] as List?)?.cast<String>() ?? const []).toSet(),
+            ((j['preferredCategories'] as List?)?.cast<String>() ?? const [])
+                .toSet(),
         preferredDifficulty: () {
-          final list = (j['preferredDifficulty'] as List?)?.cast<num>() ?? const [1, 5];
+          final list =
+              (j['preferredDifficulty'] as List?)?.cast<num>() ?? const [1, 5];
           return (list[0].toInt(), list[1].toInt());
         }(),
         locale: j['locale'] as String? ?? 'de',
         themeMode: j['themeMode'] as String? ?? 'system',
         soundsEnabled: j['soundsEnabled'] as bool? ?? false,
         hapticsEnabled: j['hapticsEnabled'] as bool? ?? true,
+        jokerAvailability: JokerAvailability.fromKey(
+          j['jokerAvailability'] as String?,
+        ),
+        preferredInputStyle: AnswerInputStyle.fromKey(
+          j['preferredInputStyle'] as String?,
+        ),
       );
 }

@@ -18,47 +18,127 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Sophia — ein warmes, akademisches Quiz der Philosophie.">
+  <meta name="description" content="Eleutheria — ein warmes, akademisches Quiz der Philosophie.">
   <meta name="theme-color" content="#F5EFE6">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Sophia">
+  <meta name="apple-mobile-web-app-title" content="Eleutheria">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>Sophia — Philosophie Quiz</title>
+  <title>Eleutheria</title>
   <style>
-    html, body { margin: 0; padding: 0; background: #F5EFE6; }
+    html, body { margin: 0; padding: 0; background: #2A1810; }
     #loader {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      background: #F5EFE6;
+      background:
+        linear-gradient(180deg, rgba(245,239,230,.38), rgba(245,239,230,.74)),
+        url("assets/assets/images/splash.png") center / cover no-repeat,
+        #F5EFE6;
       transition: opacity .4s ease;
+      color: #2A1810;
+      overflow: hidden;
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+    #loader::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 42%, transparent 0 24%, rgba(42,24,16,.10) 82%);
+      pointer-events: none;
     }
     #loader.fade { opacity: 0; pointer-events: none; }
+    #loader .loader-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transform: translateY(-2vh);
+    }
     #loader .seal {
-      width: 64px; height: 64px;
+      width: 82px; height: 82px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #8C3A4D, #6B2737 60%, #4A1A26);
       display: flex; align-items: center; justify-content: center;
       color: #F5EFE6;
-      font-family: serif; font-size: 32px; font-weight: 700;
-      box-shadow: 0 8px 24px rgba(107,39,55,0.25);
+      font-family: Georgia, "Times New Roman", serif; font-size: 40px; font-weight: 700;
+      box-shadow: 0 14px 36px rgba(107,39,55,0.30), 0 0 0 1px rgba(255,255,255,.26) inset;
       animation: pulse 1.6s ease-in-out infinite;
+    }
+    #loader .loader-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    #loader .loader-subtitle {
+      margin-top: -8px;
+      color: #6B2737;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+    #loader .loader-glyphs {
+      display: flex;
+      gap: 10px;
+      margin-top: 2px;
+    }
+    #loader .loader-glyphs span {
+      width: 34px; height: 34px;
+      display: grid; place-items: center;
+      border-radius: 10px;
+      border: 1px solid rgba(42,24,16,.14);
+      background: rgba(250,246,238,.62);
+      color: #6B2737;
+      font-size: 18px;
+      box-shadow: 0 6px 18px rgba(42,24,16,.06);
+    }
+    #loader .loader-rail {
+      width: 148px;
+      height: 4px;
+      margin-top: 4px;
+      border-radius: 999px;
+      background: rgba(42,24,16,.14);
+      overflow: hidden;
+    }
+    #loader .loader-rail span {
+      display: block;
+      width: 46%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #C9A961, #6B2737);
+      animation: load 1.8s ease-in-out infinite;
     }
     @keyframes pulse {
       0%,100% { transform: scale(1); }
       50%     { transform: scale(1.06); }
     }
+    @keyframes load {
+      0% { transform: translateX(-105%); }
+      55%, 100% { transform: translateX(225%); }
+    }
   </style>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <div id="loader"><div class="seal">Σ</div></div>
+  <div id="loader" aria-label="Eleutheria lädt">
+    <div class="loader-inner">
+      <div class="seal">Σ</div>
+      <div class="loader-title">Eleutheria</div>
+      <div class="loader-subtitle">Philosophie Quiz</div>
+      <div class="loader-glyphs" aria-hidden="true">
+        <span>ϟ</span><span>Ⅲ</span><span>↔</span><span>▦</span>
+      </div>
+      <div class="loader-rail"><span></span></div>
+    </div>
+  </div>
   <script src="flutter_bootstrap.js" async></script>
   <script>
     window.addEventListener('flutter-first-frame', () => {

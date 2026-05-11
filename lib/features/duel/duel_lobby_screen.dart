@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../data/models/answer_input_style.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
@@ -25,7 +26,12 @@ final duelRepositoryProvider = Provider<DuelRepository?>((ref) {
 });
 
 class DuelLobbyScreen extends ConsumerStatefulWidget {
-  const DuelLobbyScreen({super.key});
+  const DuelLobbyScreen({
+    super.key,
+    this.inputStyle = AnswerInputStyle.multipleChoice,
+  });
+
+  final AnswerInputStyle inputStyle;
 
   @override
   ConsumerState<DuelLobbyScreen> createState() => _DuelLobbyScreenState();
@@ -53,7 +59,7 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen> {
     try {
       final match = await repo.createDuel(hostId: profile.id);
       if (!mounted) return;
-      context.push('/duel/${match.code}');
+      context.push('/duel/${match.code}', extra: widget.inputStyle);
     } catch (e) {
       setState(() => _error = '$e');
     } finally {
@@ -77,7 +83,7 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen> {
     try {
       await repo.joinDuel(code: code, guestId: profile.id);
       if (!mounted) return;
-      context.push('/duel/$code');
+      context.push('/duel/$code', extra: widget.inputStyle);
     } catch (e) {
       setState(() => _error = '$e');
     } finally {
@@ -108,10 +114,11 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen> {
                 const SizedBox(height: 12),
                 Center(child: WaxSeal(symbol: '⚔', size: 76)),
                 const SizedBox(height: 22),
-                const ChapterHeading(
+                ChapterHeading(
                   eyebrow: 'Eristik',
                   title: 'Duell mit einer\nFreundin',
-                  subtitle: 'Fünf Fragen. Wer schneller richtig liegt, gewinnt.',
+                  subtitle:
+                      'Fünf Fragen. ${widget.inputStyle.label} ist für dich aktiv.',
                   alignment: CrossAxisAlignment.center,
                 ),
                 const SizedBox(height: 28),

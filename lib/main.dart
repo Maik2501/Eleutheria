@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/providers.dart';
-import 'app/sophia_app.dart';
+import 'app/eleutheria_app.dart';
 import 'env.dart';
 
 Future<void> main() async {
@@ -26,7 +26,7 @@ Future<void> main() async {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
-      child: const SophiaApp(),
+      child: const EleutheriaApp(),
     ),
   );
 }

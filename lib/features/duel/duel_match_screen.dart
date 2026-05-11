@@ -9,10 +9,13 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../data/models/answer_input_style.dart';
 import '../../data/models/question.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
 import '../../shared/widgets/wax_seal.dart';
+import '../letterbox/answer_normalization.dart';
+import '../letterbox/widgets/letterbox_input.dart';
 import '../quiz/widgets/answer_option_button.dart';
 import '../quiz/widgets/question_prompt_card.dart';
 import 'duel_lobby_screen.dart';
@@ -20,8 +23,14 @@ import 'duel_repository.dart';
 
 /// Live duel screen — host & guest share the same questions, race per question.
 class DuelMatchScreen extends ConsumerStatefulWidget {
-  const DuelMatchScreen({super.key, required this.code});
+  const DuelMatchScreen({
+    super.key,
+    required this.code,
+    this.inputStyle = AnswerInputStyle.multipleChoice,
+  });
+
   final String code;
+  final AnswerInputStyle inputStyle;
 
   @override
   ConsumerState<DuelMatchScreen> createState() => _DuelMatchScreenState();
@@ -39,8 +48,10 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
 
   int _currentIndex = 0;
   int _selectedIndex = -1;
+  String _typed = '';
   bool _revealed = false;
   DateTime _questionStartedAt = DateTime.now();
+  final GlobalKey<LetterboxInputState> _letterboxKey = GlobalKey();
 
   @override
   void initState() {
@@ -106,7 +117,8 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final myAnswers = _answersFor(_meId);
     final oppAnswers = _answersFor(_opponentId);
 
-    final currentIndex = myAnswers.length.clamp(0, _questions.length - 1);
+    final currentIndex =
+        myAnswers.length.clamp(0, _questions.length - 1).toInt();
     final allDone = myAnswers.length >= _questions.length &&
         oppAnswers.length >= _questions.length;
 
@@ -117,6 +129,8 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
       // Advanced — reset per-question UI state.
       _currentIndex = currentIndex;
       _selectedIndex = -1;
+      _typed = '';
+      _letterboxKey.currentState?.reset();
       _revealed = false;
       _questionStartedAt = DateTime.now();
     }
@@ -148,24 +162,35 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                           totalQuestions: _questions.length,
                         ),
                         const SizedBox(height: 18),
-                        ...List.generate(question.options.length, (i) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: AnswerOptionButton(
-                              label: question.options[i],
-                              optionLetter: _letters[i],
-                              onTap: () {
-                                if (_revealed) return;
-                                HapticFeedback.selectionClick();
-                                setState(() => _selectedIndex = i);
-                              },
-                              isSelected: _selectedIndex == i,
-                              isCorrect: i == question.correctIndex,
-                              isRevealed: _revealed,
-                              isEliminated: false,
-                            ),
-                          );
-                        }),
+                        if (widget.inputStyle == AnswerInputStyle.letterbox)
+                          LetterboxInput(
+                            key: _letterboxKey,
+                            target: question.correctAnswer,
+                            revealed: _revealed,
+                            wasCorrect: _lastWasCorrect(question),
+                            onChanged: (value) => _typed = value,
+                            onSubmitted: (_) =>
+                                _submit(question, currentIndex),
+                          )
+                        else
+                          ...List.generate(question.options.length, (i) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: AnswerOptionButton(
+                                label: question.options[i],
+                                optionLetter: _letters[i],
+                                onTap: () {
+                                  if (_revealed) return;
+                                  HapticFeedback.selectionClick();
+                                  setState(() => _selectedIndex = i);
+                                },
+                                isSelected: _selectedIndex == i,
+                                isCorrect: i == question.correctIndex,
+                                isRevealed: _revealed,
+                                isEliminated: false,
+                              ),
+                            );
+                          }),
                         const SizedBox(height: 100),
                       ],
                     ),
@@ -182,7 +207,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: PrimaryButton(
             label: _revealed ? 'Warte auf Mitspielerin…' : 'Antwort senden',
-            onPressed: _revealed || _selectedIndex < 0
+            onPressed: _revealed || !_canSubmit
                 ? null
                 : () => _submit(question, currentIndex),
           ),
@@ -193,11 +218,15 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   }
 
   Future<void> _submit(Question q, int index) async {
+    if (_revealed || !_canSubmit) return;
     final me = _meId;
     final repo = ref.read(duelRepositoryProvider);
     if (me == null || repo == null) return;
 
-    final wasCorrect = _selectedIndex == q.correctIndex;
+    final picked = widget.inputStyle == AnswerInputStyle.letterbox
+        ? (answersMatch(_typed, q.correctAnswer) ? q.correctIndex : -1)
+        : _selectedIndex;
+    final wasCorrect = picked == q.correctIndex;
     final dt = DateTime.now().difference(_questionStartedAt);
     // Speed scoring: faster correct answer = more points.
     final base = wasCorrect ? 100 + (q.difficulty - 1) * 25 : 0;
@@ -213,11 +242,26 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
       code: widget.code,
       playerId: me,
       questionIndex: index,
-      selectedIndex: _selectedIndex,
+      selectedIndex: picked,
       wasCorrect: wasCorrect,
       timeTaken: dt,
       points: pts,
     );
+  }
+
+  bool get _canSubmit {
+    if (widget.inputStyle == AnswerInputStyle.letterbox) {
+      return _typed.trim().isNotEmpty;
+    }
+    return _selectedIndex >= 0;
+  }
+
+  bool _lastWasCorrect(Question question) {
+    if (!_revealed) return false;
+    if (widget.inputStyle == AnswerInputStyle.letterbox) {
+      return answersMatch(_typed, question.correctAnswer);
+    }
+    return _selectedIndex == question.correctIndex;
   }
 
   Widget _buildSummary(List<DuelAnswer> me, List<DuelAnswer> opp) {

@@ -6,17 +6,19 @@ import '../core/theme/app_theme.dart';
 import 'providers.dart';
 import 'router.dart';
 
-class SophiaApp extends ConsumerWidget {
-  const SophiaApp({super.key});
+class EleutheriaApp extends ConsumerWidget {
+  const EleutheriaApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final mode = ref.watch(themeModeProvider);
-    final locale = ref.watch(profileNotifierProvider).value?.locale ?? 'de';
+    final storedLocale =
+        ref.watch(profileNotifierProvider).value?.locale ?? 'de';
+    final locale = storedLocale == 'de' ? storedLocale : 'de';
 
     return MaterialApp.router(
-      title: 'Sophia — Philosophie Quiz',
+      title: 'Eleutheria',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),

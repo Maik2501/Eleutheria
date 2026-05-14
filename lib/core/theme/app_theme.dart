@@ -8,7 +8,7 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData light() {
-    final palette = AppPalette.light;
+    const palette = AppPalette.light;
     final textTheme = AppTypography.build(palette.ink, palette.inkSoft);
 
     return ThemeData(
@@ -114,7 +114,7 @@ class AppTheme {
   }
 
   static ThemeData dark() {
-    final palette = AppPalette.dark;
+    const palette = AppPalette.dark;
     final textTheme = AppTypography.build(palette.ink, palette.inkSoft);
 
     return ThemeData(

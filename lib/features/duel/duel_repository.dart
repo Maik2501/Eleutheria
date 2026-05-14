@@ -92,7 +92,7 @@ class DuelRepository {
         .eq('code', code)
         .map((rows) => rows.isEmpty
             ? throw const DuelException('Lobby beendet.')
-            : DuelMatch.fromRow(rows.first));
+            : DuelMatch.fromRow(rows.first),);
   }
 
   Stream<List<DuelAnswer>> watchAnswers(String code) {
@@ -129,7 +129,7 @@ class DuelRepository {
 
   /// Build the same question set both players see, given the seed.
   List<Question> resolveQuestions(int seed,
-      {required QuestionRepository questions, int count = 5}) {
+      {required QuestionRepository questions, int count = 5,}) {
     return questions.randomBatch(count: count, seed: seed);
   }
 }

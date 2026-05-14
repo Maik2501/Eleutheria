@@ -342,7 +342,7 @@ class _PuzzleHeader extends StatelessWidget {
 
 class _InfoChip extends StatelessWidget {
   const _InfoChip(
-      {required this.icon, required this.label, this.active = false});
+      {required this.icon, required this.label, this.active = false,});
 
   final IconData icon;
   final String label;
@@ -368,7 +368,7 @@ class _InfoChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon,
-              size: 14, color: active ? palette.correct : palette.burgundy),
+              size: 14, color: active ? palette.correct : palette.burgundy,),
           const SizedBox(width: 5),
           Text(
             label,

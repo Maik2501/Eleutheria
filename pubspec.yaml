@@ -1,7 +1,7 @@
 name: philosophie_quiz
 description: "Eleutheria — ein Philosophie-Quiz im warmen Akademia-Stil."
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.1.0+2
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
@@ -46,7 +46,9 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/modes/
     - assets/images/philosophers/
     - assets/textures/
     - assets/icons/
+    - assets/icons/modes/
     - assets/data/

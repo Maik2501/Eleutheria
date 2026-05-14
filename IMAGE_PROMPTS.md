@@ -30,6 +30,21 @@ Größen: iOS verlangt zusätzlich `20×20` bis `1024×1024` — Codemagic gener
 
 ---
 
+## Spielmodus-Bilder und Icons
+
+**Dateien:** `assets/images/modes/*.webp` und `assets/icons/modes/*.webp`
+
+Alle neuen Mode-Assets folgen dem globalen Warm-Academia-Stil: weiche watercolor-and-ink Illustration, Pergamentgrund, Burgunder, Antik-Gold, ruhiges Licht, kein Text.
+
+| Modus | Bildmotiv | Iconmotiv |
+|---|---|---|
+| Quiz-Rush | Stunde, Stoppuhr, Notizen und dezente Timer-Kreisform | Stundenglas + Stoppuhr im Pergament-Medaillon |
+| Klassik | Antiker Studienplatz mit Säule, Schriftrolle, Lorbeer und Stylus | Schriftrolle + Säulenkapitell + Lorbeer |
+| Duell | Gekreuzte Schreibfedern, Waage und Lorbeer als fairer Wettbewerb | Gekreuzte Schreibfedern + Waage |
+| Kreuzworträtsel | Frau am Schreibtisch beim Lösen eines Kreuzworträtsels | Kreuzworträtselraster + Schreibfeder + Schreibtischlampe |
+
+---
+
 ## Philosophen-Porträts (40 Bilder)
 
 Alle in den Ordner `assets/images/philosophers/` legen. Dateiname = `id` aus `philosophers_seed.dart` mit Endung `.webp` (oder `.png`).

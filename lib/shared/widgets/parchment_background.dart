@@ -31,11 +31,11 @@ class ParchmentBackground extends StatelessWidget {
                 stops: const [0.0, 0.85],
               ),
             ),
-            child: CustomPaint(
+            child: const CustomPaint(
               isComplex: true,
               willChange: false,
-              painter: const _GrainPainter(seed: 7, opacity: 0.025),
-              child: const SizedBox.expand(),
+              painter: _GrainPainter(seed: 7, opacity: 0.025),
+              child: SizedBox.expand(),
             ),
           ),
         ),

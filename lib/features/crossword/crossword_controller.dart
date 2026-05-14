@@ -222,6 +222,6 @@ class CrosswordController extends StateNotifier<CrosswordState> {
   }
 
   static List<List<String>> _cloneGrid(List<List<String>> g) => [
-        for (final row in g) [...row]
+        for (final row in g) [...row],
       ];
 }

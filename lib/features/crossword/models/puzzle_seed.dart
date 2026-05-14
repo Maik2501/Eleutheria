@@ -10,7 +10,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
   estimatedMinutes: 12,
   sourceLabel: 'Themenrätsel · Begriffe',
   words: [
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_platon_a',
       answer: 'PLATON',
       clue: 'Griechischer Philosoph der Ideenlehre.',
@@ -18,7 +18,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 4,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_welt_d',
       answer: 'WELT',
       clue: 'Bei Wittgenstein: alles, was der Fall ist.',
@@ -26,7 +26,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 7,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_zeit_a',
       answer: 'ZEIT',
       clue: 'Grundform der Erfahrung neben dem Raum.',
@@ -34,7 +34,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 6,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_wert_d',
       answer: 'WERT',
       clue: 'Was in Ethik und Ästhetik zählt.',
@@ -42,7 +42,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 9,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_nous_d',
       answer: 'NOUS',
       clue: 'Griechisch für Geist oder Vernunft.',
@@ -50,7 +50,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 9,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_sein_a',
       answer: 'SEIN',
       clue: 'Grundbegriff der Ontologie.',
@@ -58,7 +58,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 8,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_ding_d',
       answer: 'DING',
       clue: 'Bei Kant gibt es es auch „an sich“.',
@@ -66,7 +66,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_akt_d',
       answer: 'AKT',
       clue: 'Vollzug im Gegensatz zur Möglichkeit.',
@@ -74,7 +74,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 6,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_sinn_a',
       answer: 'SINN',
       clue: 'Bedeutung oder Verstehensrichtung.',
@@ -82,7 +82,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 9,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_gut_a',
       answer: 'GUT',
       clue: 'Zentraler Wertbegriff der Ethik.',
@@ -90,7 +90,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 4,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_arendt_d',
       answer: 'ARENDT',
       clue: 'Denkerin der „Banalität des Bösen“.',
@@ -98,7 +98,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_dike_a',
       answer: 'DIKE',
       clue: 'Griechisch: Recht oder Gerechtigkeit.',
@@ -106,7 +106,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_rede_a',
       answer: 'REDE',
       clue: 'Gesprochenes Wort; wichtig im Dialog.',
@@ -114,7 +114,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_eros_d',
       answer: 'EROS',
       clue: 'Bei Platon: Liebe oder Begehren.',
@@ -122,7 +122,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 14,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_telos_d',
       answer: 'TELOS',
       clue: 'Griechisch für Ziel oder Zweck.',
@@ -130,7 +130,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 14,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_mut_a',
       answer: 'MUT',
       clue: 'Tugend im Umgang mit Gefahr.',
@@ -138,7 +138,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 9,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_genus_d',
       answer: 'GENUS',
       clue: 'Lateinisch: Gattung.',
@@ -146,7 +146,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 4,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_nexus_a',
       answer: 'NEXUS',
       clue: 'Gelehrtes Wort für Zusammenhang.',
@@ -154,7 +154,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 4,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_ehre_a',
       answer: 'EHRE',
       clue: 'Anerkennung oder guter Ruf.',
@@ -162,7 +162,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 1,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_hyle_d',
       answer: 'HYLE',
       clue: 'Griechisch: Stoff oder Materie.',
@@ -170,7 +170,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 1,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_hexis_a',
       answer: 'HEXIS',
       clue: 'Aristotelisch: erworbene Haltung.',
@@ -178,7 +178,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_lust_d',
       answer: 'LUST',
       clue: 'Bei Epikur: nicht bloß Party, sondern Schmerzfreiheit.',
@@ -186,7 +186,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 7,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_leid_d',
       answer: 'LEID',
       clue: 'Ausgangspunkt der vier edlen Wahrheiten.',
@@ -194,7 +194,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 13,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_prinzip_d',
       answer: 'PRINZIP',
       clue: 'Grundsatz oder Anfangsgrund.',
@@ -202,7 +202,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 4,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_teil_a',
       answer: 'TEIL',
       clue: 'Gegenstück zum Ganzen.',
@@ -210,7 +210,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 2,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_atman_d',
       answer: 'ATMAN',
       clue: 'Sanskrit-Begriff für das Selbst.',
@@ -218,7 +218,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 2,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_polis_a',
       answer: 'POLIS',
       clue: 'Griechischer Stadtstaat.',
@@ -226,7 +226,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 4,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_volk_d',
       answer: 'VOLK',
       clue: 'Politisches Kollektiv; in Demokratien souverän.',
@@ -234,7 +234,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 6,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_relativismus_a',
       answer: 'RELATIVISMUS',
       clue: 'Position: Wahrheit oder Werte gelten nur relativ.',
@@ -242,7 +242,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_ren_a',
       answer: 'REN',
       clue: 'Konfuzianische Menschlichkeit.',
@@ -250,7 +250,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 12,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_regel_d',
       answer: 'REGEL',
       clue: 'Vorschrift, nach der etwas abläuft.',
@@ -258,7 +258,7 @@ final puzzleDemoDicht = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'dicht_satz_a',
       answer: 'SATZ',
       clue: 'Aussage aus Wörtern; in der Logik wichtig.',
@@ -279,7 +279,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
   estimatedMinutes: 10,
   sourceLabel: 'Themenrätsel · Begriffe',
   words: [
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_vernunft_d',
       answer: 'VERNUNFT',
       clue: 'Vermögen des begründenden Denkens.',
@@ -287,7 +287,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 7,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_volk_a',
       answer: 'VOLK',
       clue: 'Politisches Kollektiv; in Demokratien souverän.',
@@ -295,7 +295,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 7,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_name_a',
       answer: 'NAME',
       clue: 'Sprachlicher Bezug auf eine Person oder Sache.',
@@ -303,7 +303,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 7,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_mitte_a',
       answer: 'MITTE',
       clue: 'Bei Aristoteles liegt die Tugend oft dort.',
@@ -311,7 +311,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 5,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_imperativ_d',
       answer: 'IMPERATIV',
       clue: 'Bei Kant gibt es ihn kategorisch.',
@@ -319,7 +319,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 9,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_form_d',
       answer: 'FORM',
       clue: 'Gegenstück zum Stoff, besonders bei Aristoteles.',
@@ -327,7 +327,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 5,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_term_a',
       answer: 'TERM',
       clue: 'Ausdruck oder Baustein in der Logik.',
@@ -335,7 +335,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 5,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_actus_a',
       answer: 'ACTUS',
       clue: 'Lateinisch: Wirklichkeit oder Vollzug.',
@@ -343,7 +343,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 7,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_sein_d',
       answer: 'SEIN',
       clue: 'Grundbegriff der Ontologie.',
@@ -351,7 +351,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_dasein_d',
       answer: 'DASEIN',
       clue: 'Heideggers Wort für menschliche Existenz.',
@@ -359,7 +359,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_rede_a',
       answer: 'REDE',
       clue: 'Gesprochenes Wort; wichtig im Dialog.',
@@ -367,7 +367,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 9,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_norm_a',
       answer: 'NORM',
       clue: 'Maßstab dafür, was gelten oder geschehen soll.',
@@ -375,7 +375,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_welt_d',
       answer: 'WELT',
       clue: 'Bei Wittgenstein: alles, was der Fall ist.',
@@ -383,7 +383,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 5,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_moral_a',
       answer: 'MORAL',
       clue: 'Regeln und Maßstäbe des Handelns.',
@@ -391,7 +391,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 1,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_leere_d',
       answer: 'LEERE',
       clue: 'Wichtiges Motiv im Buddhismus.',
@@ -399,7 +399,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 12,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_raum_d',
       answer: 'RAUM',
       clue: 'Bei Kant eine Form der Anschauung.',
@@ -407,7 +407,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 7,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_mut_d',
       answer: 'MUT',
       clue: 'Tugend im Umgang mit Gefahr.',
@@ -415,7 +415,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 1,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_kraft_d',
       answer: 'KRAFT',
       clue: 'Vermögen zu wirken.',
@@ -423,7 +423,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 3,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_stoff_a',
       answer: 'STOFF',
       clue: 'Materielles Prinzip im Gegensatz zur Form.',
@@ -431,7 +431,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_sorge_d',
       answer: 'SORGE',
       clue: 'Grundstruktur des Daseins bei Heidegger.',
@@ -439,7 +439,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_zeit_a',
       answer: 'ZEIT',
       clue: 'Grundform der Erfahrung neben dem Raum.',
@@ -447,7 +447,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_satz_d',
       answer: 'SATZ',
       clue: 'Aussage aus Wörtern; in der Logik wichtig.',
@@ -455,7 +455,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 14,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_kant_d',
       answer: 'KANT',
       clue: 'Philosoph des kategorischen Imperativs.',
@@ -463,7 +463,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 10,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_akt_a',
       answer: 'AKT',
       clue: 'Vollzug im Gegensatz zur Möglichkeit.',
@@ -471,7 +471,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 10,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_scham_a',
       answer: 'SCHAM',
       clue: 'Moralischer Affekt der Selbstbewertung.',
@@ -479,7 +479,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 3,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_these_d',
       answer: 'THESE',
       clue: 'Behauptung oder Ausgangssatz.',
@@ -487,7 +487,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 3,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_synthese_d',
       answer: 'SYNTHESE',
       clue: 'Zusammenführung von Gegensätzen.',
@@ -495,7 +495,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 3,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_arche_d',
       answer: 'ARCHE',
       clue: 'Griechisch: Anfang oder Urprinzip.',
@@ -503,7 +503,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 5,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_stoa_a',
       answer: 'STOA',
       clue: 'Antike Schule der Gelassenheit.',
@@ -511,7 +511,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 2,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_hyle_a',
       answer: 'HYLE',
       clue: 'Griechisch: Stoff oder Materie.',
@@ -519,7 +519,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_eros_a',
       answer: 'EROS',
       clue: 'Bei Platon: Liebe oder Begehren.',
@@ -527,7 +527,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_dike_a',
       answer: 'DIKE',
       clue: 'Griechisch: Recht oder Gerechtigkeit.',
@@ -535,7 +535,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_gut_d',
       answer: 'GUT',
       clue: 'Zentraler Wertbegriff der Ethik.',
@@ -543,7 +543,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 12,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_agon_a',
       answer: 'AGON',
       clue: 'Griechisch: Streit oder Wettkampf.',
@@ -551,7 +551,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 11,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_ren_a',
       answer: 'REN',
       clue: 'Konfuzianische Menschlichkeit.',
@@ -559,7 +559,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 0,
       direction: WordDirection.across,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_dao_d',
       answer: 'DAO',
       clue: 'Weg oder Grundprinzip im Daoismus.',
@@ -567,7 +567,7 @@ final puzzleDemoKompakt = CrosswordPuzzle(
       col: 13,
       direction: WordDirection.down,
     ),
-    CrosswordWord(
+    const CrosswordWord(
       id: 'kompakt_nous_d',
       answer: 'NOUS',
       clue: 'Griechisch für Geist oder Vernunft.',

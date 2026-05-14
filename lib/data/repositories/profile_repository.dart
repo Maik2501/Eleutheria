@@ -47,7 +47,7 @@ class ProfileRepository {
         'preferredCategories': p.preferredCategories.toList(),
         'preferredDifficulty': [
           p.preferredDifficulty.$1,
-          p.preferredDifficulty.$2
+          p.preferredDifficulty.$2,
         ],
         'locale': p.locale,
         'themeMode': p.themeMode,

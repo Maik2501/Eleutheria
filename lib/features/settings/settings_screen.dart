@@ -78,7 +78,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 32),
             Text('ÜBER ELEUTHERIA',
-                style: AppTypography.eyebrow(palette.inkMuted)),
+                style: AppTypography.eyebrow(palette.inkMuted),),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(16),
@@ -91,7 +91,7 @@ class SettingsScreen extends ConsumerWidget {
                 'Eleutheria ist ein liebevoll handgepflegtes Quiz für die Freundinnen und Freunde der Philosophie. '
                 'Die Fragen wurden kuratiert; Quellen und Erläuterungen finden sich nach jeder Antwort.',
                 style: TextStyle(
-                    color: palette.inkSoft, height: 1.55, fontSize: 14),
+                    color: palette.inkSoft, height: 1.55, fontSize: 14,),
               ),
             ),
           ],

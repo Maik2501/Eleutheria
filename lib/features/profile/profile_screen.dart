@@ -168,7 +168,7 @@ class _XpBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Fortschritt zur nächsten Stufe',
-                style: AppTypography.eyebrow(palette.inkMuted)),
+                style: AppTypography.eyebrow(palette.inkMuted),),
             Text(
               '$current / $target',
               style: AppTypography.serif(
@@ -229,7 +229,7 @@ class _Stat extends StatelessWidget {
       child: Column(
         children: [
           Text(label.toUpperCase(),
-              style: AppTypography.eyebrow(palette.inkMuted)),
+              style: AppTypography.eyebrow(palette.inkMuted),),
           const SizedBox(height: 4),
           Text(
             value,

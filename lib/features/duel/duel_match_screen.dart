@@ -103,9 +103,9 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final m = _match;
 
     if (m == null || _questions.isEmpty) {
-      return Scaffold(
+      return const Scaffold(
         body: ParchmentBackground(
-          child: const Center(child: CircularProgressIndicator()),
+          child: Center(child: CircularProgressIndicator()),
         ),
       );
     }

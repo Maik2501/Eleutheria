@@ -186,7 +186,7 @@ class _ScoreRow extends StatelessWidget {
           child: Column(
             children: [
               Text(label.toUpperCase(),
-                  style: AppTypography.eyebrow(palette.inkMuted)),
+                  style: AppTypography.eyebrow(palette.inkMuted),),
               const SizedBox(height: 6),
               Text(
                 value,

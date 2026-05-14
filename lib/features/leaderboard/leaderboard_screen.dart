@@ -53,7 +53,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                 name: r['display_name'] as String,
                 score: (r['score'] as num).toInt(),
                 correct: (r['correct'] as num).toInt(),
-              ))
+              ),)
           .toList();
     } catch (_) {
       return const [];
@@ -88,7 +88,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text('Noch keine Werte heute',
-                            style: AppTypography.eyebrow(palette.gold)),
+                            style: AppTypography.eyebrow(palette.gold),),
                         const SizedBox(height: 12),
                         Text(
                           'Sei die Erste, die heute spielt.',

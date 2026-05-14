@@ -357,7 +357,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       'session': session,
       'xpGained': xp,
       'unlockedAchievements': unlocked,
-    });
+    },);
   }
 
   double _sessionProgress(GameSessionState state) {

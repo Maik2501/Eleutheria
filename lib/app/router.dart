@@ -81,7 +81,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) {
           final name = state.pathParameters['cat']!;
           final cat = QuestionCategory.values.firstWhere((c) => c.name == name,
-              orElse: () => QuestionCategory.quoteToPhilosopher);
+              orElse: () => QuestionCategory.quoteToPhilosopher,);
           return QuizScreen(
             config: GameConfig(
               mode: GameMode.category,

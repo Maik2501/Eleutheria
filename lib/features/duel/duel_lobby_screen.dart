@@ -112,7 +112,7 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 12),
-                Center(child: WaxSeal(symbol: '⚔', size: 76)),
+                const Center(child: WaxSeal(symbol: '⚔', size: 76)),
                 const SizedBox(height: 22),
                 ChapterHeading(
                   eyebrow: 'Eristik',

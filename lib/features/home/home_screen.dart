@@ -11,7 +11,6 @@ import '../../core/theme/app_typography.dart';
 import '../../data/models/answer_input_style.dart';
 import '../../data/models/game_session.dart';
 import '../../shared/widgets/parchment_background.dart';
-import '../../shared/widgets/wax_seal.dart';
 import '../quiz/game_session_controller.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -31,7 +30,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.palette;
     final profile = ref.watch(profileNotifierProvider).value;
     if (!_loadedPreferredInputStyle && profile != null) {
       _inputStyle = profile.preferredInputStyle;
@@ -47,41 +45,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               SliverToBoxAdapter(
                 child: _HomeHeader(
                   displayName: profile?.displayName ?? '…',
-                  avatarSeal: profile?.avatarSeal ?? 'Σ',
                   streakDays: profile?.streakDays ?? 0,
                 ),
               ),
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 28, 24, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ELEUTHERIA',
-                        style: AppTypography.eyebrow(palette.gold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Spielmodus wählen',
-                        style: AppTypography.serif(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w600,
-                          height: 1.05,
-                          color: palette.ink,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Ein klarer Einstieg für schnelle Runden, klassische Sets, Duelle und Kreuzworträtsel.',
-                        style: AppTypography.sans(
-                          fontSize: 14,
-                          height: 1.45,
-                          color: palette.inkMuted,
-                        ),
-                      ),
-                    ],
-                  ),
+                  padding: EdgeInsets.fromLTRB(24, 28, 24, 0),
+                  child: _HomeIntroPanel(),
                 ),
               ),
               SliverToBoxAdapter(
@@ -99,9 +69,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   delegate: SliverChildListDelegate(
                     [
                       _ModeCard(
-                        icon: Icons.bolt_rounded,
-                        backgroundAsset:
-                            'assets/images/philosophers/nietzsche.webp',
+                        iconAsset: 'assets/icons/modes/quiz_rush.webp',
+                        backgroundAsset: 'assets/images/modes/quiz_rush.webp',
                         eyebrow: 'Tempo',
                         title: 'Quiz-Rush',
                         description:
@@ -138,9 +107,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(height: 12),
                       _ModeCard(
-                        icon: Icons.menu_book_rounded,
-                        backgroundAsset:
-                            'assets/images/philosophers/platon.webp',
+                        iconAsset: 'assets/icons/modes/classic.webp',
+                        backgroundAsset: 'assets/images/modes/classic.webp',
                         eyebrow: 'Set',
                         title: 'Klassik',
                         description:
@@ -164,9 +132,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(height: 12),
                       _ModeCard(
-                        icon: Icons.compare_arrows_rounded,
-                        backgroundAsset:
-                            'assets/images/philosophers/sokrates.webp',
+                        iconAsset: 'assets/icons/modes/duel.webp',
+                        backgroundAsset: 'assets/images/modes/duel.webp',
                         eyebrow: 'Versus',
                         title: 'Duell',
                         description:
@@ -183,9 +150,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(height: 12),
                       _ModeCard(
-                        icon: Icons.grid_on_rounded,
-                        backgroundAsset:
-                            'assets/images/philosophers/wittgenstein.webp',
+                        iconAsset: 'assets/icons/modes/crossword.webp',
+                        backgroundAsset: 'assets/images/modes/crossword.webp',
                         eyebrow: 'Daily-ready',
                         title: 'Kreuzworträtsel',
                         description:
@@ -238,15 +204,147 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
+class _HomeIntroPanel extends StatelessWidget {
+  const _HomeIntroPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 390;
+        return Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: palette.page,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: palette.divider),
+          ),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        palette.page,
+                        palette.page.withValues(alpha: 0.94),
+                        palette.parchment.withValues(alpha: 0.72),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 18, 16, 18),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'ELEUTHERIA',
+                            style: AppTypography.eyebrow(palette.gold),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Spielmodus wählen',
+                            style: AppTypography.serif(
+                              fontSize: compact ? 28 : 32,
+                              fontWeight: FontWeight.w600,
+                              height: 1.05,
+                              color: palette.ink,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Schnelle Runden, klassische Sets, Duelle und Kreuzworträtsel im warmen Akademia-Stil.',
+                            maxLines: compact ? 3 : 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTypography.sans(
+                              fontSize: 13.5,
+                              height: 1.42,
+                              color: palette.inkMuted,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (!compact) ...[
+                      const SizedBox(width: 12),
+                      const _BrandSeal(),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _BrandSeal extends StatelessWidget {
+  const _BrandSeal();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return SizedBox(
+      width: 104,
+      height: 104,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          gradient: RadialGradient(
+            center: const Alignment(-0.25, -0.35),
+            colors: [
+              palette.gold.withValues(alpha: 0.22),
+              palette.parchment.withValues(alpha: 0.66),
+            ],
+          ),
+          border: Border.all(color: palette.divider),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(11),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.ink.withValues(alpha: 0.14),
+                  blurRadius: 18,
+                  offset: const Offset(0, 9),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(
+                'assets/icons/app_icon.png',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _HomeHeader extends StatelessWidget {
   const _HomeHeader({
     required this.displayName,
-    required this.avatarSeal,
     required this.streakDays,
   });
 
   final String displayName;
-  final String avatarSeal;
   final int streakDays;
 
   @override
@@ -258,7 +356,7 @@ class _HomeHeader extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () => context.push('/profile'),
-            child: WaxSeal(symbol: avatarSeal, size: 50),
+            child: const _HeaderAppIcon(size: 58),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -288,6 +386,42 @@ class _HomeHeader extends StatelessWidget {
             tooltip: 'Einstellungen',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HeaderAppIcon extends StatelessWidget {
+  const _HeaderAppIcon({required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      width: size,
+      height: size,
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: palette.page.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(size * 0.34),
+        border: Border.all(color: palette.divider),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.ink.withValues(alpha: 0.16),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(size * 0.3),
+        child: Image.asset(
+          'assets/icons/app_icon.png',
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.medium,
+        ),
       ),
     );
   }
@@ -345,7 +479,7 @@ class _AnswerStyleSwitch extends StatelessWidget {
 
 class _ModeCard extends StatelessWidget {
   const _ModeCard({
-    required this.icon,
+    required this.iconAsset,
     required this.backgroundAsset,
     required this.eyebrow,
     required this.title,
@@ -353,7 +487,7 @@ class _ModeCard extends StatelessWidget {
     required this.children,
   });
 
-  final IconData icon;
+  final String iconAsset;
   final String backgroundAsset;
   final String eyebrow;
   final String title;
@@ -379,15 +513,16 @@ class _ModeCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.13,
-              child: Image.asset(
-                backgroundAsset,
-                fit: BoxFit.cover,
-                alignment: Alignment.centerRight,
-                filterQuality: FilterQuality.low,
-              ),
+          Positioned(
+            top: 0,
+            right: -18,
+            bottom: 0,
+            width: 170,
+            child: Image.asset(
+              backgroundAsset,
+              fit: BoxFit.cover,
+              alignment: Alignment.centerRight,
+              filterQuality: FilterQuality.low,
             ),
           ),
           Positioned.fill(
@@ -398,8 +533,9 @@ class _ModeCard extends StatelessWidget {
                   end: Alignment.centerRight,
                   colors: [
                     palette.page,
-                    palette.page.withValues(alpha: 0.94),
-                    palette.page.withValues(alpha: 0.78),
+                    palette.page.withValues(alpha: 0.98),
+                    palette.page.withValues(alpha: 0.88),
+                    palette.page.withValues(alpha: 0.58),
                   ],
                 ),
               ),
@@ -413,16 +549,7 @@ class _ModeCard extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: palette.page.withValues(alpha: 0.82),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: palette.divider),
-                      ),
-                      child: Icon(icon, color: palette.burgundy, size: 21),
-                    ),
+                    _ModeAssetIcon(asset: iconAsset),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -466,6 +593,39 @@ class _ModeCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ModeAssetIcon extends StatelessWidget {
+  const _ModeAssetIcon({required this.asset});
+
+  final String asset;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      width: 46,
+      height: 46,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: palette.page,
+        borderRadius: BorderRadius.circular(9),
+        border: Border.all(color: palette.divider),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.ink.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Image.asset(
+        asset,
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.medium,
       ),
     );
   }

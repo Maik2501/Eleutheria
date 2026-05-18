@@ -1,12 +1,15 @@
-/// Environment configuration provided via `--dart-define`.
+/// Environment configuration provided via `--dart-define-from-file=.env`.
 ///
-/// Build with:
-/// ```
-/// flutter run \
-///   --dart-define=SUPABASE_URL=https://YOUR.supabase.co \
-///   --dart-define=SUPABASE_ANON_KEY=YOUR_ANON_KEY
-/// ```
+/// Setup:
+///   1. Kopiere `.env.example` zu `.env` (gitignored)
+///   2. Trag SUPABASE_URL und SUPABASE_ANON_KEY ein
+///   3. Run via VSCode-Launch-Config oder:
+///      flutter run --dart-define-from-file=.env
 class Env {
   static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+
+  /// True wenn beide Werte gesetzt sind und Supabase initialisiert werden kann.
+  static bool get hasSupabase =>
+      supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 }

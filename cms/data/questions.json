@@ -1,0 +1,3218 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "q_quote_001",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Ich weiß, dass ich nichts weiß.\"",
+      "options": [
+        "Sokrates",
+        "Platon",
+        "Aristoteles",
+        "Heraklit"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Apologie, Platon",
+      "explanation": "Diese Maxime, oft Sokrates zugeschrieben, geht auf Platons \"Apologie\" zurück und drückt die Grundhaltung sokratischer Bescheidenheit aus.",
+      "philosopherId": "sokrates",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_002",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Cogito, ergo sum.\"",
+      "options": [
+        "Spinoza",
+        "Descartes",
+        "Leibniz",
+        "Augustinus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Discours de la méthode",
+      "explanation": "Descartes' methodischer Zweifel landet beim einzig unbezweifelbaren Satz: „Ich denke, also bin ich.\"",
+      "philosopherId": "descartes",
+      "topicKey": "cogito"
+    },
+    {
+      "id": "q_quote_003",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Gott ist tot. Gott bleibt tot. Und wir haben ihn getötet.\"",
+      "options": [
+        "Schopenhauer",
+        "Marx",
+        "Nietzsche",
+        "Heidegger"
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Die fröhliche Wissenschaft, §125",
+      "explanation": "Im Aphorismus „Der tolle Mensch\" diagnostiziert Nietzsche das Verschwinden der christlichen Letztbegründung als kulturelles Großereignis.",
+      "philosopherId": "nietzsche",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_004",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Der Mensch ist dazu verurteilt, frei zu sein.\"",
+      "options": [
+        "Camus",
+        "Beauvoir",
+        "Sartre",
+        "Heidegger"
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Der Existenzialismus ist ein Humanismus",
+      "explanation": "Sartre meint: weil es keine vorgegebene Essenz gibt, müssen wir uns selbst entwerfen — eine Last und Würde zugleich.",
+      "philosopherId": "sartre",
+      "topicKey": "sartre_existenzialismus"
+    },
+    {
+      "id": "q_quote_005",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Man wird nicht als Frau geboren, man wird es.\"",
+      "options": [
+        "Hannah Arendt",
+        "Simone de Beauvoir",
+        "Judith Butler",
+        "Martha Nussbaum"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Das andere Geschlecht (1949)",
+      "explanation": "Beauvoirs Eröffnungssatz des zweiten Bandes — Grundlage späterer Konstruktivismen, u.a. bei Butler.",
+      "philosopherId": "beauvoir",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_006",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Philosophen haben die Welt nur verschieden interpretiert; es kommt aber darauf an, sie zu verändern.\"",
+      "options": [
+        "Engels",
+        "Marx",
+        "Lenin",
+        "Hegel"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "11. Feuerbach-These",
+      "explanation": "Marx kritisiert in den Feuerbach-Thesen die kontemplative Tradition und fordert eine praxisorientierte Philosophie.",
+      "philosopherId": "marx",
+      "topicKey": "marx_kritik"
+    },
+    {
+      "id": "q_quote_007",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Wovon man nicht sprechen kann, darüber muss man schweigen.\"",
+      "options": [
+        "Russell",
+        "Wittgenstein",
+        "Frege",
+        "Carnap"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Tractatus logico-philosophicus, 7",
+      "explanation": "Der Schlusssatz des frühen Wittgenstein — Grenze des Sagbaren als Grenze sinnvoller Sprache.",
+      "philosopherId": "wittgenstein",
+      "topicKey": "tractatus"
+    },
+    {
+      "id": "q_quote_008",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Habe Mut, dich deines eigenen Verstandes zu bedienen!\"",
+      "options": [
+        "Voltaire",
+        "Hume",
+        "Kant",
+        "Lessing"
+      ],
+      "correctIndex": 2,
+      "difficulty": 1,
+      "attribution": "Beantwortung der Frage: Was ist Aufklärung? (1784)",
+      "explanation": "Kants Wahlspruch der Aufklärung — „Sapere aude!\" — ein Appell zur Selbstdenkbereitschaft.",
+      "philosopherId": "kant",
+      "topicKey": "sapere_aude"
+    },
+    {
+      "id": "q_quote_009",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Der Mensch ist frei geboren, und überall liegt er in Ketten.\"",
+      "options": [
+        "Voltaire",
+        "Locke",
+        "Rousseau",
+        "Hobbes"
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Vom Gesellschaftsvertrag (1762)",
+      "explanation": "Rousseaus Eingangsdiagnose — Grundlage seiner Theorie des contrat social.",
+      "philosopherId": "rousseau",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_010",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Wir müssen uns Sisyphos als einen glücklichen Menschen vorstellen.\"",
+      "options": [
+        "Sartre",
+        "Camus",
+        "Heidegger",
+        "Kierkegaard"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Der Mythos des Sisyphos",
+      "explanation": "Camus' absurde Held findet Sinn nicht im Erfolg, sondern in der bewussten Auflehnung gegen das Sinnlose.",
+      "philosopherId": "camus",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_011",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Das Leben ist ein Geschäft, dessen Erträge die Kosten bei weitem nicht decken.\"",
+      "options": [
+        "Schopenhauer",
+        "Kierkegaard",
+        "Nietzsche",
+        "Cioran"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Parerga und Paralipomena",
+      "explanation": "Schopenhauers berühmte Bilanz — Ausdruck seines metaphysischen Pessimismus.",
+      "philosopherId": "schopenhauer",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_012",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Hand, die zur Faust geballt ist, kann nichts empfangen.\"",
+      "options": [
+        "Marc Aurel",
+        "Seneca",
+        "Epiktet",
+        "Plotin"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Selbstbetrachtungen (paraphrasiert)",
+      "explanation": "Marc Aurels Bild für stoische Offenheit gegenüber dem Schicksal.",
+      "philosopherId": "marcus_aurelius",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_013",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Werde, der du bist.\"",
+      "options": [
+        "Pindar",
+        "Sokrates",
+        "Nietzsche",
+        "Kierkegaard"
+      ],
+      "correctIndex": 2,
+      "difficulty": 3,
+      "attribution": "Die fröhliche Wissenschaft (Untertitel-Motto)",
+      "explanation": "Pindar zugeschriebener Aphorismus, den Nietzsche zur Selbstwerdung als Lebensaufgabe radikalisiert.",
+      "philosopherId": "nietzsche",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_014",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Banalität des Bösen.\"",
+      "options": [
+        "Adorno",
+        "Arendt",
+        "Benjamin",
+        "Habermas"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Eichmann in Jerusalem (1963)",
+      "explanation": "Arendts Untertitel — die These, dass das Böse nicht dämonisch, sondern gedankenlos sein kann.",
+      "philosopherId": "arendt",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_015",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Wer ein Warum zum Leben hat, erträgt fast jedes Wie.\"",
+      "options": [
+        "Frankl",
+        "Nietzsche",
+        "Kierkegaard",
+        "Sartre"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Götzen-Dämmerung",
+      "explanation": "Nietzsches Aphorismus — später zentraler Wahlspruch von Viktor Frankls Logotherapie.",
+      "philosopherId": "nietzsche",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_016",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Der Mensch ist des Menschen Wolf.\"",
+      "options": [
+        "Hobbes",
+        "Locke",
+        "Machiavelli",
+        "Rousseau"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "De Cive (Vorrede)",
+      "explanation": "Hobbes übernimmt das Plautus-Diktum „homo homini lupus\" und macht es zum Ausgangspunkt seines Vertragsdenkens.",
+      "philosopherId": null,
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_017",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Das Sein, das in seinem Sein um dieses Sein selbst geht.\"",
+      "options": [
+        "Husserl",
+        "Heidegger",
+        "Sartre",
+        "Levinas"
+      ],
+      "correctIndex": 1,
+      "difficulty": 4,
+      "attribution": "Sein und Zeit",
+      "explanation": "Heideggers Definition des Daseins — der Mensch ist das Seiende, dem es um das Sein selbst geht.",
+      "philosopherId": "heidegger",
+      "topicKey": "heidegger_dasein"
+    },
+    {
+      "id": "q_quote_018",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Ein Leben ohne Selbstprüfung ist nicht lebenswert.\"",
+      "options": [
+        "Aristoteles",
+        "Sokrates",
+        "Diogenes",
+        "Plutarch"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Apologie 38a (Platon)",
+      "explanation": "Sokrates' Verteidigung vor Gericht: das ungeprüfte Leben sei eines Menschen unwürdig.",
+      "philosopherId": "sokrates",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_019",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Wahrlich, der Mensch ist etwas, das überwunden werden soll.\"",
+      "options": [
+        "Kierkegaard",
+        "Nietzsche",
+        "Stirner",
+        "Bataille"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Also sprach Zarathustra, Vorrede",
+      "explanation": "Zarathustras Verkündigung des Übermenschen — eine Aufgabe, kein biologisches Programm.",
+      "philosopherId": "nietzsche",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_020",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Hölle, das sind die anderen.\"",
+      "options": [
+        "Camus",
+        "Kierkegaard",
+        "Sartre",
+        "Beauvoir"
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Geschlossene Gesellschaft (1944)",
+      "explanation": "Sartres Drama-Replik — gemeint ist nicht Misanthropie, sondern dass wir uns durch den Blick anderer verdinglichen lassen.",
+      "philosopherId": "sartre",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_021",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Glück ist die Tätigkeit der Seele im Sinne vollkommener Tugend.\"",
+      "options": [
+        "Aristoteles",
+        "Platon",
+        "Epikur",
+        "Zenon von Kition"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Nikomachische Ethik I",
+      "explanation": "Aristoteles' Definition von eudaimonia — Glück als praktizierte Tugend, nicht als Zustand.",
+      "philosopherId": "aristoteles",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_022",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Es ist besser, ein unzufriedener Mensch zu sein als ein zufriedenes Schwein.\"",
+      "options": [
+        "Bentham",
+        "Mill",
+        "Singer",
+        "Sidgwick"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Utilitarianism (1861)",
+      "explanation": "Mills qualitativer Utilitarismus — höhere Lustarten zählen mehr als bloß intensivere.",
+      "philosopherId": "mill",
+      "topicKey": null
+    },
+    {
+      "id": "q_quote_023",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Was sich überhaupt sagen lässt, lässt sich klar sagen.\"",
+      "options": [
+        "Frege",
+        "Wittgenstein",
+        "Carnap",
+        "Quine"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Tractatus, Vorwort",
+      "explanation": "Frühwittgensteins Programmsatz — Klarheit als ethisch-logische Forderung.",
+      "philosopherId": "wittgenstein",
+      "topicKey": "tractatus"
+    },
+    {
+      "id": "q_quote_101",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Der Mensch ist von Natur ein politisches Lebewesen.\"",
+      "options": [
+        "Platon",
+        "Aristoteles",
+        "Epikur",
+        "Seneca"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Aristoteles, Politik, I, 1253a2–3",
+      "explanation": "Aristoteles meint damit nicht bloß Parteipolitik. Der Mensch verwirklicht seine Fähigkeiten nach ihm erst in der Polis, also in einer geordneten Gemeinschaft des Zusammenlebens.",
+      "philosopherId": "aristoteles",
+      "topicKey": "aristotle_political_animal"
+    },
+    {
+      "id": "q_quote_102",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Unruhig ist unser Herz, bis es ruht in dir.\"",
+      "options": [
+        "Augustinus",
+        "Aquin",
+        "Anselm von Canterbury",
+        "Pascal"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Augustinus, Confessiones, I,1,1",
+      "explanation": "Der Satz verdichtet Augustins Bekehrungserfahrung. Menschliches Begehren findet für ihn keine letzte Ruhe in endlichen Gütern, sondern nur in Gott.",
+      "philosopherId": "augustinus",
+      "topicKey": "augustine_restless_heart"
+    },
+    {
+      "id": "q_quote_103",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Handle so, dass du die Menschheit sowohl in deiner Person, als in der Person eines jeden andern jederzeit zugleich als Zweck, niemals bloß als Mittel brauchst.\"",
+      "options": [
+        "Rousseau",
+        "Kant",
+        "Hume",
+        "Mill"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Kant, Grundlegung zur Metaphysik der Sitten, AA 4:429",
+      "explanation": "Das ist die sogenannte Zweck-an-sich-Formel des kategorischen Imperativs. Sie schützt die Würde vernünftiger Wesen gegen jede bloß instrumentelle Behandlung.",
+      "philosopherId": "kant",
+      "topicKey": "kant_humanity_formula"
+    },
+    {
+      "id": "q_quote_105",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Bedeutung eines Wortes ist sein Gebrauch in der Sprache.\"",
+      "options": [
+        "Frege",
+        "Russell",
+        "Wittgenstein",
+        "Carnap"
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Wittgenstein, Philosophische Untersuchungen, §43",
+      "explanation": "Der späte Wittgenstein löst Bedeutung aus dem Bild fixer innerer Gegenstände. Verstehen heißt hier, sprachliche Praktiken in Lebensformen zu beherrschen.",
+      "philosopherId": "wittgenstein",
+      "topicKey": "wittgenstein_language_games"
+    },
+    {
+      "id": "q_quote_106",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Sprache ist das Haus des Seins.\"",
+      "options": [
+        "Heidegger",
+        "Gadamer",
+        "Derrida",
+        "Wilhelm von Humboldt"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Heidegger, Brief über den Humanismus, 1947",
+      "explanation": "Heidegger versteht Sprache nicht als bloßes Werkzeug des Subjekts. In ihr lichtet sich vielmehr das, was für uns überhaupt als Seiendes verständlich wird.",
+      "philosopherId": "heidegger",
+      "topicKey": "heidegger_language_house"
+    },
+    {
+      "id": "q_quote_107",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Vernunft ist, und soll nur, die Sklavin der Leidenschaften sein.\"",
+      "options": [
+        "Hume",
+        "Locke",
+        "Shaftesbury",
+        "Hutcheson"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Hume, Ein Traktat über die menschliche Natur, Buch II, Teil III, Abschnitt III",
+      "explanation": "Hume bestreitet damit, dass Vernunft allein motiviert. Sie kann Mittel ordnen und Tatsachen klären, aber Handlungskraft entspringt den Affekten.",
+      "philosopherId": "hume",
+      "topicKey": "hume_reason_passions"
+    },
+    {
+      "id": "q_quote_108",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Der freie Mensch denkt an nichts weniger als an den Tod.\"",
+      "options": [
+        "Spinoza",
+        "Descartes",
+        "Pascal",
+        "Montaigne"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Spinoza, Ethik, IV, Lehrsatz 67",
+      "explanation": "Spinozas Freiheit ist keine Willkür, sondern vernunftgeleitetes Leben. Weisheit besteht für ihn darum im Denken des Lebens, nicht im morbiden Todeskult.",
+      "philosopherId": "spinoza",
+      "topicKey": "spinoza_free_man_death"
+    },
+    {
+      "id": "q_quote_109",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Die Gerechtigkeit ist die erste Tugend sozialer Institutionen, so wie die Wahrheit bei Gedankensystemen.\"",
+      "options": [
+        "Nozick",
+        "Rawls",
+        "Habermas",
+        "Walzer"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Rawls, Eine Theorie der Gerechtigkeit, §1",
+      "explanation": "Rawls gibt der Gerechtigkeit einen Vorrang vor Nutzenkalkülen. Institutionen sind nicht schon deshalb gut, weil sie effizient oder stabil sind.",
+      "philosopherId": "rawls",
+      "topicKey": "rawls_theory_of_justice"
+    },
+    {
+      "id": "q_quote_111",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Lernen und das Gelernte von Zeit zu Zeit einüben – ist das nicht eine Freude?\"",
+      "options": [
+        "Konfuzius",
+        "Laozi",
+        "Mozi",
+        "Mencius"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Konfuzius, Analekten, 1,1",
+      "explanation": "Die Analekten eröffnen mit einer Verbindung von Studium und Übung. Wissen ist im Konfuzianismus nie nur Besitz, sondern kultivierte Lebensform.",
+      "philosopherId": null,
+      "topicKey": "confucius_learning"
+    },
+    {
+      "id": "q_quote_112",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Ich wünsche nicht, dass Frauen Macht über Männer haben, sondern über sich selbst.\"",
+      "options": [
+        "Mary Astell",
+        "Mary Wollstonecraft",
+        "Harriet Taylor Mill",
+        "Olympe de Gouges"
+      ],
+      "correctIndex": 1,
+      "difficulty": 4,
+      "attribution": "Mary Wollstonecraft, Eine Verteidigung der Rechte der Frau, Kap. 4",
+      "explanation": "Wollstonecraft fordert keine Umkehr der Herrschaft, sondern Selbstregierung durch Bildung und Vernunft. Gerade darin liegt die Modernität ihres Feminismus.",
+      "philosopherId": null,
+      "topicKey": "wollstonecraft_rights_of_woman"
+    },
+    {
+      "id": "q_quote_113",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Nicht weil es schwer ist, wagen wir es nicht, sondern weil wir es nicht wagen, ist es schwer.\"",
+      "options": [
+        "Epiktet",
+        "Seneca",
+        "Cicero",
+        "Marcus Aurelius"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Seneca, Briefe an Lucilius, 104,26",
+      "explanation": "Der Satz zeigt die stoische Pädagogik der Einübung. Moralischer Fortschritt beginnt oft dort, wo man das lähmende Zögern praktisch durchbricht.",
+      "philosopherId": "seneca",
+      "topicKey": "seneca_dare_difficult"
+    },
+    {
+      "id": "q_quote_114",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Der Weg, der sich aussprechen lässt, ist nicht der ewige Weg.\"",
+      "options": [
+        "Konfuzius",
+        "Laozi",
+        "Zhuangzi",
+        "Mozi"
+      ],
+      "correctIndex": 1,
+      "difficulty": 5,
+      "attribution": "Laozi, Daodejing, Kap. 1",
+      "explanation": "Das Daodejing beginnt mit einer Warnung vor begrifflicher Verfestigung. Das Dao entzieht sich abschließender Benennung und bleibt dem fixierenden Zugriff voraus.",
+      "philosopherId": null,
+      "topicKey": "dao_ineffable"
+    },
+    {
+      "id": "q_quote_115",
+      "category": "quoteToPhilosopher",
+      "prompt": "„Denn es ist nicht genug, einen guten Kopf zu haben; die Hauptsache ist, ihn richtig anzuwenden.\"",
+      "options": [
+        "Bacon",
+        "Descartes",
+        "Leibniz",
+        "Pascal"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Descartes, Abhandlung über die Methode, Teil I",
+      "explanation": "Descartes setzt hier nicht auf Geistesadel, sondern auf Methode. Entscheidend ist, wie man Urteilskraft ordnet und im Denken diszipliniert einsetzt.",
+      "philosopherId": "descartes",
+      "topicKey": "descartes_good_head"
+    },
+    {
+      "id": "q_quote_201",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Wenn alle Menschen frei geboren sind, wie kommt es dann, dass alle Frauen in die Sklaverei geboren wurden?\"",
+      "options": [
+        "Mary Astell",
+        "Mary Wollstonecraft",
+        "Olympe de Gouges",
+        "Harriet Taylor Mill"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Mary Astell, Some Reflections upon Marriage, Vorwort",
+      "explanation": "Astell dreht die Sprache natürlicher Freiheit gegen die patriarchale Eheordnung. Genau dadurch wird ihre Kritik an politischer und häuslicher Unterwerfung so schärfend.",
+      "philosopherId": null,
+      "topicKey": "astell_marriage_slavery"
+    },
+    {
+      "id": "q_quote_202",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Die Frau wird frei geboren und bleibt dem Manne gleich an Rechten.\"",
+      "options": [
+        "Olympe de Gouges",
+        "Mary Wollstonecraft",
+        "Christine de Pizan",
+        "Anna Julia Cooper"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, Art. I",
+      "explanation": "De Gouges schreibt die Menschenrechtssprache der Revolution bewusst um. Ihr Punkt ist nicht Sonderrecht, sondern universale Gleichberechtigung.",
+      "philosopherId": null,
+      "topicKey": "gouges_rights_of_woman_declaration"
+    },
+    {
+      "id": "q_quote_203",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Politik beruht auf der Tatsache der Pluralität der Menschen.\"",
+      "options": [
+        "Hannah Arendt",
+        "Seyla Benhabib",
+        "Simone de Beauvoir",
+        "Chantal Mouffe"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Hannah Arendt, Was ist Politik?, Fragment 1",
+      "explanation": "Arendt versteht Politik nicht vom Einzelwillen, sondern vom Zwischenraum vieler Verschiedener her. Pluralität ist bei ihr keine Störung, sondern die Bedingung des Politischen.",
+      "philosopherId": "arendt",
+      "topicKey": "arendt_plurality_fragment"
+    },
+    {
+      "id": "q_quote_204",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Ich wäre lieber ein Cyborg als eine Göttin.\"",
+      "options": [
+        "Donna Haraway",
+        "Judith Butler",
+        "Luce Irigaray",
+        "Julia Kristeva"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Donna Haraway, Ein Manifest für Cyborgs, Schluss",
+      "explanation": "Haraway nutzt die Figur des Cyborgs, um starre Gegensätze wie Natur/Kultur oder Frau/Mann aufzubrechen. Der Satz ist deshalb so berühmt, weil er Essenzialismus ironisch unterläuft.",
+      "philosopherId": null,
+      "topicKey": "haraway_cyborg_manifesto"
+    },
+    {
+      "id": "q_quote_205",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Aufmerksamkeit ist die seltenste und reinste Form der Großzügigkeit.\"",
+      "options": [
+        "Simone Weil",
+        "Edith Stein",
+        "Iris Murdoch",
+        "bell hooks"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Simone Weil, \"Betrachtungen über den rechten Gebrauch der Schulstudien im Hinblick auf die Gottesliebe\"",
+      "explanation": "Bei Weil ist Aufmerksamkeit nicht bloß Konzentration, sondern eine ethische Übung des Entgegenkommens. Darin liegt die eigentliche Schönheit des Satzes.",
+      "philosopherId": null,
+      "topicKey": "weil_attention_generosity"
+    },
+    {
+      "id": "q_quote_206",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Liebe ist die außerordentlich schwierige Erkenntnis, dass etwas anderes als man selbst wirklich ist.\"",
+      "options": [
+        "Iris Murdoch",
+        "Philippa Foot",
+        "Hannah Arendt",
+        "Simone de Beauvoir"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Iris Murdoch, Die Souveränität des Guten, \"Die Idee der Vollkommenheit\"",
+      "explanation": "Murdoch versteht Moral als Arbeit am Blick auf die Wirklichkeit. Liebe heißt bei ihr gerade, das Andere nicht dauernd auf das eigene Ego zu reduzieren.",
+      "philosopherId": null,
+      "topicKey": "murdoch_love_reality"
+    },
+    {
+      "id": "q_quote_207",
+      "category": "quoteToPhilosopher",
+      "prompt": "Wem legt Platon im Symposion den Satz \"Eros ist ein großer Daimon\" in den Mund?",
+      "options": [
+        "Diotima von Mantineia",
+        "Aspasia von Milet",
+        "Hypatia von Alexandria",
+        "Aesara von Lucania"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Platon, Symposion 202d",
+      "explanation": "Diotima ist bei Platon die Lehrerin des Sokrates in Liebesdingen. Wichtig ist dabei, sie als literarisch-philosophische Figur des Dialogs zu kennzeichnen.",
+      "philosopherId": null,
+      "topicKey": "diotima_eros_daimon"
+    },
+    {
+      "id": "q_quote_208",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Ich bin das feurige Leben.\"",
+      "options": [
+        "Hildegard von Bingen",
+        "Mechthild von Magdeburg",
+        "Julian of Norwich",
+        "Hadewijch"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Hildegard von Bingen, Liber divinorum operum I, 1",
+      "explanation": "Die Stimme spricht in Hildegards Kosmos als göttliche Lebenskraft, die die Schöpfung durchzieht. Deshalb passen bei ihr Naturbild, Theologie und Anthropologie so eng zusammen.",
+      "philosopherId": null,
+      "topicKey": "hildegard_fiery_life"
+    },
+    {
+      "id": "q_quote_209",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Macht Frauen zu vernünftigen Wesen und freien Bürgerinnen...\"",
+      "options": [
+        "Mary Wollstonecraft",
+        "Mary Astell",
+        "Harriet Taylor Mill",
+        "Olympe de Gouges"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Mary Wollstonecraft, A Vindication of the Rights of Woman, Kap. 12",
+      "explanation": "Wollstonecraft verbindet Bildung, Bürgerschaft und eheliche Beziehungen. Ihr Feminismus will Frauen nicht idealisieren, sondern als voll vernünftige Subjekte ernst nehmen.",
+      "philosopherId": null,
+      "topicKey": "wollstonecraft_rational_citizens"
+    },
+    {
+      "id": "q_quote_210",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Feminismus ist eine Bewegung, die Sexismus, sexistische Ausbeutung und Unterdrückung beenden will.\"",
+      "options": [
+        "bell hooks",
+        "Angela Davis",
+        "Audre Lorde",
+        "Anna Julia Cooper"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "bell hooks, Feminismus für alle, Kap. 1",
+      "explanation": "bell hooks formuliert Feminismus bewusst nicht als Kampf gegen Männer, sondern gegen ein Herrschaftssystem. Darum ist ihre Definition so klar und einladend zugleich.",
+      "philosopherId": null,
+      "topicKey": "hooks_end_sexist_oppression"
+    },
+    {
+      "id": "q_quote_211",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Die Frau hat das Recht, das Schafott zu besteigen; sie muss gleichermaßen das Recht haben, die Tribüne zu besteigen.\"",
+      "options": [
+        "Olympe de Gouges",
+        "Mary Wollstonecraft",
+        "Christine de Pizan",
+        "Angela Davis"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, Art. X",
+      "explanation": "Der Satz legt die Heuchelei einer Politik offen, die Frauen strafen, aber nicht mitsprechen lassen will. Genau diese Symmetrie macht de Gouges' Pointe unvergesslich.",
+      "philosopherId": null,
+      "topicKey": "gouges_rights_of_woman_declaration"
+    },
+    {
+      "id": "q_quote_212",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Der Edle verlangt alles von sich selbst...\"",
+      "options": [
+        "Konfuzius",
+        "Mengzi",
+        "Xunzi",
+        "Mozi"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Konfuzius, Lunyu/Analekten 15.21",
+      "explanation": "Der Satz passt ideal zum konfuzianischen Gedanken der Selbstkultivierung. Moral beginnt hier nicht mit Empörung über andere, sondern mit Arbeit an sich selbst.",
+      "philosopherId": null,
+      "topicKey": "confucius_self_discipline"
+    },
+    {
+      "id": "q_quote_213",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Das höchste Gute ist wie Wasser.\"",
+      "options": [
+        "Laozi",
+        "Zhuangzi",
+        "Mozi",
+        "Wang Yangming"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Laozi, Daodejing, Kap. 8",
+      "explanation": "Wasser ist bei Laozi stark, gerade weil es nicht verhärtet. Das Bild verdichtet sehr schön die daoistische Wertschätzung des Unspektakulären und Nicht-Streitenden.",
+      "philosopherId": null,
+      "topicKey": "laozi_water_goodness"
+    },
+    {
+      "id": "q_quote_214",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Nun weiß ich nicht, ob Dschuang Dschou geträumt hat, dass er ein Schmetterling sei...\"",
+      "options": [
+        "Zhuangzi",
+        "Laozi",
+        "Liezi",
+        "Mengzi"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Zhuangzi, Kap. 2",
+      "explanation": "Der Schmetterlingstraum ist kein bloßes Rätsel, sondern ein Stachel gegen allzu starre Wirklichkeitsbegriffe. Zhuangzi macht damit Perspektivwechsel philosophisch fruchtbar.",
+      "philosopherId": null,
+      "topicKey": "zhuangzi_butterfly_transformations"
+    },
+    {
+      "id": "q_quote_215",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Das Mitleid ist der Anfang der Menschlichkeit, das Gefühl der Scham der Anfang der Rechtschaffenheit...\"",
+      "options": [
+        "Mengzi",
+        "Konfuzius",
+        "Xunzi",
+        "Mozi"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Mengzi 2A6",
+      "explanation": "Mengzi begründet Moral mit den \"Anfängen\" oder Keimen der Tugend. Das ist keine fertige Heiligkeit, sondern ein zartes Potential, das erzogen werden muss.",
+      "philosopherId": null,
+      "topicKey": "mencius_compassion_sprout"
+    },
+    {
+      "id": "q_quote_216",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Was abhängig entstanden ist, nennen wir Leerheit.\"",
+      "options": [
+        "Nagarjuna",
+        "Vasubandhu",
+        "Asanga",
+        "Shankara"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Nagarjuna, Mulamadhyamakakarika 24,18",
+      "explanation": "Nagarjuna trennt Leerheit gerade nicht von der Welt der Beziehungen, sondern denkt beides zusammen. Darin liegt die Raffinesse des Madhyamaka.",
+      "philosopherId": null,
+      "topicKey": "madhyamaka_nagarjuna"
+    },
+    {
+      "id": "q_quote_217",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Wissen und Handeln sind eins.\"",
+      "options": [
+        "Wang Yangming",
+        "Zhu Xi",
+        "Konfuzius",
+        "Xunzi"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Wang Yangming, Chuanxilu",
+      "explanation": "Wang richtet sich gegen bloßes Papierwissen. Wahres Wissen zeigt sich für ihn darin, dass es das Handeln bereits innerlich mitbewegt.",
+      "philosopherId": null,
+      "topicKey": "wang_unity_of_knowing_and_acting"
+    },
+    {
+      "id": "q_quote_218",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Die Natur des Menschen ist böse.\"",
+      "options": [
+        "Xunzi",
+        "Mengzi",
+        "Mozi",
+        "Han Feizi"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Xunzi, Kap. 23",
+      "explanation": "Xunzi will nicht sagen, dass Menschen hoffnungslos seien. Er betont vielmehr, dass Bildung, Ritual und bewusste Formung notwendig sind.",
+      "philosopherId": null,
+      "topicKey": "xunzi_human_nature_bad"
+    },
+    {
+      "id": "q_quote_219",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Stell dir einen Menschen vor, der auf einmal vollständig erschaffen wurde und ohne Sinneseindruck im Raum schwebt...\"",
+      "options": [
+        "Avicenna",
+        "Descartes",
+        "Al-Ghazali",
+        "Maimonides"
+      ],
+      "correctIndex": 0,
+      "difficulty": 5,
+      "attribution": "Avicenna, Kitab al-Shifa, De anima I, 1",
+      "explanation": "Das Gedankenexperiment des \"schwebenden Menschen\" soll zeigen, dass Selbstbewusstsein nicht einfach aus der Wahrnehmung des Körpers stammt. Genau darum ist es in der Philosophie des Geistes bis heute berühmt.",
+      "philosopherId": null,
+      "topicKey": "avicenna_floating_person"
+    },
+    {
+      "id": "q_quote_220",
+      "category": "quoteToPhilosopher",
+      "prompt": "\"Macht und Gewalt sind Gegensätze.\"",
+      "options": [
+        "Hannah Arendt",
+        "Chantal Mouffe",
+        "Max Weber",
+        "Michel Foucault"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Hannah Arendt, Macht und Gewalt",
+      "explanation": "Arendt trennt Macht und Gewalt bewusst voneinander. Macht entsteht für sie aus gemeinsamem Handeln, während Gewalt oft gerade den Zusammenbruch solcher Macht anzeigt.",
+      "philosopherId": "arendt",
+      "topicKey": "arendt_power_violence"
+    },
+    {
+      "id": "q_work_001",
+      "category": "workToAuthor",
+      "prompt": "„Kritik der reinen Vernunft\"",
+      "options": [
+        "Hegel",
+        "Fichte",
+        "Kant",
+        "Schopenhauer"
+      ],
+      "correctIndex": 2,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Kants Hauptwerk von 1781 — die transzendentale Untersuchung der Bedingungen der Erkenntnis.",
+      "philosopherId": "kant",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_002",
+      "category": "workToAuthor",
+      "prompt": "„Sein und Zeit\"",
+      "options": [
+        "Husserl",
+        "Heidegger",
+        "Jaspers",
+        "Sartre"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Heideggers Hauptwerk (1927) — Fundamentalontologie mit der Daseinsanalytik im Zentrum.",
+      "philosopherId": "heidegger",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_003",
+      "category": "workToAuthor",
+      "prompt": "„Das Sein und das Nichts\"",
+      "options": [
+        "Heidegger",
+        "Sartre",
+        "Camus",
+        "Merleau-Ponty"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Sartres existenzialistisches Hauptwerk (1943) — phänomenologische Ontologie der Freiheit.",
+      "philosopherId": "sartre",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_004",
+      "category": "workToAuthor",
+      "prompt": "„Die Welt als Wille und Vorstellung\"",
+      "options": [
+        "Schopenhauer",
+        "Nietzsche",
+        "Hartmann",
+        "Schelling"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Schopenhauers Hauptwerk (1819) — die Welt als blinder Wille jenseits der Erscheinung.",
+      "philosopherId": "schopenhauer",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_005",
+      "category": "workToAuthor",
+      "prompt": "„Phänomenologie des Geistes\"",
+      "options": [
+        "Husserl",
+        "Hegel",
+        "Schelling",
+        "Fichte"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Hegels Werk (1807) — der dialektische Bildungsweg des Bewusstseins zum absoluten Wissen.",
+      "philosopherId": "hegel",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_006",
+      "category": "workToAuthor",
+      "prompt": "„Vita activa\"",
+      "options": [
+        "Adorno",
+        "Arendt",
+        "Habermas",
+        "Marcuse"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Arendts Hauptwerk (1958) — Unterscheidung von Arbeiten, Herstellen und Handeln.",
+      "philosopherId": "arendt",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_007",
+      "category": "workToAuthor",
+      "prompt": "„Eine Theorie der Gerechtigkeit\"",
+      "options": [
+        "Nozick",
+        "Rawls",
+        "Dworkin",
+        "Sen"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Rawls' Hauptwerk (1971) — Gerechtigkeit als Fairness im „Schleier des Nichtwissens\".",
+      "philosopherId": "rawls",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_008",
+      "category": "workToAuthor",
+      "prompt": "„Das Unbehagen der Geschlechter\"",
+      "options": [
+        "Beauvoir",
+        "Butler",
+        "Irigaray",
+        "Kristeva"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Butlers „Gender Trouble\" (1990) — die Performativitätsthese.",
+      "philosopherId": "butler",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_009",
+      "category": "workToAuthor",
+      "prompt": "„Der Fürst\" (Il Principe)",
+      "options": [
+        "Hobbes",
+        "Bodin",
+        "Machiavelli",
+        "Rousseau"
+      ],
+      "correctIndex": 2,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Machiavellis politisches Hauptwerk (1513) — bahnbrechend in seiner Trennung von Politik und Moral.",
+      "philosopherId": "machiavelli",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_010",
+      "category": "workToAuthor",
+      "prompt": "„Logisch-Philosophische Abhandlung\"",
+      "options": [
+        "Russell",
+        "Wittgenstein",
+        "Carnap",
+        "Frege"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Wittgensteins „Tractatus\" (1921) — die Bildtheorie der Sprache.",
+      "philosopherId": "wittgenstein",
+      "topicKey": "tractatus"
+    },
+    {
+      "id": "q_work_011",
+      "category": "workToAuthor",
+      "prompt": "„Dialektik der Aufklärung\"",
+      "options": [
+        "Adorno & Horkheimer",
+        "Habermas & Apel",
+        "Marcuse & Fromm",
+        "Benjamin & Bloch"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Adorno und Horkheimer (1944) — Aufklärung schlägt in Mythos zurück.",
+      "philosopherId": "adorno",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_012",
+      "category": "workToAuthor",
+      "prompt": "„Die Konstruktion der gesellschaftlichen Wirklichkeit\"",
+      "options": [
+        "Berger & Luckmann",
+        "Searle",
+        "Bourdieu",
+        "Habermas"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Berger und Luckmann (1966) — wissenssoziologisches Standardwerk zur sozialen Konstruktion.",
+      "philosopherId": null,
+      "topicKey": null
+    },
+    {
+      "id": "q_work_013",
+      "category": "workToAuthor",
+      "prompt": "„Bekenntnisse\" (Confessiones)",
+      "options": [
+        "Augustinus",
+        "Thomas von Aquin",
+        "Anselm von Canterbury",
+        "Boethius"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Augustinus' Selbstreflexion (~398) — Urtext der inneren Autobiografie.",
+      "philosopherId": "augustinus",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_014",
+      "category": "workToAuthor",
+      "prompt": "„Selbstbetrachtungen\" (Ta eis heauton)",
+      "options": [
+        "Seneca",
+        "Epiktet",
+        "Marcus Aurelius",
+        "Cicero"
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Marc Aurels Tagebuch — stoische Selbstgespräche eines Kaisers.",
+      "philosopherId": "marcus_aurelius",
+      "topicKey": null
+    },
+    {
+      "id": "q_work_101",
+      "category": "workToAuthor",
+      "prompt": "„Leviathan\"",
+      "options": [
+        "Thomas Hobbes",
+        "John Locke",
+        "Jean-Jacques Rousseau",
+        "Niccolò Machiavelli"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Hobbes entwirft hier seine Theorie souveräner Staatsgewalt als Antwort auf Bürgerkrieg und Angst. Frieden entsteht für ihn nur durch eine überlegene politische Macht.",
+      "philosopherId": null,
+      "topicKey": "hobbes_leviathan"
+    },
+    {
+      "id": "q_work_102",
+      "category": "workToAuthor",
+      "prompt": "„Das andere Geschlecht\"",
+      "options": [
+        "Beauvoir",
+        "Butler",
+        "Wollstonecraft",
+        "Arendt"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Beauvoir verbindet Existenzialismus, Sozialanalyse und Geschlechterkritik. Das Werk wurde zu einem Bezugspunkt der feministischen Theorie des 20. Jahrhunderts.",
+      "philosopherId": "beauvoir",
+      "topicKey": "beauvoir_second_sex"
+    },
+    {
+      "id": "q_work_106",
+      "category": "workToAuthor",
+      "prompt": "„Über die Freiheit\"",
+      "options": [
+        "Mill",
+        "Bentham",
+        "Benjamin Constant",
+        "Tocqueville"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Mills klassischer Liberalismus verteidigt individuelle Selbstbestimmung gegen sozialen Konformitätsdruck. Zentral ist sein berühmtes Schadensprinzip.",
+      "philosopherId": "mill",
+      "topicKey": "mill_liberty"
+    },
+    {
+      "id": "q_work_107",
+      "category": "workToAuthor",
+      "prompt": "„Mūlamadhyamakakārikā\"",
+      "options": [
+        "Nāgārjuna",
+        "Vasubandhu",
+        "Śaṅkara",
+        "Dignāga"
+      ],
+      "correctIndex": 0,
+      "difficulty": 5,
+      "attribution": null,
+      "explanation": "Das Grundtext der Madhyamaka-Schule entfaltet die Lehre der Leerheit. Nāgārjuna kritisiert damit jede Vorstellung eigenständig bestehender Wesenheiten.",
+      "philosopherId": null,
+      "topicKey": "madhyamaka_nagarjuna"
+    },
+    {
+      "id": "q_work_108",
+      "category": "workToAuthor",
+      "prompt": "„Eine Verteidigung der Rechte der Frau\"",
+      "options": [
+        "Mary Wollstonecraft",
+        "Mary Astell",
+        "Harriet Taylor Mill",
+        "Émilie du Châtelet"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Wollstonecraft antwortet auf die Geschlechterordnung der Aufklärung mit einem Bildungsprogramm der Autonomie. Das Buch ist ein Schlüsseltext des frühen Feminismus.",
+      "philosopherId": null,
+      "topicKey": "wollstonecraft_rights_of_woman"
+    },
+    {
+      "id": "q_work_109",
+      "category": "workToAuthor",
+      "prompt": "„Die offene Gesellschaft und ihre Feinde\"",
+      "options": [
+        "Popper",
+        "Arendt",
+        "Isaiah Berlin",
+        "Hayek"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Popper verteidigt hier kritischen Rationalismus auch politisch. Berühmt ist seine scharfe, bis heute umstrittene Kritik an Platon, Hegel und Marx.",
+      "philosopherId": "popper",
+      "topicKey": "popper_open_society"
+    },
+    {
+      "id": "q_work_201",
+      "category": "workToAuthor",
+      "prompt": "Wer verfasste A Serious Proposal to the Ladies?",
+      "options": [
+        "Damaris Cudworth Masham",
+        "Mary Astell",
+        "Bathsua Makin",
+        "Mary Wollstonecraft"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Mary Astell, A Serious Proposal to the Ladies, 1694",
+      "explanation": "Astell verbindet in dieser Schrift Frauenbildung mit moralischer und geistiger Selbstständigkeit. Gerade deshalb gilt sie als Schlüsseltext früher feministischer Philosophie.",
+      "philosopherId": null,
+      "topicKey": "astell_serious_proposal"
+    },
+    {
+      "id": "q_work_202",
+      "category": "workToAuthor",
+      "prompt": "Von wem stammt The Principles of the Most Ancient and Modern Philosophy?",
+      "options": [
+        "Anne Conway",
+        "Margaret Cavendish",
+        "Elisabeth von der Pfalz",
+        "Catharine Trotter Cockburn"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Anne Conway, The Principles of the Most Ancient and Modern Philosophy, 1690",
+      "explanation": "Conways Hauptwerk entwickelt eine lebendige, nicht-dualistische Metaphysik. Gerade ihr Angriff auf die Vorstellung toter Materie macht das Buch so originell.",
+      "philosopherId": null,
+      "topicKey": "conway_principles_monism"
+    },
+    {
+      "id": "q_work_203",
+      "category": "workToAuthor",
+      "prompt": "Wer schrieb Observations upon Experimental Philosophy?",
+      "options": [
+        "Margaret Cavendish",
+        "Anne Conway",
+        "Emilie du Chatelet",
+        "Damaris Cudworth Masham"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Margaret Cavendish, Observations upon Experimental Philosophy, 1666",
+      "explanation": "Cavendish nutzt das Werk, um die neue Experimentalwissenschaft kritisch zu befragen. Sie denkt Natur nicht als tote Maschine, sondern als selbstbewegte Materie.",
+      "philosopherId": null,
+      "topicKey": "cavendish_observations_experimental_philosophy"
+    },
+    {
+      "id": "q_work_204",
+      "category": "workToAuthor",
+      "prompt": "Wer ist die Autorin von Institutions de Physique?",
+      "options": [
+        "Emilie du Chatelet",
+        "Sophie Germain",
+        "Anne Conway",
+        "Laura Bassi"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Emilie du Chatelet, Institutions de Physique, 1740",
+      "explanation": "Du Chatelet verbindet in diesem Werk Metaphysik und Physik auf bemerkenswert eigenständige Weise. Es ist weit mehr als nur ein Kommentar zu Newton.",
+      "philosopherId": null,
+      "topicKey": "duchatelet_institutions_physics"
+    },
+    {
+      "id": "q_work_205",
+      "category": "workToAuthor",
+      "prompt": "Von wem stammt Das Buch von der Stadt der Frauen?",
+      "options": [
+        "Christine de Pizan",
+        "Hildegard von Bingen",
+        "Tullia d'Aragona",
+        "Moderata Fonte"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Christine de Pizan, Le Livre de la Cite des Dames, 1405",
+      "explanation": "Christine antwortet mit diesem Werk auf frauenfeindliche Traditionen, indem sie eine symbolische Stadt aus weiblichen Beispielen errichtet. Das ist zugleich Verteidigung und Neuschreibung kulturellen Gedächtnisses.",
+      "philosopherId": null,
+      "topicKey": "pizan_city_of_ladies"
+    },
+    {
+      "id": "q_work_206",
+      "category": "workToAuthor",
+      "prompt": "Wer schrieb den Dialogue on the Infinity of Love?",
+      "options": [
+        "Tullia d'Aragona",
+        "Leone Ebreo",
+        "Pietro Bembo",
+        "Baldassare Castiglione"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Tullia d'Aragona, Dialogo della infinita d'amore, 1547",
+      "explanation": "Tullia d'Aragona interveniert damit in die Renaissance-Debatte über Liebe, Begehren und Geschlechterrollen. Gerade die philosophische Souveränität ihrer Stimme ist hier bemerkenswert.",
+      "philosopherId": null,
+      "topicKey": "tullia_infinity_of_love"
+    },
+    {
+      "id": "q_work_207",
+      "category": "workToAuthor",
+      "prompt": "Wer verfasste die Erklärung der Rechte der Frau und Bürgerin?",
+      "options": [
+        "Olympe de Gouges",
+        "Mary Wollstonecraft",
+        "Simone de Beauvoir",
+        "Nicolas de Condorcet"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, 1791",
+      "explanation": "De Gouges schreibt die revolutionäre Rechte-Sprache um, damit Frauen nicht länger unsichtbar bleiben. Das macht den Text bis heute so lehrreich.",
+      "philosopherId": null,
+      "topicKey": "gouges_rights_of_woman_declaration"
+    },
+    {
+      "id": "q_work_208",
+      "category": "workToAuthor",
+      "prompt": "Von wem stammt The Enfranchisement of Women?",
+      "options": [
+        "Harriet Taylor Mill",
+        "Harriet Martineau",
+        "Barbara Bodichon",
+        "Millicent Garrett Fawcett"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Harriet Taylor Mill, The Enfranchisement of Women, 1851",
+      "explanation": "Der Essay gehört zu den wichtigsten frühen Texten für politisches Frauenstimmrecht im englischsprachigen Raum. Harriet Taylor Mill ist hier keineswegs nur Randfigur im Schatten Mills.",
+      "philosopherId": null,
+      "topicKey": "harriet_taylor_enfranchisement"
+    },
+    {
+      "id": "q_work_209",
+      "category": "workToAuthor",
+      "prompt": "Wer schrieb How to Observe Morals and Manners?",
+      "options": [
+        "Harriet Martineau",
+        "Anna Julia Cooper",
+        "Harriet Taylor Mill",
+        "Jane Addams"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Harriet Martineau, How to Observe Morals and Manners, 1838",
+      "explanation": "Martineau denkt Beobachtung nicht als neutralen Blick von oben, sondern als methodisch reflektierte Sozialforschung. Das wirkt erstaunlich modern.",
+      "philosopherId": null,
+      "topicKey": "martineau_observe_morals_manners"
+    },
+    {
+      "id": "q_work_210",
+      "category": "workToAuthor",
+      "prompt": "Von wem stammt A Voice from the South?",
+      "options": [
+        "Anna Julia Cooper",
+        "Ida B. Wells",
+        "bell hooks",
+        "Sojourner Truth"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Anna Julia Cooper, A Voice from the South, 1892",
+      "explanation": "Coopers Buch gilt als früher Grundtext schwarzen feministischen Denkens. Es verbindet Bildungsfrage, Demokratie und Rassismuskritik in ungewöhnlicher Schärfe.",
+      "philosopherId": null,
+      "topicKey": "cooper_voice_from_south"
+    },
+    {
+      "id": "q_work_211",
+      "category": "workToAuthor",
+      "prompt": "Wer verfasste Philosophy in a New Key?",
+      "options": [
+        "Susanne Langer",
+        "Ernst Cassirer",
+        "Hannah Arendt",
+        "Simone Weil"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Susanne Langer, Philosophy in a New Key, 1942",
+      "explanation": "Langer macht Symbolisierung zum Schlüssel für Verstehen von Kunst, Mythos und Denken. Gerade mit dieser Weitung wurde das Buch so einflussreich.",
+      "philosopherId": null,
+      "topicKey": "langer_new_key_symbolism"
+    },
+    {
+      "id": "q_work_212",
+      "category": "workToAuthor",
+      "prompt": "Wer schrieb Epistemic Injustice?",
+      "options": [
+        "Miranda Fricker",
+        "Sally Haslanger",
+        "Susan Haack",
+        "Onora O'Neill"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Miranda Fricker, Epistemic Injustice, 2007",
+      "explanation": "Frickers Buch hat einen ganzen Debattenstrang in der Gegenwartsphilosophie sichtbar gemacht. Es zeigt, dass auch Erkennen und Zeugenschaft Gerechtigkeitsfragen enthalten.",
+      "philosopherId": null,
+      "topicKey": "fricker_epistemic_injustice"
+    },
+    {
+      "id": "q_work_213",
+      "category": "workToAuthor",
+      "prompt": "Von wem stammt Critique of Forms of Life?",
+      "options": [
+        "Rahel Jaeggi",
+        "Nancy Fraser",
+        "Judith Butler",
+        "Chantal Mouffe"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Rahel Jaeggi, Kritik von Lebensformen / Critique of Forms of Life",
+      "explanation": "Jaeggi will zeigen, dass Lebensformen nicht bloß Geschmackssache sind, sondern rational kritisierbar. Darin liegt der aktuelle Reiz ihrer Sozialphilosophie.",
+      "philosopherId": null,
+      "topicKey": "jaeggi_forms_of_life"
+    },
+    {
+      "id": "q_work_214",
+      "category": "workToAuthor",
+      "prompt": "Wer verfasste die Upadesasahasri?",
+      "options": [
+        "Shankara",
+        "Nagarjuna",
+        "Vasubandhu",
+        "Ramanuja"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Shankara, Upadesasahasri",
+      "explanation": "Die Upadesasahasri ist ein klassischer Text des Advaita Vedanta. Sie entfaltet den Weg zur Einsicht in die Nicht-Zweiheit von Selbst und absoluter Wirklichkeit.",
+      "philosopherId": null,
+      "topicKey": "shankara_upadesasahasri"
+    },
+    {
+      "id": "q_era_001",
+      "category": "philosopherToEra",
+      "prompt": "Immanuel Kant",
+      "options": [
+        "Renaissance",
+        "Aufklärung",
+        "19. Jahrhundert",
+        "Antike"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Kant (1724–1804) gilt als der Höhepunkt der Aufklärungsphilosophie.",
+      "philosopherId": "kant",
+      "topicKey": null
+    },
+    {
+      "id": "q_era_002",
+      "category": "philosopherToEra",
+      "prompt": "Thomas von Aquin",
+      "options": [
+        "Antike",
+        "Mittelalter",
+        "Renaissance",
+        "Aufklärung"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Thomas (1225–1274) — zentraler Denker der Hochscholastik.",
+      "philosopherId": "aquin",
+      "topicKey": null
+    },
+    {
+      "id": "q_era_003",
+      "category": "philosopherToEra",
+      "prompt": "Hannah Arendt",
+      "options": [
+        "19. Jahrhundert",
+        "Moderne / Postmoderne",
+        "Aufklärung",
+        "Zeitgenössisch"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Arendt (1906–1975) wirkte zur Mitte des 20. Jahrhunderts.",
+      "philosopherId": "arendt",
+      "topicKey": null
+    },
+    {
+      "id": "q_era_004",
+      "category": "philosopherToEra",
+      "prompt": "Niccolò Machiavelli",
+      "options": [
+        "Mittelalter",
+        "Renaissance",
+        "Aufklärung",
+        "Antike"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Machiavelli (1469–1527) ist eine Schlüsselfigur der italienischen Renaissance.",
+      "philosopherId": "machiavelli",
+      "topicKey": null
+    },
+    {
+      "id": "q_era_005",
+      "category": "philosopherToEra",
+      "prompt": "Søren Kierkegaard",
+      "options": [
+        "Aufklärung",
+        "19. Jahrhundert",
+        "Moderne / Postmoderne",
+        "Renaissance"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Kierkegaard (1813–1855) — der dänische Vater der Existenzphilosophie.",
+      "philosopherId": "kierkegaard",
+      "topicKey": null
+    },
+    {
+      "id": "q_era_101",
+      "category": "philosopherToEra",
+      "prompt": "Hypatia",
+      "options": [
+        "Antike & Spätantike",
+        "Mittelalter & Renaissance",
+        "Aufklärung",
+        "Moderne / Postmoderne"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Hypatia wirkte im Alexandria des späten 4. und frühen 5. Jahrhunderts. Sie steht exemplarisch für den gelehrten Übergang von klassischer Antike zur Spätantike.",
+      "philosopherId": null,
+      "topicKey": "hypatia_era"
+    },
+    {
+      "id": "q_era_102",
+      "category": "philosopherToEra",
+      "prompt": "Avicenna",
+      "options": [
+        "Antike & Spätantike",
+        "Mittelalter & Renaissance",
+        "Aufklärung",
+        "19. Jahrhundert"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Avicenna, arabisch Ibn Sīnā, wirkte im 10. und 11. Jahrhundert. Seine Metaphysik und Psychologie prägten die islamische wie die lateinische Scholastik tief.",
+      "philosopherId": null,
+      "topicKey": "avicenna_era"
+    },
+    {
+      "id": "q_era_103",
+      "category": "philosopherToEra",
+      "prompt": "Marcus Aurelius",
+      "options": [
+        "Antike & Spätantike",
+        "Mittelalter & Renaissance",
+        "19. Jahrhundert",
+        "Moderne / Postmoderne"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Marc Aurel ist römischer Kaiser und stoischer Philosoph des 2. Jahrhunderts. Seine Selbstbetrachtungen gehören klar in die Antike.",
+      "philosopherId": "marcus_aurelius",
+      "topicKey": "marcus_aurelius_era"
+    },
+    {
+      "id": "q_era_105",
+      "category": "philosopherToEra",
+      "prompt": "Wittgenstein",
+      "options": [
+        "Aufklärung",
+        "19. Jahrhundert",
+        "Moderne / Postmoderne",
+        "Zeitgenössisch"
+      ],
+      "correctIndex": 2,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Wittgenstein prägt die Philosophie des 20. Jahrhunderts. Sein Weg führt vom Tractatus zur Sprachspielanalyse der späten Schriften.",
+      "philosopherId": "wittgenstein",
+      "topicKey": "wittgenstein_language_games"
+    },
+    {
+      "id": "q_era_107",
+      "category": "philosopherToEra",
+      "prompt": "Butler",
+      "options": [
+        "Moderne / Postmoderne",
+        "Zeitgenössisch",
+        "Aufklärung",
+        "19. Jahrhundert"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Judith Butler ist eine lebende Gegenwartsphilosophin. Ihre Arbeiten zu Gender, Sprache und Politik gehören in den zeitgenössischen Debattenraum.",
+      "philosopherId": "butler",
+      "topicKey": "butler_gender_performativity"
+    },
+    {
+      "id": "q_era_108",
+      "category": "philosopherToEra",
+      "prompt": "Nussbaum",
+      "options": [
+        "Zeitgenössisch",
+        "Moderne / Postmoderne",
+        "Aufklärung",
+        "19. Jahrhundert"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Martha Nussbaum ist eine zentrale zeitgenössische Philosophin. Sie verbindet antike Ethik, politische Philosophie und den Fähigkeitenansatz.",
+      "philosopherId": "nussbaum",
+      "topicKey": "nussbaum_era"
+    },
+    {
+      "id": "q_era_201",
+      "category": "philosopherToEra",
+      "prompt": "Welcher Epoche wird Hypatia am ehesten zugeordnet?",
+      "options": [
+        "Klassische Antike",
+        "Spätantike",
+        "Hochmittelalter",
+        "Frühe Neuzeit"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Hypatia von Alexandria, ca. 355/370-415 n. Chr.",
+      "explanation": "Hypatia wirkte im spätantiken Alexandria und steht für eine letzte blühende Phase antiker Gelehrsamkeit. Gerade ihr später Kontext ist philosophisch wichtig.",
+      "philosopherId": null,
+      "topicKey": "hypatia_late_antique_alexandria"
+    },
+    {
+      "id": "q_era_202",
+      "category": "philosopherToEra",
+      "prompt": "In welche Epoche gehört Diotima von Mantineia als literarisch-philosophische Figur bei Platon?",
+      "options": [
+        "Vorsokratik",
+        "Klassische Antike",
+        "Spätantike",
+        "Hellenismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Platon, Symposion; Rahmen des 5./4. Jh. v. Chr.",
+      "explanation": "Diotima gehört als Figur in den Horizont der klassischen griechischen Antike. Gerade im Symposion wird sie zur philosophischen Autorität über Eros.",
+      "philosopherId": null,
+      "topicKey": "diotima_symposium_figure_era"
+    },
+    {
+      "id": "q_era_203",
+      "category": "philosopherToEra",
+      "prompt": "Aesara von Lucania wird meist welcher Epoche zugeordnet?",
+      "options": [
+        "Klassische Antike",
+        "Hellenismus",
+        "Spätantike",
+        "Hochmittelalter"
+      ],
+      "correctIndex": 1,
+      "difficulty": 5,
+      "attribution": "Aesara von Lucania, zugeschriebener pythagoreischer Fragmenttext",
+      "explanation": "Aesara wird gewöhnlich im pythagoreischen Kontext der spätklassischen bis hellenistischen Antike verortet. Ihre Überlieferung ist schmal, aber philosophisch aufschlussreich.",
+      "philosopherId": null,
+      "topicKey": "aesara_hellenistic_pythagorean"
+    },
+    {
+      "id": "q_era_204",
+      "category": "philosopherToEra",
+      "prompt": "Makrina die Jüngere gehört in welche Epoche?",
+      "options": [
+        "Klassische Antike",
+        "Spätantike",
+        "Hochmittelalter",
+        "Renaissance"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Makrina die Jüngere, ca. 327-379",
+      "explanation": "Makrina ist eine Gestalt der christlichen Spätantike. In Gregors Dialog tritt sie als philosophische Lehrerin über Seele und Auferstehung hervor.",
+      "philosopherId": null,
+      "topicKey": "macrina_late_antiquity_dialogue"
+    },
+    {
+      "id": "q_era_205",
+      "category": "philosopherToEra",
+      "prompt": "Welcher Epoche ist Hildegard von Bingen zuzuordnen?",
+      "options": [
+        "Spätantike",
+        "Hochmittelalter",
+        "Renaissance",
+        "Aufklärung"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Hildegard von Bingen, 1098-1179",
+      "explanation": "Hildegard ist eine Schlüsselgestalt des 12. Jahrhunderts. Ihre Werke stehen mitten im intellektuellen und theologischen Leben des Hochmittelalters.",
+      "philosopherId": null,
+      "topicKey": "hildegard_high_middle_ages"
+    },
+    {
+      "id": "q_era_206",
+      "category": "philosopherToEra",
+      "prompt": "Elisabeth von der Pfalz gehört philosophisch in welche Epoche?",
+      "options": [
+        "Renaissance",
+        "Frühe Neuzeit",
+        "19. Jahrhundert",
+        "20. Jahrhundert"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Elisabeth von der Pfalz, 1618-1680",
+      "explanation": "Elisabeth gehört ganz in die Debatten der frühen Neuzeit. Ihre Korrespondenz mit Descartes ist dafür ein besonders schönes Beispiel.",
+      "philosopherId": null,
+      "topicKey": "elisabeth_early_modern_era"
+    },
+    {
+      "id": "q_era_207",
+      "category": "philosopherToEra",
+      "prompt": "Anna Julia Cooper ist vor allem eine Denkerin welchen Jahrhunderts?",
+      "options": [
+        "Aufklärung",
+        "19. Jahrhundert",
+        "20. Jahrhundert",
+        "Gegenwart"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Anna Julia Cooper, 1858-1964; A Voice from the South, 1892",
+      "explanation": "Coopers grundlegende philosophisch-politische Interventionen entstehen im ausgehenden 19. Jahrhundert. Gerade dort wird ihre Verbindung von Bildung, Race und Geschlecht sichtbar.",
+      "philosopherId": null,
+      "topicKey": "cooper_nineteenth_century"
+    },
+    {
+      "id": "q_era_208",
+      "category": "philosopherToEra",
+      "prompt": "Edith Stein wird welcher Epoche zugeordnet?",
+      "options": [
+        "19. Jahrhundert",
+        "20. Jahrhundert",
+        "Gegenwart",
+        "Frühe Neuzeit"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Edith Stein, 1891-1942",
+      "explanation": "Stein gehört in die dichte philosophische Landschaft des 20. Jahrhunderts. Ihre Arbeit verbindet Phänomenologie, Anthropologie und später auch Metaphysik.",
+      "philosopherId": null,
+      "topicKey": "stein_twentieth_century"
+    },
+    {
+      "id": "q_era_209",
+      "category": "philosopherToEra",
+      "prompt": "Nishida Kitaro ist philosophisch vor allem eine Figur welcher Epoche?",
+      "options": [
+        "19. Jahrhundert",
+        "20. Jahrhundert",
+        "Gegenwart",
+        "Edo-Zeit"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Nishida Kitaro, 1870-1945",
+      "explanation": "Nishida ist ein moderner japanischer Philosoph des 20. Jahrhunderts und Gründerfigur der Kyoto-Schule. Genau darin liegt seine transkulturelle Bedeutung.",
+      "philosopherId": null,
+      "topicKey": "nishida_twentieth_century"
+    },
+    {
+      "id": "q_era_210",
+      "category": "philosopherToEra",
+      "prompt": "Wang Yangming gehört historisch am besten wohin?",
+      "options": [
+        "Antike in China",
+        "Mittelalter in Europa",
+        "Frühe Neuzeit in China",
+        "20. Jahrhundert in Japan"
+      ],
+      "correctIndex": 2,
+      "difficulty": 3,
+      "attribution": "Wang Yangming, 1472-1529",
+      "explanation": "Wang Yangming ist ein Denker der Ming-Zeit und damit der chinesischen Frühen Neuzeit. Seine Lehre steht im Kontext des Neo-Konfuzianismus.",
+      "philosopherId": null,
+      "topicKey": "wang_ming_early_modern_china"
+    },
+    {
+      "id": "q_concept_001",
+      "category": "conceptToSchool",
+      "prompt": "Kategorischer Imperativ",
+      "options": [
+        "Utilitarismus",
+        "Deontologische Ethik",
+        "Tugendethik",
+        "Kontraktualismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Kants kategorischer Imperativ ist Grundbegriff der deontologischen Ethik — Pflicht statt Folgen.",
+      "philosopherId": "kant",
+      "topicKey": null
+    },
+    {
+      "id": "q_concept_002",
+      "category": "conceptToSchool",
+      "prompt": "Ataraxie",
+      "options": [
+        "Stoa",
+        "Epikureismus",
+        "Skeptizismus",
+        "Mehrere"
+      ],
+      "correctIndex": 3,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Ataraxie (Seelenruhe) ist ein Kernbegriff in Stoa, Epikureismus *und* pyrrhonischer Skepsis — wenn auch mit unterschiedlichen Wegen dorthin.",
+      "philosopherId": null,
+      "topicKey": null
+    },
+    {
+      "id": "q_concept_003",
+      "category": "conceptToSchool",
+      "prompt": "Performativität",
+      "options": [
+        "Phänomenologie",
+        "Gender Studies / Poststrukturalismus",
+        "Analytische Philosophie",
+        "Pragmatismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Butlers Begriff für die wiederholte Inszenierung, durch die Geschlecht überhaupt erst entsteht.",
+      "philosopherId": "butler",
+      "topicKey": null
+    },
+    {
+      "id": "q_concept_004",
+      "category": "conceptToSchool",
+      "prompt": "Falsifikation",
+      "options": [
+        "Pragmatismus",
+        "Kritischer Rationalismus",
+        "Logischer Positivismus",
+        "Hermeneutik"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Poppers Kriterium: nur Theorien, die scheitern *könnten*, sind wissenschaftlich.",
+      "philosopherId": "popper",
+      "topicKey": null
+    },
+    {
+      "id": "q_concept_005",
+      "category": "conceptToSchool",
+      "prompt": "Diskursethik",
+      "options": [
+        "Frankfurter Schule",
+        "Phänomenologie",
+        "Tugendethik",
+        "Vertragstheorie"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Habermas' Diskursethik — Normgeltung nur, was alle Betroffenen in idealer Sprechsituation zustimmen könnten.",
+      "philosopherId": "habermas",
+      "topicKey": null
+    },
+    {
+      "id": "q_concept_006",
+      "category": "conceptToSchool",
+      "prompt": "Schleier des Nichtwissens",
+      "options": [
+        "Utilitarismus",
+        "Kontraktualismus",
+        "Libertarismus",
+        "Kommunitarismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Rawls' Gedankenexperiment für faire Prinzipien — moderner Kontraktualismus.",
+      "philosopherId": "rawls",
+      "topicKey": null
+    },
+    {
+      "id": "q_concept_007",
+      "category": "conceptToSchool",
+      "prompt": "Dasein",
+      "options": [
+        "Phänomenologie",
+        "Hermeneutik",
+        "Existenzphilosophie / Fundamentalontologie",
+        "Idealismus"
+      ],
+      "correctIndex": 2,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Heideggers Begriff für jenes Seiende, das die Frage nach dem Sein selbst stellt — also den Menschen.",
+      "philosopherId": "heidegger",
+      "topicKey": "heidegger_dasein"
+    },
+    {
+      "id": "q_concept_101",
+      "category": "conceptToSchool",
+      "prompt": "Epoché",
+      "options": [
+        "Hermeneutik",
+        "Phänomenologie",
+        "Stoizismus",
+        "Pragmatismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Die Epoché bezeichnet das Einklammern naiver Seinsannahmen. So soll die Phänomenologie freilegen, wie Dinge im Bewusstsein erscheinen.",
+      "philosopherId": null,
+      "topicKey": "epoche_phenomenology"
+    },
+    {
+      "id": "q_concept_102",
+      "category": "conceptToSchool",
+      "prompt": "différance",
+      "options": [
+        "Strukturalismus",
+        "Poststrukturalismus",
+        "Logischer Positivismus",
+        "Existenzialismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Derridas Kunstwort verbindet Verschiebung und Unterscheidung. Es zeigt, dass Bedeutung nie vollständig präsent ist, sondern aus Differenzen entsteht.",
+      "philosopherId": null,
+      "topicKey": "derrida_differance"
+    },
+    {
+      "id": "q_concept_103",
+      "category": "conceptToSchool",
+      "prompt": "Utilitätsprinzip",
+      "options": [
+        "Utilitarismus",
+        "Deontologische Ethik",
+        "Tugendethik",
+        "Stoizismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": null,
+      "explanation": "Im Utilitarismus entscheidet letztlich die Bilanz von Wohl und Leid. Moralisch zählt, welche Handlung die besten Folgen für alle Betroffenen hat.",
+      "philosopherId": null,
+      "topicKey": "utilitarian_principle"
+    },
+    {
+      "id": "q_concept_106",
+      "category": "conceptToSchool",
+      "prompt": "Sprachspiel",
+      "options": [
+        "Analytische Philosophie",
+        "Lebensphilosophie",
+        "Hermeneutik",
+        "Stoizismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Der Begriff markiert bei Wittgenstein den praktischen, regelgebundenen Gebrauch von Sprache. Damit verschiebt sich Analyse von inneren Bedeutungen zu öffentlichen Vollzügen.",
+      "philosopherId": null,
+      "topicKey": "wittgenstein_language_games"
+    },
+    {
+      "id": "q_concept_107",
+      "category": "conceptToSchool",
+      "prompt": "wu wei",
+      "options": [
+        "Konfuzianismus",
+        "Daoismus",
+        "Mohismus",
+        "Legalismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Wu wei meint nicht Untätigkeit, sondern nicht-erzwingendes Handeln. Im Daoismus gilt gerade diese Gelassenheit als tiefste Weise stimmigen Handelns.",
+      "philosopherId": null,
+      "topicKey": "daoist_wu_wei"
+    },
+    {
+      "id": "q_concept_108",
+      "category": "conceptToSchool",
+      "prompt": "śūnyatā",
+      "options": [
+        "Zen-Buddhismus",
+        "Vedānta",
+        "Madhyamaka",
+        "Nyāya"
+      ],
+      "correctIndex": 2,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Leerheit meint hier nicht Nichts, sondern fehlende Eigenwesenheit. Damit erklärt Madhyamaka die radikale Abhängigkeit aller Dinge von Bedingungen.",
+      "philosopherId": null,
+      "topicKey": "madhyamaka_nagarjuna"
+    },
+    {
+      "id": "q_concept_109",
+      "category": "conceptToSchool",
+      "prompt": "Praxis",
+      "options": [
+        "Marxismus",
+        "Skeptizismus",
+        "Existenzialismus",
+        "Strukturalismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Bei Marx ist Praxis mehr als Anwendung von Theorie. Gemeint ist gesellschaftlich wirksames, weltveränderndes Handeln in materiellen Verhältnissen.",
+      "philosopherId": null,
+      "topicKey": "marx_praxis"
+    },
+    {
+      "id": "q_concept_201",
+      "category": "conceptToSchool",
+      "prompt": "Zu welcher Tradition gehört der Begriff viriditas am ehesten?",
+      "options": [
+        "Mohismus",
+        "christliche Mystik des 12. Jahrhunderts",
+        "Kyoto-Schule",
+        "Stoizismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Hildegard von Bingen, Scivias und andere Visionswerke",
+      "explanation": "Viriditas ist Hildegards Wort für Grünkraft, Lebendigkeit und geistige Fruchtbarkeit. Der Begriff passt deshalb tief in ihre visionäre Theologie.",
+      "philosopherId": null,
+      "topicKey": "hildegard_viriditas"
+    },
+    {
+      "id": "q_concept_202",
+      "category": "conceptToSchool",
+      "prompt": "Die \"Leiter der Liebe\", wie Diotima sie lehrt, gehört am ehesten zu welcher Schule?",
+      "options": [
+        "Neoplatonismus",
+        "Platonismus",
+        "Aristotelismus",
+        "Skeptizismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Platon, Symposion 210a-212b",
+      "explanation": "Die Aufstiegsbewegung von schönem Körper zu schöner Erkenntnis ist ein klassisch platonisches Motiv. Diotimas Rede verdichtet diesen Gedanken besonders eindrucksvoll.",
+      "philosopherId": null,
+      "topicKey": "diotima_ladder_of_love"
+    },
+    {
+      "id": "q_concept_203",
+      "category": "conceptToSchool",
+      "prompt": "Sally Haslangers \"ameliorative Analyse\" gehört am ehesten wohin?",
+      "options": [
+        "kritischer Rationalismus",
+        "feministische Sozialontologie",
+        "philosophische Hermeneutik",
+        "Phänomenologie"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Sally Haslanger, Resisting Reality und einschlägige Aufsätze",
+      "explanation": "Haslanger fragt nicht nur, was unsere Begriffe faktisch bedeuten, sondern wozu wir sie für gerechtere soziale Praxis brauchen. Das macht ihre Analyse \"ameliorativ\".",
+      "philosopherId": null,
+      "topicKey": "haslanger_ameliorative_analysis"
+    },
+    {
+      "id": "q_concept_204",
+      "category": "conceptToSchool",
+      "prompt": "Der Begriff epistemische Ungerechtigkeit gehört am ehesten zu welcher Richtung?",
+      "options": [
+        "Strukturalismus",
+        "soziale Erkenntnistheorie",
+        "Utilitarismus",
+        "Neuthomismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Miranda Fricker, Epistemic Injustice, 2007",
+      "explanation": "Frickers Begriff zeigt, dass Menschen auch als Wissende unrecht erfahren können. Damit eröffnet sie ein zentrales Feld sozialer Erkenntnistheorie.",
+      "philosopherId": null,
+      "topicKey": "fricker_epistemic_injustice"
+    },
+    {
+      "id": "q_concept_205",
+      "category": "conceptToSchool",
+      "prompt": "Susan Haacks foundherentism gehört in welche philosophische Gegend?",
+      "options": [
+        "pragmatistische Epistemologie",
+        "deontologische Ethik",
+        "Madhyamaka",
+        "Neoplatonismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Susan Haack, Evidence and Inquiry, 1993",
+      "explanation": "Haack verbindet mit foundherentism Elemente aus Fundationalismus und Kohärentismus. Ihr Modell bleibt dabei klar erkenntnistheoretisch und pragmatistisch geprägt.",
+      "philosopherId": null,
+      "topicKey": "haack_foundherentism"
+    },
+    {
+      "id": "q_concept_206",
+      "category": "conceptToSchool",
+      "prompt": "Der Ausdruck agonistischer Pluralismus steht am ehesten für welche Theorie?",
+      "options": [
+        "agonistische Demokratietheorie",
+        "Diskursethik",
+        "Libertarismus",
+        "Konfuzianismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Chantal Mouffe, The Democratic Paradox und spätere Schriften",
+      "explanation": "Mouffe will politischen Konflikt nicht wegmoralisieren, sondern demokratisch formen. Gegner sollen Feinde nicht vernichten, sondern als legitime Gegenspieler anerkennen.",
+      "philosopherId": null,
+      "topicKey": "mouffe_agonistic_pluralism"
+    },
+    {
+      "id": "q_concept_207",
+      "category": "conceptToSchool",
+      "prompt": "Seyla Benhabibs Ausdruck democratic iterations gehört am ehesten zu welcher Theorie?",
+      "options": [
+        "kosmopolitische Demokratietheorie",
+        "agonistische Demokratietheorie",
+        "libertarische Vertragstheorie",
+        "klassischer Republikanismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Seyla Benhabib, The Rights of Others, Kap. 5",
+      "explanation": "Benhabib beschreibt damit, wie universale Rechte in konkreten politischen Auseinandersetzungen immer neu angeeignet und ausgelegt werden. Das verbindet Universalismus mit demokratischer Praxis.",
+      "philosopherId": null,
+      "topicKey": "benhabib_democratic_iterations"
+    },
+    {
+      "id": "q_concept_208",
+      "category": "conceptToSchool",
+      "prompt": "Christine Korsgaards Begriff der praktischen Identität gehört am ehesten wohin?",
+      "options": [
+        "Neoaristotelismus",
+        "neo-kantischer Konstruktivismus",
+        "Poststrukturalismus",
+        "Stoizismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Christine Korsgaard, The Sources of Normativity",
+      "explanation": "Korsgaard fragt, aus welchen Selbstverständnissen normativer Anspruch für uns entsteht. Genau das ist typisch für ihren neo-kantischen Konstruktivismus.",
+      "philosopherId": null,
+      "topicKey": "korsgaard_practical_identity"
+    },
+    {
+      "id": "q_concept_209",
+      "category": "conceptToSchool",
+      "prompt": "Der Fähigkeitenansatz ist bei Martha Nussbaum am ehesten Teil welcher Richtung?",
+      "options": [
+        "neoaristotelische politische Philosophie",
+        "Positivismus",
+        "Ash'aritische Theologie",
+        "Kyoto-Schule"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Martha Nussbaum, Women and Human Development und spätere Schriften",
+      "explanation": "Bei Nussbaum geht es um die realen Bedingungen gelingenden menschlichen Lebens. Darin verbindet sie Aristoteles, Würdebegriff und politische Institutionen.",
+      "philosopherId": "nussbaum",
+      "topicKey": "nussbaum_capabilities_new"
+    },
+    {
+      "id": "q_concept_210",
+      "category": "conceptToSchool",
+      "prompt": "Murdochs Idee des unselfing gehört am ehesten wohin?",
+      "options": [
+        "Emotivismus",
+        "platonisch inspirierte Tugendethik",
+        "Verifikationismus",
+        "Mohismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 4,
+      "attribution": "Iris Murdoch, Die Souveränität des Guten und verwandte Essays",
+      "explanation": "Murdoch versteht Moral als Übung im Abbau egozentrischer Verzerrung. Das knüpft an Platon an, aber in einer sehr modernen moralpsychologischen Form.",
+      "philosopherId": null,
+      "topicKey": "murdoch_unselfing_attention"
+    },
+    {
+      "id": "q_concept_211",
+      "category": "conceptToSchool",
+      "prompt": "Wozu gehört das mohistische Leitwort jian ai am ehesten?",
+      "options": [
+        "Mohismus",
+        "Konfuzianismus",
+        "Daoismus",
+        "Legalismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Mozi, Grundgedanke der unparteiischen Fürsorge",
+      "explanation": "Jian ai wird oft als unparteiische oder universale Fürsorge wiedergegeben. Damit setzt der Mohismus ein starkes Gegengewicht zu enger Parteilichkeit.",
+      "philosopherId": null,
+      "topicKey": "mozi_impartial_care"
+    },
+    {
+      "id": "q_concept_212",
+      "category": "conceptToSchool",
+      "prompt": "Der Begriff ziran gehört am ehesten zu welcher Tradition?",
+      "options": [
+        "Yogacara",
+        "Daoismus",
+        "Neo-Konfuzianismus",
+        "Stoizismus"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Laozi und Zhuangzi; daoistische Tradition",
+      "explanation": "Ziran meint so etwas wie Von-selbst-so-Sein oder Natürlichkeit. Damit ist ein Kernmotiv daoistischen Denkens getroffen, ohne in bloßes Laissez-faire abzugleiten.",
+      "philosopherId": null,
+      "topicKey": "daoist_ziran_naturalness"
+    },
+    {
+      "id": "q_concept_213",
+      "category": "conceptToSchool",
+      "prompt": "Der Begriff alaya-vijnana gehört am ehesten zu welcher Schule?",
+      "options": [
+        "Yogacara",
+        "Madhyamaka",
+        "Advaita Vedanta",
+        "Neo-Konfuzianismus"
+      ],
+      "correctIndex": 0,
+      "difficulty": 5,
+      "attribution": "Vasubandhu und die Yogacara-Tradition",
+      "explanation": "Das \"Speicherbewusstsein\" ist ein Schlüsselbegriff des Yogacara-Buddhismus. Er versucht, Kontinuität von Erfahrung zu denken, ohne eine feste Seele anzunehmen.",
+      "philosopherId": null,
+      "topicKey": "vasubandhu_storehouse_consciousness"
+    },
+    {
+      "id": "q_concept_214",
+      "category": "conceptToSchool",
+      "prompt": "Die Formel \"Einheit von Wissen und Handeln\" gehört am ehesten zu welcher Richtung?",
+      "options": [
+        "Neo-Konfuzianismus",
+        "Stoizismus",
+        "Zen-Buddhismus",
+        "Sophistik"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Wang Yangming, Chuanxilu",
+      "explanation": "Bei Wang Yangming ist Wissen nicht erst dann echt, wenn es anschließend umgesetzt wird. Vielmehr zeigt sich richtiges Wissen schon in der inneren Bewegtheit zum Handeln.",
+      "philosopherId": null,
+      "topicKey": "wang_unity_of_knowing_and_acting"
+    },
+    {
+      "id": "q_complete_001",
+      "category": "completeQuote",
+      "prompt": "„Ich denke, also …\"",
+      "options": [
+        "…lebe ich.",
+        "…bin ich.",
+        "…irre ich.",
+        "…existiere ich."
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Descartes",
+      "explanation": "„Cogito, ergo sum\" — Descartes' Fundament aller Gewissheit.",
+      "philosopherId": "descartes",
+      "topicKey": "cogito"
+    },
+    {
+      "id": "q_complete_002",
+      "category": "completeQuote",
+      "prompt": "„Was mich nicht umbringt, …\"",
+      "options": [
+        "…vergisst mich.",
+        "…macht mich härter.",
+        "…macht mich stärker.",
+        "…lehrt mich Demut."
+      ],
+      "correctIndex": 2,
+      "difficulty": 1,
+      "attribution": "Nietzsche, Götzen-Dämmerung",
+      "explanation": "Aphorismus aus den „Sprüchen und Pfeilen\" — oft populär verkürzt zitiert.",
+      "philosopherId": "nietzsche",
+      "topicKey": null
+    },
+    {
+      "id": "q_complete_003",
+      "category": "completeQuote",
+      "prompt": "„Der Mensch ist das Maß …\"",
+      "options": [
+        "…der Tugend.",
+        "…des Glücks.",
+        "…aller Dinge.",
+        "…des Wissens."
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Protagoras (überliefert bei Platon, Theaitetos)",
+      "explanation": "Protagoras' homo-mensura-Satz — frühe Formel des Relativismus.",
+      "philosopherId": null,
+      "topicKey": null
+    },
+    {
+      "id": "q_complete_004",
+      "category": "completeQuote",
+      "prompt": "„Habe Mut, dich deines eigenen …\"",
+      "options": [
+        "…Glaubens zu bedienen.",
+        "…Verstandes zu bedienen.",
+        "…Willens zu bedienen.",
+        "…Herzens zu bedienen."
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Kant, Was ist Aufklärung?",
+      "explanation": "Kants Wahlspruch der Aufklärung.",
+      "philosopherId": "kant",
+      "topicKey": "sapere_aude"
+    },
+    {
+      "id": "q_complete_005",
+      "category": "completeQuote",
+      "prompt": "„Es gibt nichts Praktischeres als …\"",
+      "options": [
+        "…ein gutes Vorbild.",
+        "…eine gute Theorie.",
+        "…einen klaren Kopf.",
+        "…einen festen Willen."
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Kant zugeschrieben",
+      "explanation": "Klassischer Aphorismus zur Theorie-Praxis-Verschränkung.",
+      "philosopherId": "kant",
+      "topicKey": null
+    },
+    {
+      "id": "q_complete_006",
+      "category": "completeQuote",
+      "prompt": "„Die Existenz geht der …\"",
+      "options": [
+        "…Materie voraus.",
+        "…Vernunft voraus.",
+        "…Essenz voraus.",
+        "…Wahrheit voraus."
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Sartre, Der Existenzialismus ist ein Humanismus",
+      "explanation": "Sartres Formel des Existenzialismus — der Mensch entwirft sich selbst.",
+      "philosopherId": "sartre",
+      "topicKey": "sartre_existenzialismus"
+    },
+    {
+      "id": "q_complete_101",
+      "category": "completeQuote",
+      "prompt": "„Der Mensch ist frei geboren, und überall liegt er in …\"",
+      "options": [
+        "Verträgen",
+        "Gesetzen",
+        "Ketten",
+        "Abhängigkeiten"
+      ],
+      "correctIndex": 2,
+      "difficulty": 1,
+      "attribution": "Rousseau, Vom Gesellschaftsvertrag, Buch I, Kap. 1",
+      "explanation": "Rousseau eröffnet so seine Frage nach legitimer politischer Ordnung. Freiheit bleibt normativer Ausgangspunkt, auch wenn reale Gesellschaften sie deformieren.",
+      "philosopherId": "rousseau",
+      "topicKey": "social_contract_rousseau"
+    },
+    {
+      "id": "q_complete_102",
+      "category": "completeQuote",
+      "prompt": "„Die Philosophen haben die Welt nur verschieden interpretiert; es kommt darauf an, sie zu …\"",
+      "options": [
+        "bewahren",
+        "erklären",
+        "verändern",
+        "verstehen"
+      ],
+      "correctIndex": 2,
+      "difficulty": 1,
+      "attribution": "Marx, Thesen über Feuerbach, These 11",
+      "explanation": "Marx wendet sich gegen reine Betrachtung. Theorie soll an gesellschaftlicher Praxis Maß nehmen und in veränderndes Handeln übergehen.",
+      "philosopherId": "marx",
+      "topicKey": "marx_kritik"
+    },
+    {
+      "id": "q_complete_103",
+      "category": "completeQuote",
+      "prompt": "„Es gibt kein richtiges Leben im …\"",
+      "options": [
+        "System",
+        "Unwahren",
+        "Falschen",
+        "Leeren"
+      ],
+      "correctIndex": 2,
+      "difficulty": 2,
+      "attribution": "Adorno, Minima Moralia, Aphorismus „Asyl für Obdachlose\"",
+      "explanation": "Adorno formuliert damit eine negative Moralphilosophie nach den Katastrophen des 20. Jahrhunderts. Individuelle Anständigkeit hebt falsche Verhältnisse nicht einfach auf.",
+      "philosopherId": "adorno",
+      "topicKey": "adorno_wrong_life"
+    },
+    {
+      "id": "q_complete_104",
+      "category": "completeQuote",
+      "prompt": "„Es gibt nur ein wirklich ernstes philosophisches Problem: den …\"",
+      "options": [
+        "Tod",
+        "Selbstmord",
+        "Zweifel",
+        "Krieg"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Camus, Der Mythos des Sisyphos, Anfang",
+      "explanation": "Camus beginnt beim Wert des Lebens selbst. Vor aller Systematik steht für ihn die Frage, wie man mit der Erfahrung des Absurden lebt.",
+      "philosopherId": "camus",
+      "topicKey": "camus_suicide"
+    },
+    {
+      "id": "q_complete_105",
+      "category": "completeQuote",
+      "prompt": "„Über sich selbst, über seinen eigenen Körper und Geist, ist das Individuum …\"",
+      "options": [
+        "autark",
+        "souverän",
+        "unfehlbar",
+        "zweckhaft"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Mill, Über die Freiheit, Kap. 1",
+      "explanation": "Mill verteidigt damit eine Schutzsphäre der Selbstbestimmung. Eingriffe sind nur dann legitim, wenn andere vor Schaden bewahrt werden müssen.",
+      "philosopherId": "mill",
+      "topicKey": "mill_liberty"
+    },
+    {
+      "id": "q_complete_106",
+      "category": "completeQuote",
+      "prompt": "„Zwei Dinge erfüllen das Gemüt mit immer neuer und zunehmender Bewunderung und Ehrfurcht: der bestirnte Himmel über mir und das moralische Gesetz …\"",
+      "options": [
+        "für uns",
+        "in mir",
+        "über allen",
+        "im Menschen"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": "Kant, Kritik der praktischen Vernunft, Beschluß",
+      "explanation": "Kant verbindet hier Naturerhabenheit und praktische Vernunft. Die Größe des Kosmos und die Verbindlichkeit des Sollens treffen im Menschen zusammen.",
+      "philosopherId": "kant",
+      "topicKey": "kant_starry_sky"
+    },
+    {
+      "id": "q_complete_107",
+      "category": "completeQuote",
+      "prompt": "„Der Edle verlangt alles von sich selbst, der Primitive stellt nur Forderungen an …\"",
+      "options": [
+        "sich",
+        "andere",
+        "den Staat",
+        "die Ahnen"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": "Konfuzius, Analekten, 15,21",
+      "explanation": "Der Satz bringt eine konfuzianische Ethik der Selbstkultivierung auf den Punkt. Moral beginnt mit der Arbeit an sich, nicht mit dem schnellen Vorwurf an andere.",
+      "philosopherId": null,
+      "topicKey": "confucius_self_discipline"
+    },
+    {
+      "id": "q_complete_108",
+      "category": "completeQuote",
+      "prompt": "„Der Weg, der sich aussprechen lässt, ist nicht der … Weg.\"",
+      "options": [
+        "gerade",
+        "menschliche",
+        "ewige",
+        "gute"
+      ],
+      "correctIndex": 2,
+      "difficulty": 4,
+      "attribution": "Laozi, Daodejing, Kap. 1",
+      "explanation": "Die Lücke ist philosophisch entscheidend. Das Dao entzieht sich endgültiger Festschreibung und öffnet so einen Raum jenseits begrifflicher Herrschaft.",
+      "philosopherId": null,
+      "topicKey": "dao_ineffable"
+    },
+    {
+      "id": "q_complete_109",
+      "category": "completeQuote",
+      "prompt": "„Denn es ist nicht genug, einen guten Kopf zu haben; die Hauptsache ist, ihn richtig …\"",
+      "options": [
+        "zu zügeln",
+        "anzuwenden",
+        "zu bezweifeln",
+        "zu reinigen"
+      ],
+      "correctIndex": 1,
+      "difficulty": 1,
+      "attribution": "Descartes, Abhandlung über die Methode, Teil I",
+      "explanation": "Descartes setzt Vertrauen in methodisch gelenkte Urteilskraft. Philosophische Klarheit ist für ihn weniger Gabe als disziplinierte Praxis des Denkens.",
+      "philosopherId": "descartes",
+      "topicKey": "descartes_good_head"
+    },
+    {
+      "id": "q_complete_201",
+      "category": "completeQuote",
+      "prompt": "Vervollständige das Zitat von Mary Astell: \"Wenn alle Menschen frei geboren sind, wie kommt es dann, dass alle Frauen in die ...\"",
+      "options": [
+        "Sklaverei geboren wurden",
+        "Ehe gezwungen werden",
+        "Unmündigkeit verbannt bleiben",
+        "Armut gestoßen werden"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Mary Astell, Some Reflections upon Marriage, Vorwort",
+      "explanation": "Astell verbindet hier politische Freiheit und Geschlechterordnung in einem einzigen scharfen Satz. Gerade deshalb ist die Pointe bis heute so stark.",
+      "philosopherId": null,
+      "topicKey": "astell_marriage_slavery"
+    },
+    {
+      "id": "q_complete_202",
+      "category": "completeQuote",
+      "prompt": "Vervollständige das Zitat von Olympe de Gouges: \"Die Frau hat das Recht, das Schafott zu besteigen; sie muss gleichermaßen das Recht haben, ...\"",
+      "options": [
+        "die Tribüne zu besteigen",
+        "ein Amt zu bekleiden",
+        "zu wählen und gewählt zu werden",
+        "die Gesetze zu schreiben"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, Art. X",
+      "explanation": "De Gouges macht sichtbar, wie absurd eine Ordnung ist, die Frauen Strafe zumutet, aber Mitsprache verweigert. Der Satz ist zugleich schnittig und systemkritisch.",
+      "philosopherId": null,
+      "topicKey": "gouges_rights_of_woman_declaration"
+    },
+    {
+      "id": "q_complete_203",
+      "category": "completeQuote",
+      "prompt": "Vervollständige Hannah Arendts Satz: \"Politik beruht auf der Tatsache der ...\"",
+      "options": [
+        "Pluralität der Menschen",
+        "Souveränität der Nationen",
+        "Freiheit des Willens",
+        "Einheit des Volks"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Hannah Arendt, Was ist Politik?, Fragment 1",
+      "explanation": "Arendt denkt Politik von der Vielheit her, nicht von Homogenität. So wird Verschiedenheit zur Grundbedingung gemeinsamen Handelns.",
+      "philosopherId": "arendt",
+      "topicKey": "arendt_plurality_fragment"
+    },
+    {
+      "id": "q_complete_204",
+      "category": "completeQuote",
+      "prompt": "Vervollständige Donna Haraways Satz: \"Ich wäre lieber ein ...\"",
+      "options": [
+        "Cyborg als eine Göttin",
+        "Netzwerk als ein Subjekt",
+        "Hybrid als eine Essenz",
+        "Code als eine Natur"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Donna Haraway, Ein Manifest für Cyborgs, Schluss",
+      "explanation": "Der Satz bekommt seine Schärfe gerade aus dem Kontrast von Hybridität und essenzialistischer Reinheitsphantasie. Deshalb ist er so merkfähig.",
+      "philosopherId": null,
+      "topicKey": "haraway_cyborg_manifesto"
+    },
+    {
+      "id": "q_complete_205",
+      "category": "completeQuote",
+      "prompt": "Vervollständige das Zitat von Simone Weil: \"Aufmerksamkeit ist die seltenste und reinste Form der ...\"",
+      "options": [
+        "Großzügigkeit",
+        "Gerechtigkeit",
+        "Nächstenliebe",
+        "Besonnenheit"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Simone Weil, \"Betrachtungen über den rechten Gebrauch der Schulstudien im Hinblick auf die Gottesliebe\"",
+      "explanation": "Weil macht aus Aufmerksamkeit eine ethische Tugend. Der Satz ist kurz, aber er öffnet einen ganzen Begriff von geistiger Gastfreundschaft.",
+      "philosopherId": null,
+      "topicKey": "weil_attention_generosity"
+    },
+    {
+      "id": "q_complete_206",
+      "category": "completeQuote",
+      "prompt": "Vervollständige den Satz aus dem Daodejing: \"Das höchste Gute ist wie ...\"",
+      "options": [
+        "Wasser",
+        "Leere",
+        "Holz",
+        "Wind"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Laozi, Daodejing, Kap. 8",
+      "explanation": "Wasser ist bei Laozi nicht schwach, sondern wirksam ohne Härte. Gerade darin zeigt sich die daoistische Wertschätzung des Nachgiebigen.",
+      "philosopherId": null,
+      "topicKey": "laozi_water_goodness"
+    },
+    {
+      "id": "q_complete_207",
+      "category": "completeQuote",
+      "prompt": "Vervollständige das Zitat von Konfuzius: \"Der Edle verlangt alles von ...\"",
+      "options": [
+        "sich selbst",
+        "der Tradition",
+        "seinem Lehrer",
+        "der Familie"
+      ],
+      "correctIndex": 0,
+      "difficulty": 1,
+      "attribution": "Konfuzius, Lunyu/Analekten 15.21",
+      "explanation": "Der Satz bringt konfuzianische Selbstkultivierung wunderbar knapp auf den Punkt. Ethische Arbeit fängt hier beim eigenen Charakter an.",
+      "philosopherId": null,
+      "topicKey": "confucius_self_discipline"
+    },
+    {
+      "id": "q_complete_208",
+      "category": "completeQuote",
+      "prompt": "Vervollständige den Zhuangzi-Satz: \"... oder ob der Schmetterling geträumt hat, dass er ...\"",
+      "options": [
+        "Dschuang Dschou sei",
+        "ein Mensch geworden sei",
+        "wirklich wach sei",
+        "sterblich sei"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Zhuangzi, Kap. 2",
+      "explanation": "Die berühmte Schlusswendung kippt Perspektive gegen Perspektive. Genau dadurch untergräbt Zhuangzi allzu bequeme Gewissheiten über Identität und Wirklichkeit.",
+      "philosopherId": null,
+      "topicKey": "zhuangzi_butterfly_transformations"
+    },
+    {
+      "id": "q_complete_209",
+      "category": "completeQuote",
+      "prompt": "Vervollständige den Satz Nagarjunas: \"Was abhängig entstanden ist, nennen wir ...\"",
+      "options": [
+        "Leerheit",
+        "Substanz",
+        "Atman",
+        "Naturgesetz"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Nagarjuna, Mulamadhyamakakarika 24,18",
+      "explanation": "Die Pointe besteht darin, Leerheit nicht als Nichts zu verstehen, sondern als Beziehungscharakter aller Dinge. Das ist philosophisch viel subtiler, als es zunächst klingt.",
+      "philosopherId": null,
+      "topicKey": "madhyamaka_nagarjuna"
+    },
+    {
+      "id": "q_complete_210",
+      "category": "completeQuote",
+      "prompt": "Vervollständige Murdochs Satz: \"Liebe ist die extrem schwere Wahrnehmung, dass etwas anderes als man selbst ...\"",
+      "options": [
+        "wirklich ist",
+        "denkbar ist",
+        "unschuldig ist",
+        "frei ist"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Iris Murdoch, Die Souveränität des Guten, \"Die Idee der Vollkommenheit\"",
+      "explanation": "Murdochs Moralpsychologie lebt von diesem kleinen Wort \"wirklich\". Es zwingt das Ego, das Andere endlich ernst zu nehmen.",
+      "philosopherId": null,
+      "topicKey": "murdoch_love_reality"
+    },
+    {
+      "id": "q_critique_001",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer entwickelte den historischen Materialismus als Kritik an Hegels Idealismus?",
+      "options": [
+        "Schopenhauer",
+        "Marx",
+        "Kierkegaard",
+        "Feuerbach"
+      ],
+      "correctIndex": 1,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Marx „stellt Hegel vom Kopf auf die Füße\": nicht das Bewusstsein bestimme das Sein, sondern umgekehrt.",
+      "philosopherId": "marx",
+      "topicKey": "marx_kritik"
+    },
+    {
+      "id": "q_critique_002",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wessen Ideenlehre kritisierte Aristoteles mit dem „Drittes-Mensch-Argument\"?",
+      "options": [
+        "Heraklit",
+        "Parmenides",
+        "Platon",
+        "Pythagoras"
+      ],
+      "correctIndex": 2,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Aristoteles wendet den Regress gegen Platons getrennte Ideen ein — Form und Stoff sind nicht trennbar.",
+      "philosopherId": "aristoteles",
+      "topicKey": null
+    },
+    {
+      "id": "q_critique_003",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer kritisierte den logischen Positivismus mit der „Quine-Duhem-These\"?",
+      "options": [
+        "Quine",
+        "Popper",
+        "Kuhn",
+        "Feyerabend"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Quines „Two Dogmas of Empiricism\" greifen analytisch/synthetisch und Reduktionismus an.",
+      "philosopherId": null,
+      "topicKey": null
+    },
+    {
+      "id": "q_critique_004",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer formulierte die spätere Kritik an seiner eigenen frühen Bildtheorie der Sprache?",
+      "options": [
+        "Russell",
+        "Wittgenstein",
+        "Carnap",
+        "Husserl"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Der späte Wittgenstein der „Philosophischen Untersuchungen\" verwirft den Tractatus zugunsten der Sprachspiele.",
+      "philosopherId": "wittgenstein",
+      "topicKey": null
+    },
+    {
+      "id": "q_critique_005",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer kritisierte Rawls' Theorie aus libertärer Sicht in „Anarchy, State, and Utopia\"?",
+      "options": [
+        "Sandel",
+        "Nozick",
+        "Walzer",
+        "MacIntyre"
+      ],
+      "correctIndex": 1,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Nozick (1974) verteidigt einen minimalen Staat und kritisiert Umverteilung als Eingriff in legitime Eigentumstitel.",
+      "philosopherId": null,
+      "topicKey": null
+    },
+    {
+      "id": "q_critique_101",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer stellte Descartes in ihrer Korrespondenz die berühmte Rückfrage, wie eine immaterielle Seele einen materiellen Körper bewegen könne?",
+      "options": [
+        "Margaret Cavendish",
+        "Élisabeth von der Pfalz",
+        "Anne Conway",
+        "Damaris Cudworth Masham"
+      ],
+      "correctIndex": 1,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Élisabeth trifft den neuralgischen Punkt des Cartesianismus. Ihre Briefe machten das Problem der Geist-Körper-Interaktion zu einem Klassiker der neuzeitlichen Philosophie.",
+      "philosopherId": null,
+      "topicKey": "elisabeth_descartes_interaction"
+    },
+    {
+      "id": "q_critique_102",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer warf Kant vor, sein Moralgesetz bleibe eine „leere Formalität\"?",
+      "options": [
+        "Hegel",
+        "Fichte",
+        "Schelling",
+        "Schleiermacher"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Hegel meint, bloße Form allgemeiner Gesetzlichkeit sage noch nicht, was in konkreten sittlichen Verhältnissen geboten ist. Deshalb rückt er Sittlichkeit ins Zentrum.",
+      "philosopherId": "hegel",
+      "topicKey": "hegel_kant_formalism"
+    },
+    {
+      "id": "q_critique_103",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer griff Platons politische Philosophie in „Die offene Gesellschaft und ihre Feinde\" fundamental an?",
+      "options": [
+        "Popper",
+        "Rawls",
+        "Isaiah Berlin",
+        "Arendt"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": null,
+      "explanation": "Popper liest Platon als Vordenker geschlossener, anti-liberaler Ordnung. Gerade weil diese Deutung berühmt und umstritten ist, bleibt sie philosophiegeschichtlich wichtig.",
+      "philosopherId": "popper",
+      "topicKey": "popper_open_society"
+    },
+    {
+      "id": "q_critique_104",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer polemisierte besonders scharf gegen Hegel und machte ihn zum Symbol akademischer Verdunkelung?",
+      "options": [
+        "Feuerbach",
+        "Schopenhauer",
+        "Kierkegaard",
+        "Trendelenburg"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Schopenhauer sah in Hegel keine Vollendung, sondern Verfall der Philosophie. Hinter der Polemik steht sein grundsätzlicher Widerstand gegen spekulativen Systembau.",
+      "philosopherId": "schopenhauer",
+      "topicKey": "schopenhauer_gegen_hegel"
+    },
+    {
+      "id": "q_critique_105",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer kritisierte Rousseaus Frauenbild in „Émile\" ausdrücklich in „Eine Verteidigung der Rechte der Frau\"?",
+      "options": [
+        "Mary Astell",
+        "Mary Wollstonecraft",
+        "Harriet Taylor Mill",
+        "Olympe de Gouges"
+      ],
+      "correctIndex": 1,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Wollstonecraft widerspricht Rousseaus Erziehungsideal für Sophie frontal. Frauen sollen nicht zur Zierde, sondern zu vernünftigen Bürgerinnen gebildet werden.",
+      "philosopherId": null,
+      "topicKey": "wollstonecraft_rights_of_woman"
+    },
+    {
+      "id": "q_critique_106",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer kritisierte Sartres Existenzialismus am Ende von „Das wilde Denken\" aus struktural-anthropologischer Perspektive?",
+      "options": [
+        "Foucault",
+        "Lévi-Strauss",
+        "Althusser",
+        "Merleau-Ponty"
+      ],
+      "correctIndex": 1,
+      "difficulty": 4,
+      "attribution": null,
+      "explanation": "Lévi-Strauss wendet sich dort gegen Sartres Vorrang des erlebenden Subjekts. Für ihn haben Strukturen und Relationen philosophisch ein größeres Gewicht als existenzielle Selbstdeutung.",
+      "philosopherId": null,
+      "topicKey": "levi_strauss_vs_sartre"
+    },
+    {
+      "id": "q_critique_107",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer kritisierte in „Gender Trouble\" noch Beauvoirs Restannahme eines vorausliegenden Geschlechts?",
+      "options": [
+        "Judith Butler",
+        "Luce Irigaray",
+        "Nancy Fraser",
+        "Martha Nussbaum"
+      ],
+      "correctIndex": 0,
+      "difficulty": 5,
+      "attribution": null,
+      "explanation": "Butler radikalisiert Beauvoirs Einsicht. Wenn Geschlecht performativ hervorgebracht wird, gibt es keinen unschuldigen, vorsprachlichen Kern des Geschlechts, auf den Politik einfach zurückgreifen könnte.",
+      "philosopherId": "butler",
+      "topicKey": "butler_gender_performativity"
+    },
+    {
+      "id": "q_critique_108",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wer machte in „Die Geburt der Tragödie\" den sokratischen Rationalismus für den Niedergang der griechischen Tragödie mitverantwortlich?",
+      "options": [
+        "Nietzsche",
+        "Heidegger",
+        "Burckhardt",
+        "Schopenhauer"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": null,
+      "explanation": "Nietzsche kritisiert nicht nur Sokrates als Person, sondern einen Typus theoretischer Kultur. Das Dionysische werde durch den Optimismus des Begriffs verdrängt.",
+      "philosopherId": "nietzsche",
+      "topicKey": "nietzsche_socrates_tragedy"
+    },
+    {
+      "id": "q_critique_201",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wessen Dualismus griff Elisabeth von der Pfalz an, als sie nach der Wechselwirkung von Seele und Körper fragte?",
+      "options": [
+        "Descartes",
+        "Spinoza",
+        "Leibniz",
+        "Locke"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Korrespondenz Elisabeth von der Pfalz - René Descartes, besonders Brief vom 16. Mai 1643",
+      "explanation": "Elisabeths Rückfrage ist philosophisch berühmt, weil sie den Interaktionspunkt des cartesianischen Dualismus freilegt. Ihre Kritik ist präzise und alles andere als bloß biografisch interessant.",
+      "philosopherId": "descartes",
+      "topicKey": "elisabeth_descartes_interaction"
+    },
+    {
+      "id": "q_critique_202",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wessen mikroskopische Experimentierkultur attackierte Margaret Cavendish in Observations upon Experimental Philosophy besonders prominent?",
+      "options": [
+        "Robert Hooke",
+        "Francis Bacon",
+        "Galileo Galilei",
+        "Thomas Hobbes"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Margaret Cavendish, Observations upon Experimental Philosophy, im Umfeld von Hookes Micrographia",
+      "explanation": "Cavendish reagiert besonders auf die Autoritätsansprüche instrumenteller Beobachtung. Ihr Einwand lautet nicht gegen Wissen überhaupt, sondern gegen vorschnelle Selbstsicherheit der neuen Methode.",
+      "philosopherId": null,
+      "topicKey": "cavendish_against_hooke_microscopes"
+    },
+    {
+      "id": "q_critique_203",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wessen Position kritisierte Anne Conway besonders scharf, indem sie gegen tote Materie und für eine belebte Monistik argumentierte?",
+      "options": [
+        "Descartes",
+        "Berkeley",
+        "Hobbes",
+        "Rousseau"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Anne Conway, The Principles of the Most Ancient and Modern Philosophy",
+      "explanation": "Conway wendet sich gegen die Trennung von denkender und ausgedehnter Substanz. Ihre Alternative ist eine gestufte, lebendige und verwandlungsfähige Wirklichkeit.",
+      "philosopherId": "descartes",
+      "topicKey": "conway_against_cartesian_dead_matter"
+    },
+    {
+      "id": "q_critique_204",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wen griff Damaris Cudworth Masham in A Discourse Concerning the Love of God direkt an?",
+      "options": [
+        "John Norris",
+        "John Locke",
+        "George Berkeley",
+        "Anthony Collins"
+      ],
+      "correctIndex": 0,
+      "difficulty": 5,
+      "attribution": "Damaris Cudworth Masham, A Discourse Concerning the Love of God, 1696",
+      "explanation": "Masham wendet sich gegen John Norris' malebranchistische Frömmigkeit und verteidigt die Bedeutung menschlicher Beziehungen. Gerade diese Mischung aus Religion, Moral und Alltag ist philosophisch spannend.",
+      "philosopherId": null,
+      "topicKey": "masham_against_norris_love_god"
+    },
+    {
+      "id": "q_critique_205",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wessen Reflections beantwortete Mary Wollstonecraft mit A Vindication of the Rights of Men?",
+      "options": [
+        "Edmund Burke",
+        "Thomas Paine",
+        "William Godwin",
+        "Richard Price"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Mary Wollstonecraft, A Vindication of the Rights of Men, Untertitel und Kontext von 1790",
+      "explanation": "Wollstonecrafts erste große politische Streitschrift ist eine direkte Antwort auf Burke. Schon hier zeigt sich ihre Verbindung von Freiheitsdenken und Gesellschaftskritik.",
+      "philosopherId": null,
+      "topicKey": "wollstonecraft_against_burke"
+    },
+    {
+      "id": "q_critique_206",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wen kritisierte Edith Stein im Anhang zu Endliches und ewiges Sein ausdrücklich?",
+      "options": [
+        "Martin Heidegger",
+        "Edmund Husserl",
+        "Karl Jaspers",
+        "Jean-Paul Sartre"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Edith Stein, Endliches und ewiges Sein, Anhang \"Martin Heideggers Existenzphilosophie\"",
+      "explanation": "Stein liest Heidegger genau und widerspricht ihm auf hohem Niveau. Gerade dadurch wird sichtbar, wie eigenständig ihr späteres Denken geworden ist.",
+      "philosopherId": "heidegger",
+      "topicKey": "stein_against_heidegger_rs"
+    },
+    {
+      "id": "q_critique_207",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wen griff Elizabeth Anscombe in dem Pamphlet Mr Truman's Degree wegen der Atombombenabwürfe an?",
+      "options": [
+        "Harry S. Truman",
+        "Winston Churchill",
+        "Dwight D. Eisenhower",
+        "J. Robert Oppenheimer"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "G. E. M. Anscombe, Mr Truman's Degree, 1956",
+      "explanation": "Anscombe kritisiert nicht nur eine Person, sondern eine ganze Rechtfertigungslogik des Tötens Unschuldiger. Das macht den Text bis heute provozierend.",
+      "philosopherId": null,
+      "topicKey": "anscombe_against_truman"
+    },
+    {
+      "id": "q_critique_208",
+      "category": "whoCriticizedWhom",
+      "prompt": "Gegen wessen nichtkognitivistische Ethik bezogen Philippa Foots frühe Aufsätze wie Moral Arguments deutlich Stellung?",
+      "options": [
+        "A. J. Ayer",
+        "R. M. Hare",
+        "Gilbert Ryle",
+        "Charles L. Stevenson"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Philippa Foot, Moral Arguments, 1958",
+      "explanation": "Foot wollte Moral nicht auf bloße Gefühlsäußerung reduzieren lassen. Ihre frühe Kritik hilft zu verstehen, warum später Tugendethik wieder so stark wurde.",
+      "philosopherId": null,
+      "topicKey": "foot_against_emotivism_ayer"
+    },
+    {
+      "id": "q_critique_209",
+      "category": "whoCriticizedWhom",
+      "prompt": "Welchen Existenzialisten analysierte und kritisierte Iris Murdoch in ihrem frühen Buch Romantic Rationalist?",
+      "options": [
+        "Jean-Paul Sartre",
+        "Albert Camus",
+        "Maurice Merleau-Ponty",
+        "Gabriel Marcel"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Iris Murdoch, Sartre: Romantic Rationalist, 1953",
+      "explanation": "Murdoch nimmt Sartre ernst, aber sie schärft im Lesen auch ihre eigene Kritik an einem allzu voluntaristischen Freiheitsbegriff. Das macht das Buch doppelt interessant.",
+      "philosopherId": "sartre",
+      "topicKey": "murdoch_reads_sartre"
+    },
+    {
+      "id": "q_critique_210",
+      "category": "whoCriticizedWhom",
+      "prompt": "Mit wem führte Nancy Fraser den programmatischen Streit Redistribution or Recognition?",
+      "options": [
+        "Axel Honneth",
+        "Jürgen Habermas",
+        "Charles Taylor",
+        "Richard Rorty"
+      ],
+      "correctIndex": 0,
+      "difficulty": 4,
+      "attribution": "Nancy Fraser und Axel Honneth, Redistribution or Recognition?, 2003",
+      "explanation": "Fraser kritisiert Theorien, die soziale Gerechtigkeit zu einseitig als Frage der Anerkennung fassen. Der Streit mit Honneth ist deshalb ein moderner Theorieklassiker.",
+      "philosopherId": null,
+      "topicKey": "fraser_recognition_redistribution"
+    },
+    {
+      "id": "q_critique_211",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wessen Stil und Politik der Subversion kritisierte Martha Nussbaum im Essay The Professor of Parody?",
+      "options": [
+        "Judith Butler",
+        "Luce Irigaray",
+        "Julia Kristeva",
+        "Donna Haraway"
+      ],
+      "correctIndex": 0,
+      "difficulty": 2,
+      "attribution": "Martha Nussbaum, The Professor of Parody, 1999",
+      "explanation": "Nussbaum wirft Butler vor, politische Wirksamkeit zugunsten sprachlicher Pose zu unterschätzen. Man muss die Kritik nicht teilen, aber sie markiert eine wichtige feministische Kontroverse.",
+      "philosopherId": "butler",
+      "topicKey": "nussbaum_on_butler_parody"
+    },
+    {
+      "id": "q_critique_212",
+      "category": "whoCriticizedWhom",
+      "prompt": "Wessen metaphysische Positionen standen im Zentrum von Al-Ghazalis Die Inkohärenz der Philosophen?",
+      "options": [
+        "Avicenna",
+        "Averroes",
+        "Maimonides",
+        "Ibn Khaldun"
+      ],
+      "correctIndex": 0,
+      "difficulty": 3,
+      "attribution": "Al-Ghazali, Tahafut al-falasifa, 11. Jh.",
+      "explanation": "Al-Ghazali richtet seine Kritik vor allem gegen die avicennische Philosophenschule. Gerade daraus entstand eine der großen Debatten der islamischen Philosophie.",
+      "philosopherId": null,
+      "topicKey": "ghazali_against_avicennism"
+    }
+  ]
+}

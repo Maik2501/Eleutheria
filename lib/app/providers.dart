@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../data/models/answer_input_style.dart';
+import '../data/models/difficulty_band.dart';
 import '../data/models/player_profile.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_repository.dart';
+import '../data/repositories/score_repository.dart';
+import '../data/repositories/supabase_profile_repository.dart';
+import '../env.dart';
 
 /// Set during bootstrap in main.dart, then injected via override.
 final sharedPreferencesProvider = Provider<SharedPreferences>(
@@ -19,6 +24,43 @@ final profileRepositoryProvider = Provider<ProfileRepository>(
 final questionRepositoryProvider = Provider<QuestionRepository>(
   (ref) => QuestionRepository(),
 );
+
+/// Repository für die Supabase-Profiles-Tabelle. `null` wenn Supabase
+/// nicht konfiguriert ist — der Aufrufer muss damit umgehen.
+final supabaseProfileRepositoryProvider =
+    Provider<SupabaseProfileRepository?>((ref) {
+  if (!Env.hasSupabase) return null;
+  try {
+    return SupabaseProfileRepository(Supabase.instance.client);
+  } catch (_) {
+    return null;
+  }
+});
+
+/// Repository für die Supabase-`scores`-Tabelle. `null` wenn Supabase
+/// nicht konfiguriert ist — Submits werden dann übersprungen.
+final scoreRepositoryProvider = Provider<ScoreRepository?>((ref) {
+  if (!Env.hasSupabase) return null;
+  try {
+    return ScoreRepository(Supabase.instance.client);
+  } catch (_) {
+    return null;
+  }
+});
+
+/// Lädt das Remote-Profil einmalig beim App-Start. Wird vom Router-Gate
+/// ausgewertet, um zu entscheiden, ob die Profil-Setup-UI gezeigt werden muss.
+///
+/// Werte:
+/// - `AsyncData(profile)` mit Daten → Setup ist erledigt, weiter zum Home
+/// - `AsyncData(null)` → noch kein Remote-Profil, Setup-UI zeigen
+/// - `AsyncData(null)` bei fehlendem Repo (kein Supabase) → Offline-Modus, kein Gate
+/// - `AsyncError` → Netzwerkproblem, UI muss Retry anbieten
+final remoteProfileProvider = FutureProvider<RemoteProfile?>((ref) async {
+  final repo = ref.watch(supabaseProfileRepositoryProvider);
+  if (repo == null) return null;
+  return repo.fetchMine();
+});
 
 /// Live, mutable player profile. Use [profileNotifierProvider.notifier] to
 /// mutate; widgets watch this directly.
@@ -92,6 +134,13 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     final p = state.value;
     if (p == null) return;
     p.preferredInputStyle = style;
+    await _persist(p);
+  }
+
+  Future<void> setDifficultyBand(DifficultyBand band) async {
+    final p = state.value;
+    if (p == null) return;
+    p.preferredDifficulty = (band.min, band.max);
     await _persist(p);
   }
 

@@ -1,3 +1,4 @@
+import 'answer_input_style.dart';
 import 'question.dart';
 
 /// One run of the quiz — solo or VS.
@@ -10,6 +11,7 @@ class GameSession {
     this.categories = const {},
     this.difficultyMin = 1,
     this.difficultyMax = 5,
+    this.inputStyle = AnswerInputStyle.multipleChoice,
     this.usedPowerUps = const [],
     List<AnswerRecord>? answers,
   }) : answers = answers ?? <AnswerRecord>[];
@@ -23,6 +25,10 @@ class GameSession {
   final Set<QuestionCategory> categories;
   final int difficultyMin;
   final int difficultyMax;
+
+  /// How the player answered (multiple-choice vs. letterbox).
+  /// Kept on the session so it survives navigation to the result screen.
+  final AnswerInputStyle inputStyle;
 
   /// Records, one per answered question.
   final List<AnswerRecord> answers;

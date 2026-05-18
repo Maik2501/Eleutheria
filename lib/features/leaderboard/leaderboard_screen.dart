@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../data/repositories/score_repository.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 
-/// Daily leaderboard, fed by a Supabase view:
-///
-/// ```sql
-/// create table daily_scores (
-///   day date not null,
-///   player_id uuid not null,
-///   display_name text not null,
-///   score int not null,
-///   correct int not null,
-///   submitted_at timestamptz default now(),
-///   primary key (day, player_id)
-/// );
-/// ```
+/// Reads from the Supabase `scores` table.
+/// Two leaderboards live side-by-side via the `is_pure` flag:
+/// - **Pure**: nur Sessions ohne Joker (`is_pure = true`)
+/// - **Casual**: alle, Joker-Fragen mit 50 % gewertet
 class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
 
@@ -28,40 +20,44 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
   ConsumerState<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
-  Future<List<_Entry>>? _future;
+class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tab;
+
+  // Filter-State
+  _ModeFilter _mode = _ModeFilter.all;
+  _RangeFilter _range = _RangeFilter.allTime;
 
   @override
   void initState() {
     super.initState();
-    _future = _load();
+    _tab = TabController(length: 2, vsync: this);
+    _tab.addListener(() => setState(() {}));
   }
 
-  Future<List<_Entry>> _load() async {
-    try {
-      final today = DateTime.now().toUtc();
-      final dayKey =
-          '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-      final rows = await Supabase.instance.client
-          .from('daily_scores')
-          .select()
-          .eq('day', dayKey)
-          .order('score', ascending: false)
-          .limit(50);
-      return (rows as List)
-          .map((r) => _Entry(
-                name: r['display_name'] as String,
-                score: (r['score'] as num).toInt(),
-                correct: (r['correct'] as num).toInt(),
-              ),)
-          .toList();
-    } catch (_) {
-      return const [];
-    }
+  @override
+  void dispose() {
+    _tab.dispose();
+    super.dispose();
+  }
+
+  bool get _isPureTab => _tab.index == 0;
+
+  Future<List<ScoreEntry>> _load() async {
+    final repo = ref.read(scoreRepositoryProvider);
+    if (repo == null) return const [];
+    return repo.topScores(
+      pure: _isPureTab,
+      mode: _mode.serverKey,
+      since: _range.since(),
+      onlyMine: _range == _RangeFilter.myBest,
+      limit: 50,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -72,49 +68,209 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
       ),
       body: ParchmentBackground(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-            child: FutureBuilder<List<_Entry>>(
-              future: _future,
-              builder: (context, snap) {
-                final palette = context.palette;
-                if (snap.connectionState != ConnectionState.done) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final list = snap.data ?? const [];
-                if (list.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Noch keine Werte heute',
-                            style: AppTypography.eyebrow(palette.gold),),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Sei die Erste, die heute spielt.',
-                          style: TextStyle(color: palette.inkMuted),
-                        ),
-                      ],
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(24, 8, 24, 12),
+                child: ChapterHeading(
+                  eyebrow: 'Bestenliste',
+                  title: 'Pure & Casual',
+                  subtitle:
+                      'Pure: Sessions ohne Joker. Casual: Joker-Fragen werden mit 50 % gewertet.',
+                ),
+              ),
+              TabBar(
+                controller: _tab,
+                labelColor: palette.burgundy,
+                unselectedLabelColor: palette.inkMuted,
+                indicatorColor: palette.gold,
+                labelStyle: AppTypography.button(),
+                tabs: const [
+                  Tab(text: 'Pure'),
+                  Tab(text: 'Casual'),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _FilterRow(
+                label: 'Modus',
+                children: [
+                  for (final m in _ModeFilter.values)
+                    _Chip(
+                      label: m.label,
+                      active: _mode == m,
+                      onTap: () => setState(() => _mode = m),
                     ),
-                  );
-                }
-                return ListView.builder(
-                  itemCount: list.length + 1,
-                  itemBuilder: (ctx, i) {
-                    if (i == 0) {
-                      return const Padding(
-                        padding: EdgeInsets.only(bottom: 16),
-                        child: ChapterHeading(
-                          eyebrow: 'Heute',
-                          title: 'Tagesrangliste',
-                        ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              _FilterRow(
+                label: 'Zeitraum',
+                children: [
+                  for (final r in _RangeFilter.values)
+                    _Chip(
+                      label: r.label,
+                      active: _range == r,
+                      onTap: () => setState(() => _range = r),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Expanded(
+                child: FutureBuilder<List<ScoreEntry>>(
+                  // Re-fetch when tab/filter change — Future ist hier idiomatisch
+                  // einfacher als ein Provider, weil Filter-State lokal liegt.
+                  future: _load(),
+                  builder: (context, snap) {
+                    if (snap.connectionState != ConnectionState.done) {
+                      return Center(
+                        child: CircularProgressIndicator(color: palette.gold),
                       );
                     }
-                    final e = list[i - 1];
-                    return _Row(rank: i, entry: e);
+                    if (snap.hasError) {
+                      return _EmptyState(
+                        title: 'Konnte Liste nicht laden.',
+                        subtitle: '${snap.error}',
+                      );
+                    }
+                    final list = snap.data ?? const <ScoreEntry>[];
+                    if (list.isEmpty) {
+                      return _EmptyState(
+                        title: 'Noch keine Einträge',
+                        subtitle: _isPureTab
+                            ? 'Sei die Erste, die einen Joker-freien Lauf einreicht.'
+                            : 'Spiel ein paar Runden, dann erscheint hier was.',
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(20, 6, 20, 24),
+                      itemCount: list.length,
+                      itemBuilder: (ctx, i) =>
+                          _Row(rank: i + 1, entry: list[i]),
+                    );
                   },
-                );
-              },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ───────────────────────── Filters ─────────────────────────
+
+enum _ModeFilter {
+  all('Alle', null),
+  classic('Klassisch', 'classic'),
+  quizRush('Quiz-Rush', 'quizRush'),
+  suddenDeath('Sudden Death', 'suddenDeath'),
+  daily('Tägliche Frage', 'daily'),
+  letterbox('Letterbox', 'letterbox');
+
+  const _ModeFilter(this.label, this.serverKey);
+  final String label;
+  final String? serverKey;
+}
+
+enum _RangeFilter {
+  today('Heute'),
+  week('Diese Woche'),
+  allTime('All-Time'),
+  myBest('Mein Bestes');
+
+  const _RangeFilter(this.label);
+  final String label;
+
+  DateTime? since() {
+    final now = DateTime.now().toUtc();
+    switch (this) {
+      case _RangeFilter.today:
+        return DateTime.utc(now.year, now.month, now.day);
+      case _RangeFilter.week:
+        return now.subtract(const Duration(days: 7));
+      case _RangeFilter.allTime:
+      case _RangeFilter.myBest:
+        return null;
+    }
+  }
+}
+
+// ───────────────────────── UI bits ─────────────────────────
+
+class _FilterRow extends StatelessWidget {
+  const _FilterRow({required this.label, required this.children});
+  final String label;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 6),
+            child: Text(
+              label.toUpperCase(),
+              style: AppTypography.eyebrow(palette.gold),
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final c in children) ...[c, const SizedBox(width: 8)],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    required this.label,
+    required this.active,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: active
+                ? palette.burgundy.withValues(alpha: 0.16)
+                : palette.page,
+            border: Border.all(
+              color: active
+                  ? palette.burgundy.withValues(alpha: 0.55)
+                  : palette.divider,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            label,
+            style: AppTypography.sans(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: active ? palette.burgundy : palette.ink,
             ),
           ),
         ),
@@ -123,17 +279,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   }
 }
 
-class _Entry {
-  const _Entry({required this.name, required this.score, required this.correct});
-  final String name;
-  final int score;
-  final int correct;
-}
-
 class _Row extends StatelessWidget {
   const _Row({required this.rank, required this.entry});
   final int rank;
-  final _Entry entry;
+  final ScoreEntry entry;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +294,9 @@ class _Row extends StatelessWidget {
       decoration: BoxDecoration(
         color: palette.page,
         border: Border.all(
-          color: podium ? palette.gold.withValues(alpha: 0.5) : palette.divider,
+          color: podium
+              ? palette.gold.withValues(alpha: 0.5)
+              : palette.divider,
           width: podium ? 1.4 : 1,
         ),
         borderRadius: BorderRadius.circular(14),
@@ -165,16 +316,31 @@ class _Row extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              entry.name,
-              style: AppTypography.serif(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: palette.ink,
-                letterSpacing: -0.2,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  entry.displayName,
+                  style: AppTypography.serif(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: palette.ink,
+                    letterSpacing: -0.2,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${entry.correct}/${entry.answered} · ${_bandLabel(entry.difficultyBand)}'
+                  '${entry.jokersUsed > 0 ? ' · ${entry.jokersUsed} Joker' : ''}',
+                  style: AppTypography.sans(
+                    fontSize: 11.5,
+                    color: palette.inkMuted,
+                  ),
+                ),
+              ],
             ),
           ),
           Text(
@@ -186,6 +352,40 @@ class _Row extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  String _bandLabel(String key) => switch (key) {
+        'einstieg' => 'Einstieg',
+        'meisterpruefung' => 'Meisterprüfung',
+        _ => 'Salon',
+      };
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState({required this.title, required this.subtitle});
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title, style: AppTypography.eyebrow(palette.gold)),
+            const SizedBox(height: 10),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: palette.inkMuted, fontSize: 13),
+            ),
+          ],
+        ),
       ),
     );
   }

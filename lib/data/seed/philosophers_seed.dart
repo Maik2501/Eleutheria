@@ -1,8 +1,12 @@
 import '../models/philosopher.dart';
 
 /// Curated set of philosophers covering the canonical Western tradition plus
-/// influential 20th/21st-century voices. Extend freely.
+/// influential 20th/21st-century voices. Extend freely via the CMS.
+///
+/// EDITING NOTE: prefer the local CMS in `cms/`. Round-trips via
+/// scripts/extract_questions.py and scripts/write_philosophers.py.
 const kPhilosophers = <Philosopher>[
+
   Philosopher(
     id: 'sokrates',
     name: 'Sokrates',

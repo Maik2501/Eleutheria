@@ -6,6 +6,7 @@ import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/achievement.dart';
+import '../../data/repositories/supabase_profile_repository.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/wax_seal.dart';
@@ -60,7 +61,11 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 18),
-            _XpBar(progress: progress, current: p.xpIntoCurrentLevel, target: p.xpForNextLevel),
+            _XpBar(
+              progress: progress,
+              current: p.xpIntoCurrentLevel,
+              target: p.xpForNextLevel,
+            ),
             const SizedBox(height: 28),
             Row(
               children: [
@@ -141,9 +146,43 @@ class ProfileScreen extends ConsumerWidget {
         ],
       ),
     );
-    if (newName != null && newName.isNotEmpty) {
-      await ref.read(profileNotifierProvider.notifier).renameTo(newName);
+    ctrl.dispose();
+
+    final trimmed = newName?.trim();
+    if (trimmed == null || trimmed.isEmpty || trimmed == p.displayName) {
+      return;
     }
+
+    final remoteRepo = ref.read(supabaseProfileRepositoryProvider);
+    if (remoteRepo == null) {
+      await ref.read(profileNotifierProvider.notifier).renameTo(trimmed);
+      return;
+    }
+
+    final result = await remoteRepo.reserve(trimmed);
+    if (!context.mounted) return;
+
+    switch (result) {
+      case ReservationOk(displayName: final reservedName):
+        await ref.read(profileNotifierProvider.notifier).renameTo(reservedName);
+        ref.invalidate(remoteProfileProvider);
+      case ReservationTaken(suggestions: final suggestions):
+        final suffix =
+            suggestions.isEmpty ? '' : ' Vorschlag: ${suggestions.first}';
+        _showNameError(context, 'Der Name ist schon vergeben.$suffix');
+      case ReservationInvalid(reason: final reason):
+        _showNameError(context, reason);
+      case ReservationOffline():
+        _showNameError(context, 'Keine Verbindung. Name wurde nicht geändert.');
+      case ReservationError(message: final message):
+        _showNameError(context, 'Fehler: $message');
+    }
+  }
+
+  void _showNameError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 }
 
@@ -167,8 +206,10 @@ class _XpBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Fortschritt zur nächsten Stufe',
-                style: AppTypography.eyebrow(palette.inkMuted),),
+            Text(
+              'Fortschritt zur nächsten Stufe',
+              style: AppTypography.eyebrow(palette.inkMuted),
+            ),
             Text(
               '$current / $target',
               style: AppTypography.serif(
@@ -228,8 +269,10 @@ class _Stat extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(label.toUpperCase(),
-              style: AppTypography.eyebrow(palette.inkMuted),),
+          Text(
+            label.toUpperCase(),
+            style: AppTypography.eyebrow(palette.inkMuted),
+          ),
           const SizedBox(height: 4),
           Text(
             value,

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sophia · Fragen-Editor</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <div class="seal">Σ</div>
+      <div>
+        <div class="eyebrow">Eleutheria</div>
+        <h1>Editor</h1>
+      </div>
+      <nav class="tabs">
+        <button class="tab active" data-tab="questions">Fragen</button>
+        <button class="tab" data-tab="philosophers">Philosophen</button>
+      </nav>
+    </div>
+    <div class="meta">
+      <span id="count-pill" class="pill">… Fragen</span>
+      <span id="dirty-pill" class="pill pill-warn hidden">ungespeichert</span>
+      <button id="reload-btn" class="btn ghost" title="Neu aus Seed-Dateien laden">Neu laden</button>
+      <button id="bulk-btn" class="btn ghost">Bulk-Import</button>
+      <button id="save-btn" class="btn primary">Speichern</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ───────── Fragen-View ───────── -->
+    <section id="view-questions" class="layout view">
+      <aside class="filters">
+        <label class="eyebrow">Suche</label>
+        <input type="search" id="filter-search" placeholder="Prompt, ID, Antwort …">
+
+        <label class="eyebrow">Kategorie</label>
+        <select id="filter-category">
+          <option value="">Alle</option>
+        </select>
+
+        <label class="eyebrow">Schwierigkeit</label>
+        <div class="diff-row">
+          <label><input type="checkbox" data-diff="1" checked> 1</label>
+          <label><input type="checkbox" data-diff="2" checked> 2</label>
+          <label><input type="checkbox" data-diff="3" checked> 3</label>
+          <label><input type="checkbox" data-diff="4" checked> 4</label>
+          <label><input type="checkbox" data-diff="5" checked> 5</label>
+        </div>
+
+        <label class="eyebrow">Philosoph</label>
+        <div id="filter-philosopher-cb" class="combobox"></div>
+
+        <button id="new-btn" class="btn primary full">+ Neue Frage</button>
+
+        <div id="stats" class="stats"></div>
+      </aside>
+
+      <section class="table-wrap">
+        <table id="qtable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Kategorie</th>
+              <th>Prompt</th>
+              <th>Richtige Antwort</th>
+              <th class="num">Diff.</th>
+              <th>Philosoph</th>
+            </tr>
+          </thead>
+          <tbody id="qtbody"></tbody>
+        </table>
+      </section>
+    </section>
+
+    <!-- ───────── Philosophen-View ───────── -->
+    <section id="view-philosophers" class="layout view hidden">
+      <aside class="filters">
+        <label class="eyebrow">Suche</label>
+        <input type="search" id="p-filter-search" placeholder="Name, ID, Schule …">
+
+        <label class="eyebrow">Epoche</label>
+        <select id="p-filter-era">
+          <option value="">Alle</option>
+          <option value="antike">Antike</option>
+          <option value="mittelalter">Mittelalter</option>
+          <option value="renaissance">Renaissance</option>
+          <option value="aufklaerung">Aufklärung</option>
+          <option value="neunzehntes">19. Jahrhundert</option>
+          <option value="modernePostmoderne">Moderne / Postmoderne</option>
+          <option value="zeitgenoessisch">Zeitgenössisch</option>
+        </select>
+
+        <button id="p-new-btn" class="btn primary full">+ Neuer Philosoph</button>
+
+        <div id="p-stats" class="stats"></div>
+      </aside>
+
+      <section class="table-wrap">
+        <table id="ptable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Jahre</th>
+              <th>Epoche</th>
+              <th>Schule</th>
+              <th class="num">Fragen</th>
+            </tr>
+          </thead>
+          <tbody id="ptbody"></tbody>
+        </table>
+      </section>
+    </section>
+  </main>
+
+  <!-- Edit drawer -->
+  <aside id="drawer" class="drawer hidden">
+    <header>
+      <h2 id="drawer-title">Frage</h2>
+      <button id="drawer-close" class="btn ghost">Schliessen</button>
+    </header>
+    <div class="form">
+      <label>ID
+        <input id="f-id" type="text" placeholder="q_quote_NNN">
+      </label>
+      <label>Kategorie
+        <select id="f-category"></select>
+      </label>
+      <label>Prompt
+        <textarea id="f-prompt" rows="3"></textarea>
+      </label>
+      <fieldset class="options">
+        <legend>Antworten (4) — richtige markieren</legend>
+        <div class="opt"><input type="radio" name="correct" value="0"><input id="f-opt-0" type="text"></div>
+        <div class="opt"><input type="radio" name="correct" value="1"><input id="f-opt-1" type="text"></div>
+        <div class="opt"><input type="radio" name="correct" value="2"><input id="f-opt-2" type="text"></div>
+        <div class="opt"><input type="radio" name="correct" value="3"><input id="f-opt-3" type="text"></div>
+      </fieldset>
+      <label>Schwierigkeit
+        <select id="f-difficulty">
+          <option value="1">1 — Einstieg</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 — Meister</option>
+        </select>
+      </label>
+      <label>Attribution
+        <input id="f-attribution" type="text" placeholder="Werk, Kapitel">
+      </label>
+      <label>Erklärung
+        <textarea id="f-explanation" rows="3"></textarea>
+      </label>
+      <label>Philosoph
+        <div id="f-philosopher-cb" class="combobox"></div>
+      </label>
+      <label>Topic-Key (Spoiler-Gruppe)
+        <input id="f-topic-key" type="text" placeholder="z.B. cogito">
+      </label>
+      <div id="form-issues" class="issues"></div>
+      <div class="actions">
+        <button id="delete-btn" class="btn danger">Löschen</button>
+        <button id="apply-btn" class="btn primary">Übernehmen</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Philosopher Edit drawer -->
+  <aside id="p-drawer" class="drawer hidden">
+    <header>
+      <h2 id="p-drawer-title">Philosoph</h2>
+      <button id="p-drawer-close" class="btn ghost">Schliessen</button>
+    </header>
+    <div class="form">
+      <label>ID (kebab-case, eindeutig)
+        <input id="pf-id" type="text" placeholder="z.B. de_beauvoir">
+      </label>
+      <label>Name
+        <input id="pf-name" type="text" placeholder="Vorname Nachname">
+      </label>
+      <label>Lebensdaten
+        <input id="pf-years" type="text" placeholder="1908 – 1986">
+      </label>
+      <label>Epoche
+        <select id="pf-era">
+          <option value="antike">Antike</option>
+          <option value="mittelalter">Mittelalter</option>
+          <option value="renaissance">Renaissance</option>
+          <option value="aufklaerung">Aufklärung</option>
+          <option value="neunzehntes">19. Jahrhundert</option>
+          <option value="modernePostmoderne">Moderne / Postmoderne</option>
+          <option value="zeitgenoessisch">Zeitgenössisch</option>
+        </select>
+      </label>
+      <label>Schule / Strömung
+        <input id="pf-school" type="text" placeholder="z.B. Existenzphilosophie">
+      </label>
+      <label>Tagline
+        <textarea id="pf-tagline" rows="2" placeholder="Ein-Satz-Beschreibung."></textarea>
+      </label>
+      <label>Image Asset
+        <input id="pf-image" type="text" placeholder="assets/images/philosophers/id.webp">
+      </label>
+      <label>Aliases (Komma-getrennt, optional)
+        <input id="pf-aliases" type="text" placeholder="Nietzsche, Friedrich Nietzsche">
+      </label>
+      <div id="p-form-issues" class="issues"></div>
+      <div class="actions">
+        <button id="p-delete-btn" class="btn danger">Löschen</button>
+        <button id="p-apply-btn" class="btn primary">Übernehmen</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Bulk Import dialog -->
+  <div id="bulk-dialog" class="dialog hidden">
+    <div class="dialog-card">
+      <header>
+        <h2>Bulk-Import</h2>
+        <button id="bulk-close" class="btn ghost">Schliessen</button>
+      </header>
+      <p class="hint">
+        Paste den Dart-Output deiner Deep-Research-Charge (eine
+        <code>[ Question(...), Question(...) ]</code>-Liste oder einzelne
+        <code>Question(...)</code>-Blöcke). Validierung läuft pro Frage; gültige
+        werden ans Ende eingefügt, fehlerhafte werden samt Begründung gemeldet.
+      </p>
+      <textarea id="bulk-text" rows="14" placeholder="Question(&#10;  id: 'q_quote_301',&#10;  category: QuestionCategory.quoteToPhilosopher,&#10;  ..."></textarea>
+      <div id="bulk-report" class="bulk-report"></div>
+      <div class="actions">
+        <button id="bulk-validate" class="btn ghost">Validieren</button>
+        <button id="bulk-apply" class="btn primary" disabled>Einfügen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/data/philosophers.js"></script>
+  <script src="/data/questions.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,174 +1,161 @@
-# Deep-Research-Prompt: 60 neue Fragen für „Sophia"
+# Deep-Research-Prompt: ausgewogene Fragen-Erweiterung fuer Eleutheria
 
-> Kopiere den kompletten Block unter `--- BEGIN PROMPT ---` in dein Deep-Research-Tool. Das Output ist Dart-Code, den du direkt unten in `lib/data/seed/questions_seed.dart` einfügen kannst.
+Kopiere den kompletten Block unter `--- BEGIN PROMPT ---` in dein Deep-Research-Tool. Das Ziel ist eine neue Fragencharge, die den aktuellen stark maennlich gepraegten Kanon ausgleicht und zugleich faktenfest bleibt.
 
----
+## Aktueller Stand im Projekt
 
-## Tipps zum Tool
+- Aktuelle Seed-Fragen: 109.
+- Aktuell per `philosopherId` stark vertreten: Kant (8), Nietzsche (6), Wittgenstein (6), Heidegger/Butler/Descartes/Sartre (je 4).
+- Aktuell explizit weiblich/nicht-maennlich vertreten: Arendt, Beauvoir, Butler, Nussbaum sowie ohne `philosopherId` Hypatia, Mary Wollstonecraft und Elisabeth von der Pfalz.
+- Ziel der naechsten Runde: Frauen und nicht-maennliche Philosoph:innen deutlich aufholen lassen, ohne reine Token-Fragen zu produzieren.
 
-- **Perplexity Deep Research** oder **OpenAI Deep Research** sind ideal — sie können Quellen prüfen.
-- **Claude Research / Projects** mit aktivierter Web-Suche geht auch.
-- Wenn das Tool eine Themen-/Tiefen-Slider hat: maximale Recherche-Tiefe, „akademisch / scholarly".
-- Bei Output-Längen-Limits: einfach „weitere 30 Fragen, gleiches Format" nachschicken.
+## Empfohlenes Tool-Setup
 
----
+- Perplexity Deep Research, OpenAI Deep Research oder ein vergleichbares Tool mit Web-Suche nutzen.
+- Recherche-Tiefe: maximal / scholarly / academic.
+- Wenn Output-Limits greifen: erst 40 Fragen generieren lassen, danach mit „weitere 40, gleiche Regeln" fortsetzen.
 
 --- BEGIN PROMPT ---
 
 # Aufgabe
 
-Du bist ein Philosophie-Lehrer, der für ein deutschsprachiges Quiz-Spiel **60 neue, faktisch korrekte, gut recherchierte Quiz-Fragen** erstellt. Das Spiel heißt **Sophia** und richtet sich an Philosophie-Studierende. Output muss **kompilierbarer Dart-Code** sein.
+Du bist ein Philosophie-Lehrer und erstellst fuer ein deutschsprachiges Quiz-Spiel namens **Eleutheria** gut recherchierte neue Philosophiefragen. Das Spiel hat bereits viele Fragen zu maennlichen kanonischen Philosophen. Deine Aufgabe ist, die Datenbasis in Richtung **ungefaehr ausgeglichener Sichtbarkeit von maennlichen und weiblichen/nicht-maennlichen Philosoph:innen** zu erweitern.
 
-## Stilrichtlinien
+Erstelle **80 neue, faktisch korrekte, quellenstarke Quiz-Fragen** als direkt kompilierbaren Dart-Code.
 
-- **Sprache: Deutsch.** Auch Zitate werden in der gängigen deutschen Übersetzung wiedergegeben (lateinische Originalfloskeln wie „Cogito, ergo sum" oder „Sapere aude!" dürfen stehen bleiben).
-- **Akademische Genauigkeit**: Belege jedes Zitat mit Werk und (idealerweise) Stellenangabe in `attribution`.
-- **Bildende Erklärung** (`explanation`): 1–2 Sätze, die nicht nur die richtige Antwort wiederholen, sondern den philosophischen Hintergrund erhellen. Tonfall: warm, erwachsen, nicht herablassend.
-- **Vier plausible Optionen pro Frage**. Falsche Optionen müssen *plausibel* sein — andere Philosophen ähnlicher Epoche oder verwandter Schule.
-- **Schwierigkeit (`difficulty`)**: 1 (Anfänger:in) bis 5 (Master). Verteilung über die 60 Fragen ungefähr: 15× D1, 18× D2, 15× D3, 8× D4, 4× D5.
+## Prioritaet: Balance
 
-## Output-Format (sehr wichtig)
+Von den 80 Fragen muessen mindestens **50 Fragen** eine Philosophin oder nicht-maennliche Person als richtige Antwort, zentrales Thema oder Hauptbezug haben.
 
-Liefere **eine einzige Dart-Liste** mit 60 `Question(...)`-Literalen. **Direkt einfügbar** ans Ende von `kQuestions` in `lib/data/seed/questions_seed.dart`. Keine Prosa, keine Markdown-Codeblöcke, keine Nummerierung — nur die Liste.
+Besonders gewuenschte Zielpersonen:
 
-Beispiel-Eintrag (Format):
+- Antike / Spaetantike: Hypatia, Diotima (als literarisch-philosophische Figur klar kennzeichnen), Aesara von Lucania, Makrina die Juengere.
+- Mittelalter / Renaissance: Hildegard von Bingen, Christine de Pizan, Tullia d'Aragona.
+- Fruehe Neuzeit / Aufklaerung: Elisabeth von der Pfalz, Margaret Cavendish, Anne Conway, Damaris Cudworth Masham, Mary Astell, Emilie du Chatelet, Olympe de Gouges, Mary Wollstonecraft.
+- 19. Jahrhundert: Harriet Taylor Mill, Harriet Martineau, Anna Julia Cooper.
+- 20. Jahrhundert: Edith Stein, Simone Weil, Susanne Langer, Elizabeth Anscombe, Philippa Foot, Iris Murdoch, Hannah Arendt, Simone de Beauvoir, Angela Davis, bell hooks, Gayatri Chakravorty Spivak, Donna Haraway, Luce Irigaray, Julia Kristeva, Nancy Fraser.
+- Gegenwart: Judith Butler, Martha Nussbaum, Christine Korsgaard, Onora O'Neill, Seyla Benhabib, Susan Haack, Sally Haslanger, Miranda Fricker, Rahel Jaeggi, Chantal Mouffe.
 
-```dart
+Zusaetzlich sollen mindestens **12 Fragen** nicht-westliche Philosophie oder transkulturelle Rezeption abdecken: Konfuzius, Laozi, Zhuangzi, Mengzi/Mencius, Mozi, Xunzi, Nagarjuna, Vasubandhu, Shankara, Avicenna/Ibn Sina, Averroes/Ibn Rushd, Maimonides, Al-Ghazali, Wang Yangming, Nishida Kitaro.
+
+Vermeide, die naechste Charge wieder mit Kant, Nietzsche, Heidegger, Wittgenstein, Sartre, Rawls oder Popper zu fuellen. Diese Namen duerfen als falsche Optionen vorkommen, aber hoechstens 8 der 80 Fragen sollen sie als Hauptbezug haben.
+
+## Sprache und Stil
+
+- Sprache: Deutsch.
+- Zitate: etablierte deutsche Uebersetzung verwenden; bei Unsicherheit lieber Werk-/Begriffsfragen statt zweifelhafter Zitate.
+- Jede Frage braucht vier plausible Antwortoptionen.
+- Falsche Optionen muessen plausibel sein: gleiche Epoche, gleiche Debatte, verwandte Schule.
+- `explanation`: 1-2 Saetze, warm, praezise, bildend, nicht herablassend.
+- `attribution`: bei Zitaten immer Werk und moeglichst Abschnitt/Kapitel/Paragraph angeben. Keine erfundenen Stellenangaben.
+- Schwierigkeit `difficulty`: 1 bis 5. Zielverteilung: ca. 18x D1, 24x D2, 22x D3, 12x D4, 4x D5.
+
+## Output-Format
+
+Liefere **eine einzige Dart-Liste** mit 80 `Question(...)`-Literalen. Direkt einfuegbar ans Ende von `kQuestions` in `lib/data/seed/questions_seed.dart`.
+
+Keine Markdown-Codebloecke, keine Prosa, keine Nummerierung. Nur:
+
+[
+  Question(...),
+  Question(...),
+]
+
+Kein `kQuestions =`, kein Semikolon.
+
+## Dart-Format
+
+Beispiel:
+
 Question(
-  id: 'q_quote_101',
+  id: 'q_quote_201',
   category: QuestionCategory.quoteToPhilosopher,
-  prompt: '„Der Wille zur Macht."',
-  options: ['Schopenhauer', 'Nietzsche', 'Heidegger', 'Kierkegaard'],
+  prompt: '„Ich wuensche nicht, dass Frauen Macht ueber Maenner haben, sondern ueber sich selbst."',
+  options: ['Mary Astell', 'Mary Wollstonecraft', 'Harriet Taylor Mill', 'Olympe de Gouges'],
   correctIndex: 1,
-  difficulty: 2,
-  attribution: 'Aus dem Nachlass — postum hg. von Elisabeth Förster-Nietzsche',
+  difficulty: 3,
+  attribution: 'Mary Wollstonecraft, A Vindication of the Rights of Woman, Kap. 4',
   explanation:
-      'Der Begriff durchzieht Nietzsches Spätwerk; das gleichnamige Buch ist allerdings keine autorisierte Schrift, sondern eine umstrittene Nachlasskompilation.',
-  philosopherId: 'nietzsche',
-  topicKey: 'wille_zur_macht',
+      'Wollstonecraft fordert keine Umkehrung der Herrschaft, sondern Selbstregierung durch Bildung und Vernunft. Genau darin liegt die politische Pointe ihres fruehen Feminismus.',
+  topicKey: 'wollstonecraft_self_government',
 ),
-```
 
-## Field-Regeln
+## ID-Regeln
 
-- `id`: eindeutig, kebab-style mit Kategorie-Präfix. **Beginne bei `q_quote_101`** und zähle hoch — bestehende IDs `q_quote_001..023`, `q_work_001..014`, `q_era_001..005`, `q_concept_001..007`, `q_complete_001..006`, `q_critique_001..005` dürfen nicht kollidieren.
-- `category`: einer von:
-  - `QuestionCategory.quoteToPhilosopher` — Zitat → Philosoph (~15 Fragen)
-  - `QuestionCategory.workToAuthor` — Werk → Autor (~10)
-  - `QuestionCategory.philosopherToEra` — Philosoph → Epoche (~8)
-  - `QuestionCategory.conceptToSchool` — Begriff → Schule/Strömung (~10)
-  - `QuestionCategory.completeQuote` — Lücke vervollständigen (~9)
-  - `QuestionCategory.whoCriticizedWhom` — wer hat wen kritisiert/widerlegt (~8)
-- `options`: Liste aus genau **4 Strings**. Reihenfolge frei — der Code mischt zur Laufzeit. `correctIndex` muss auf die korrekte Position zeigen.
-- `attribution`: nur bei Zitaten (Quellen-Werk, ggf. Abschnitt). Bei `philosopherToEra` und `conceptToSchool` weglassen.
-- `explanation`: **Pflicht** für jede Frage. Etwa 12–35 Wörter.
-- `philosopherId`: **muss** zu einem Eintrag der unten gelisteten ID-Tabelle passen. Bei Fragen ohne klare Person-Zuordnung (z.B. eine reine Schul-Begriff-Frage) `null` lassen (Feld weglassen).
-- `topicKey`: **optional, aber wichtig**. Setze denselben `topicKey` für Fragen, die einander beim Zufallsziehen verraten würden. Beispiele: zwei Fragen zum gleichen Zitat, eine Quote-Frage und ihr Complete-Pendant, eine Begriff-Frage und die Werk-Frage zum gleichen Buch. Snake-Case-String, sprechend (z.B. `wille_zur_macht`, `categorical_imperative_kant`).
+Die Datei enthaelt bereits IDs bis etwa:
+
+- `q_quote_115`
+- `q_work_109`
+- `q_era_108`
+- `q_concept_109`
+- `q_complete_109`
+- `q_critique_108`
+
+Starte neue IDs daher bei:
+
+- `q_quote_201`
+- `q_work_201`
+- `q_era_201`
+- `q_concept_201`
+- `q_complete_201`
+- `q_critique_201`
+
+Keine bestehenden IDs wiederverwenden.
+
+## Kategorien und Mengen
+
+Erzeuge ungefaehr:
+
+- 20x `QuestionCategory.quoteToPhilosopher`
+- 14x `QuestionCategory.workToAuthor`
+- 10x `QuestionCategory.philosopherToEra`
+- 14x `QuestionCategory.conceptToSchool`
+- 10x `QuestionCategory.completeQuote`
+- 12x `QuestionCategory.whoCriticizedWhom`
 
 ## Erlaubte `philosopherId`-Werte
 
-Antike & Spätantike:
-`sokrates`, `platon`, `aristoteles`, `epikur`, `seneca`, `marcus_aurelius`
+Setze `philosopherId` nur, wenn die Person in dieser Liste vorkommt:
 
-Mittelalter & Renaissance:
-`augustinus`, `aquin`, `occam`, `machiavelli`
+`sokrates`, `platon`, `aristoteles`, `epikur`, `seneca`, `marcus_aurelius`, `augustinus`, `aquin`, `occam`, `machiavelli`, `descartes`, `spinoza`, `leibniz`, `locke`, `hume`, `rousseau`, `kant`, `hegel`, `schopenhauer`, `kierkegaard`, `marx`, `mill`, `nietzsche`, `freud`, `wittgenstein`, `heidegger`, `arendt`, `sartre`, `beauvoir`, `camus`, `foucault`, `derrida`, `habermas`, `rawls`, `butler`, `singer`, `nussbaum`, `adorno`, `benjamin`, `popper`.
 
-Aufklärung:
-`descartes`, `spinoza`, `leibniz`, `locke`, `hume`, `rousseau`, `kant`
+Wenn die richtige Antwort oder Hauptperson nicht in dieser Liste steht, lasse `philosopherId` komplett weg. Nicht `null` schreiben.
 
-19. Jahrhundert:
-`hegel`, `schopenhauer`, `kierkegaard`, `marx`, `mill`, `nietzsche`
+## Vorhandene topicKeys vermeiden
 
-Moderne / Postmoderne:
-`freud`, `wittgenstein`, `heidegger`, `arendt`, `sartre`, `beauvoir`, `camus`, `foucault`, `derrida`, `adorno`, `benjamin`, `popper`, `rawls`
+Nutze neue sprechende `topicKey`s und vermeide diese vorhandenen Keys:
 
-Zeitgenössisch:
-`habermas`, `butler`, `singer`, `nussbaum`
+`adorno_wrong_life`, `aristotle_political_animal`, `augustine_restless_heart`, `avicenna_era`, `beauvoir_second_sex`, `butler_gender_performativity`, `camus_suicide`, `cogito`, `confucius_learning`, `confucius_self_discipline`, `dao_ineffable`, `daoist_wu_wei`, `derrida_differance`, `descartes_good_head`, `elisabeth_descartes_interaction`, `epoche_phenomenology`, `hegel_kant_formalism`, `heidegger_dasein`, `heidegger_language_house`, `hobbes_leviathan`, `hume_reason_passions`, `hypatia_era`, `kant_humanity_formula`, `kant_starry_sky`, `levi_strauss_vs_sartre`, `madhyamaka_nagarjuna`, `marcus_aurelius_era`, `marx_kritik`, `marx_praxis`, `mill_liberty`, `nietzsche_socrates_tragedy`, `nussbaum_era`, `popper_open_society`, `rawls_theory_of_justice`, `sapere_aude`, `sartre_existenzialismus`, `schopenhauer_gegen_hegel`, `seneca_dare_difficult`, `social_contract_rousseau`, `spinoza_free_man_death`, `tractatus`, `utilitarian_principle`, `wittgenstein_language_games`, `wollstonecraft_rights_of_woman`.
 
-> **Wichtig**: Wenn du einen Philosophen brauchst, der nicht in dieser Liste steht (z.B. Levinas, Bergson, Cassirer, Bourdieu, Frege, Russell, Quine, Putnam, Davidson, Anscombe, Korsgaard, Honneth, Han, Sloterdijk, MacIntyre, Sandel, Walzer, Taylor, Apel, Gadamer, Lévi-Strauss, Lacan, Lyotard, Deleuze, Žižek, Agamben, Latour, Boethius, Maimonides, Erasmus, Bacon, Pascal, Berkeley, Schelling, Fichte, Feuerbach, Stirner, Bentham, Tugendhat, Plessner, Ricœur, Cavell, Bloch, Marcuse, Horkheimer, Fromm, Husserl, Brentano, Hartmann, Jaspers, Plotin, Diogenes, Heraklit, Parmenides, Anaxagoras, Empedokles, Demokrit, Pythagoras, Zenon, Plotin, Cicero, Boethius, Dilthey, Rorty, Searle, Strawson, Nagel, Kripke, Frankfurt, Williams, Dworkin, Korsgaard, Foot, Murdoch, Hadot, Ricœur, Rancière, Hooks, Spivak), dann **lasse `philosopherId` weg** und bilde die Frage trotzdem korrekt — wir tragen den Philosophen später nach.
+Wenn zwei neue Fragen dasselbe Werk, Zitat oder dieselbe Debatte beruehren, gib ihnen denselben neuen `topicKey`, damit die App sie nicht direkt gegeneinander ausspielt.
 
-## Themenmischung
+## Qualitaetsregeln
 
-Nicht nur westlicher Kanon. Achte besonders auf:
-- **Frauen-Philosophinnen**: nicht nur Arendt/Beauvoir/Butler, sondern auch Hypatia (Antike), Astell, Wollstonecraft, Conway, Élisabeth von der Pfalz, Stein, Weil, Murdoch, Anscombe, Foot, Korsgaard. (Falls jemand davon nicht in der erlaubten Liste ist: ohne `philosopherId`.)
-- **Nicht-westliche Stimmen** dürfen vorkommen, müssen aber sehr klar gekennzeichnet sein (Konfuzius, Laozi, Nāgārjuna, Avicenna, Averroes, Maimonides, Al-Ghazali). Wieder: ohne `philosopherId`, falls nicht in der Liste.
-- **20.-/21.-Jahrhundert-Strömungen**: analytische Philosophie (Sprach-/Geist-Philosophie), Pragmatismus, Phänomenologie, Hermeneutik, Strukturalismus/Poststrukturalismus, Frankfurter Schule, Critical Theory, Bioethik, Tierethik, Umweltethik, KI-/Tech-Ethik.
+- Keine apokryphen oder zweifelhaften Zitate, ausser sie werden klar als zugeschrieben/apokryph markiert. Lieber vermeiden.
+- Keine reinen Trivia-Fragen ohne philosophischen Gehalt.
+- Keine Fragen, deren falsche Optionen offensichtlich absurd sind.
+- Keine Wiederholungen bestehender Fragen zu Cogito, Sapere aude, Tractatus, Sein und Zeit, Social Contract, Zweite Geschlecht, Gender Trouble, Rawls' Theory of Justice, Daodejing Kap. 1, Mary Wollstonecrafts Selbstregierung-Zitat.
+- Bei historischen Frauen nicht nur Biografie abfragen, sondern Werke, Argumente, Kritiken und Begriffe.
+- Bei nicht-westlicher Philosophie keine exotisierende Sprache; Schulen und Begriffe sachlich einordnen.
 
-## Anti-Spoiler-Pärchen
+## Endkontrolle vor Ausgabe
 
-Vermeide es, zwei Fragen zu *demselben* Zitat oder Werk zu produzieren, ohne sie mit identischem `topicKey` zu verbinden. Vergib `topicKey` aktiv — lieber zu viele als zu wenige.
+Pruefe vor der finalen Antwort:
 
-Beispiele bestehender Topic-Keys (nicht überschreiben):
-`cogito`, `sapere_aude`, `sartre_existenzialismus`, `tractatus`, `heidegger_dasein`, `marx_kritik`.
-
-Neue topicKeys denkbar z.B. für:
-`wille_zur_macht`, `kategorischer_imperativ`, `tabula_rasa`, `naturzustand_hobbes`, `eternal_return`, `okhams_razor`, `mensch_als_ende`, `prinzip_des_zureichenden_grundes`, `naturalistic_fallacy`, `verdacht_des_ressentiments`, `dialektik_der_aufklaerung`, ...
-
-## Beispielfragen pro Kategorie (zur Orientierung — NICHT in der Antwort wiederholen)
-
-```dart
-// quoteToPhilosopher
-Question(id: 'q_quote_101', category: QuestionCategory.quoteToPhilosopher,
-  prompt: '„Wer einen Abgrund zu lange anschaut, in den schaut auch der Abgrund hinein."',
-  options: ['Kafka', 'Nietzsche', 'Dostojewski', 'Kierkegaard'],
-  correctIndex: 1, difficulty: 2,
-  attribution: 'Jenseits von Gut und Böse, Aphorismus 146',
-  explanation: 'Nietzsches Bild für die Gefahr, sich beim Kampf gegen das Böse selbst zu verformen.',
-  philosopherId: 'nietzsche'),
-
-// workToAuthor
-Question(id: 'q_work_101', category: QuestionCategory.workToAuthor,
-  prompt: '„Negative Dialektik"',
-  options: ['Adorno', 'Horkheimer', 'Marcuse', 'Habermas'],
-  correctIndex: 0, difficulty: 3,
-  explanation: 'Adornos Spätwerk (1966) — Versuch, das Nicht-Identische gegen die identifizierende Vernunft zu retten.',
-  philosopherId: 'adorno'),
-
-// philosopherToEra
-Question(id: 'q_era_101', category: QuestionCategory.philosopherToEra,
-  prompt: 'Foucault',
-  options: ['Aufklärung', '19. Jahrhundert', 'Moderne / Postmoderne', 'Zeitgenössisch'],
-  correctIndex: 2, difficulty: 1,
-  explanation: 'Michel Foucault (1926–1984) — zentrale Figur des französischen Poststrukturalismus.',
-  philosopherId: 'foucault'),
-
-// conceptToSchool
-Question(id: 'q_concept_101', category: QuestionCategory.conceptToSchool,
-  prompt: 'Hermeneutischer Zirkel',
-  options: ['Phänomenologie', 'Hermeneutik', 'Strukturalismus', 'Pragmatismus'],
-  correctIndex: 1, difficulty: 2,
-  explanation: 'Der Begriff für das wechselseitige Verstehen von Teil und Ganzem ist Kerngedanke der Hermeneutik (Schleiermacher, Dilthey, Gadamer).'),
-
-// completeQuote
-Question(id: 'q_complete_101', category: QuestionCategory.completeQuote,
-  prompt: '„Wir können den Wind nicht ändern, aber …"',
-  options: ['…wir können warten.', '…die Segel anders setzen.', '…den Hafen wechseln.', '…den Kurs halten.'],
-  correctIndex: 1, difficulty: 2,
-  attribution: 'Aristoteles zugeschrieben (apokryph)',
-  explanation: 'Eine im Stoizismus rezipierte Maxime — die Trennung des Beeinflussbaren vom Nicht-Beeinflussbaren.'),
-
-// whoCriticizedWhom
-Question(id: 'q_critique_101', category: QuestionCategory.whoCriticizedWhom,
-  prompt: 'Wer kritisierte Sartres frühen Existenzialismus aus marxistisch-strukturalistischer Sicht?',
-  options: ['Camus', 'Lévi-Strauss', 'Foucault', 'Merleau-Ponty'],
-  correctIndex: 1, difficulty: 4,
-  explanation: 'Lévi-Strauss\' „Das wilde Denken" (1962) endet mit einer scharfen Polemik gegen Sartres geschichtsphilosophische Ansprüche.'),
-```
-
-## Letzter Hinweis
-
-Liefere **nur die 60 Fragen-Literale**, getrennt durch Kommas. Kein Kommentar, kein Markdown, keine erklärende Prosa drumherum. Eine pseudo-leere Liste der Form `[Question(...), Question(...), ...]` reicht — keine `kQuestions =`-Zuweisung, kein abschließendes Semikolon.
+1. Genau 80 `Question(...)`-Eintraege.
+2. Mindestens 50 Fragen mit Philosophinnen/nicht-maennlichen Hauptbezug.
+3. Mindestens 12 Fragen zu nicht-westlicher oder transkultureller Philosophie.
+4. Jede Frage hat genau 4 Optionen und einen korrekten `correctIndex` von 0 bis 3.
+5. Jede Frage hat eine `explanation`.
+6. Zitatfragen haben `attribution`.
+7. Keine ID-Kollisionen mit bestehenden IDs.
+8. `philosopherId` nur aus der erlaubten Liste.
 
 --- END PROMPT ---
 
----
-
 ## Nach dem Research
 
-1. Output ist eine Liste von `Question(...)` getrennt durch Kommas.
-2. Öffne `lib/data/seed/questions_seed.dart`.
-3. Suche das Zeilenende `];` am Schluss von `kQuestions`.
-4. Füge die neuen Einträge **vor** dem `];` ein, mit Komma davor.
-5. Speichere — Flutter-Hot-Reload (`r` im Terminal) zieht die neuen Fragen automatisch.
-
-Falls das Tool an einer Stelle Halluziniert (falsches Werk, falsches Datum), markiere die betroffene Frage und schick sie nochmal mit „Quelle bitte angeben" durch ein zweites Tool. Faktencheck > schiere Menge.
+1. Output in `lib/data/seed/questions_seed.dart` vor dem abschliessenden `];` einfuegen.
+2. `flutter test` laufen lassen.
+3. Stichprobenartig 10-15 Fragen faktenchecken, besonders Zitate und Werkzuordnungen.
+4. Neue haeufig auftretende Personen spaeter in `philosophers_seed.dart` aufnehmen und passende Bilder aus `IMAGE_PROMPTS.md` erzeugen.

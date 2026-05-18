@@ -9,6 +9,7 @@ import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/answer_input_style.dart';
+import '../../data/models/difficulty_band.dart';
 import '../../data/models/game_session.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../quiz/game_session_controller.dart';
@@ -22,7 +23,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   AnswerInputStyle _inputStyle = AnswerInputStyle.multipleChoice;
-  bool _loadedPreferredInputStyle = false;
+  DifficultyBand _band = DifficultyBand.salon;
+  bool _loadedFromProfile = false;
 
   Duration get _questionLimit => _inputStyle == AnswerInputStyle.letterbox
       ? const Duration(seconds: 45)
@@ -31,9 +33,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileNotifierProvider).value;
-    if (!_loadedPreferredInputStyle && profile != null) {
+    if (!_loadedFromProfile && profile != null) {
       _inputStyle = profile.preferredInputStyle;
-      _loadedPreferredInputStyle = true;
+      _band = DifficultyBand.fromRange(
+        profile.preferredDifficulty.$1,
+        profile.preferredDifficulty.$2,
+      );
+      _loadedFromProfile = true;
     }
 
     return Scaffold(
@@ -60,6 +66,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: _AnswerStyleSwitch(
                     value: _inputStyle,
                     onChanged: _setInputStyle,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
+                  child: _DifficultyBandSwitch(
+                    value: _band,
+                    onChanged: _setBand,
                   ),
                 ),
               ),
@@ -137,14 +152,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         eyebrow: 'Versus',
                         title: 'Duell',
                         description:
-                            'Online-Duelle werden nach dem ersten TestFlight-Test freigeschaltet.',
+                            'Live gegen eine Freundin. Race-Modus, Parallel-Modus, '
+                            'eigene Zeit- und Leben-Settings.',
                         children: [
                           _OptionAction(
-                            icon: Icons.hourglass_empty_rounded,
-                            label: 'Bald verfügbar',
-                            meta: 'Coming soon',
-                            onTap: () =>
-                                context.push('/duel', extra: _inputStyle),
+                            icon: Icons.add_rounded,
+                            label: 'Lobby eröffnen',
+                            meta: 'Code teilen',
+                            onTap: () => context.push('/duel'),
+                          ),
+                          _OptionAction(
+                            icon: Icons.login_rounded,
+                            label: 'Beitreten',
+                            meta: '6-Zeichen-Code',
+                            onTap: () => context.push('/duel'),
                           ),
                         ],
                       ),
@@ -167,7 +188,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(height: 14),
                       _UtilityRail(
-                        onCategories: () => context.push('/categories'),
                         onLeaderboard: () => context.push('/leaderboard'),
                       ),
                     ].animate(interval: 45.ms).fadeIn(duration: 280.ms).moveY(
@@ -188,6 +208,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _startQuiz(GameConfig config) {
     final adjusted = config.copyWith(
       inputStyle: _inputStyle,
+      difficultyMin: _band.min,
+      difficultyMax: _band.max,
       perQuestionTimeLimit: config.perQuestionTimeLimit == Duration.zero
           ? Duration.zero
           : _questionLimit,
@@ -198,9 +220,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _setInputStyle(AnswerInputStyle value) {
     setState(() {
       _inputStyle = value;
-      _loadedPreferredInputStyle = true;
+      _loadedFromProfile = true;
     });
     ref.read(profileNotifierProvider.notifier).setPreferredInputStyle(value);
+  }
+
+  void _setBand(DifficultyBand value) {
+    setState(() {
+      _band = value;
+      _loadedFromProfile = true;
+    });
+    ref.read(profileNotifierProvider.notifier).setDifficultyBand(value);
   }
 }
 
@@ -477,6 +507,61 @@ class _AnswerStyleSwitch extends StatelessWidget {
   }
 }
 
+class _DifficultyBandSwitch extends StatelessWidget {
+  const _DifficultyBandSwitch({
+    required this.value,
+    required this.onChanged,
+  });
+
+  final DifficultyBand value;
+  final ValueChanged<DifficultyBand> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: palette.page,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: palette.divider),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'SCHWIERIGKEIT · ${value.subtitle.toUpperCase()}',
+            style: AppTypography.eyebrow(palette.inkMuted),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<DifficultyBand>(
+              showSelectedIcon: false,
+              selected: {value},
+              onSelectionChanged: (selection) => onChanged(selection.single),
+              segments: const [
+                ButtonSegment(
+                  value: DifficultyBand.einstieg,
+                  label: Text('Einstieg'),
+                ),
+                ButtonSegment(
+                  value: DifficultyBand.salon,
+                  label: Text('Salon'),
+                ),
+                ButtonSegment(
+                  value: DifficultyBand.meisterpruefung,
+                  label: Text('Meister'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ModeCard extends StatelessWidget {
   const _ModeCard({
     required this.iconAsset,
@@ -697,34 +782,19 @@ class _OptionAction extends StatelessWidget {
 }
 
 class _UtilityRail extends StatelessWidget {
-  const _UtilityRail({
-    required this.onCategories,
-    required this.onLeaderboard,
-  });
+  const _UtilityRail({required this.onLeaderboard});
 
-  final VoidCallback onCategories;
   final VoidCallback onLeaderboard;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: onCategories,
-            icon: const Icon(Icons.category_rounded),
-            label: const Text('Kategorien'),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: onLeaderboard,
-            icon: const Icon(Icons.leaderboard_rounded),
-            label: const Text('Rangliste'),
-          ),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: onLeaderboard,
+        icon: const Icon(Icons.leaderboard_rounded),
+        label: const Text('Rangliste'),
+      ),
     );
   }
 }

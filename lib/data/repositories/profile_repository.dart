@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/answer_input_style.dart';
@@ -14,19 +15,62 @@ class ProfileRepository {
   static const _key = 'player_profile_v1';
   final SharedPreferences _prefs;
 
+  /// Returns the Supabase auth UID if signed in, else null. We prefer this
+  /// over a locally generated UUID so RLS-Policies can match `auth.uid()`.
+  String? get _supabaseUid {
+    try {
+      return Supabase.instance.client.auth.currentUser?.id;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<PlayerProfile> load() async {
     final raw = _prefs.getString(_key);
+    final authUid = _supabaseUid;
+
     if (raw == null) {
       final p = PlayerProfile.fresh(
-        id: const Uuid().v4(),
+        id: authUid ?? const Uuid().v4(),
         displayName: 'Schülerin der Philosophie',
       );
       await save(p);
       return p;
     }
     final json = jsonDecode(raw) as Map<String, dynamic>;
-    return _fromJson(json);
+    final existing = _fromJson(json);
+
+    // Migration: war die App schon mal mit einer lokalen UUID gestartet und
+    // bekommt jetzt eine Supabase-UID? Dann ID austauschen, Rest behalten.
+    if (authUid != null && existing.id != authUid) {
+      final migrated = _withId(existing, authUid);
+      await save(migrated);
+      return migrated;
+    }
+    return existing;
   }
+
+  PlayerProfile _withId(PlayerProfile p, String newId) => PlayerProfile(
+        id: newId,
+        displayName: p.displayName,
+        avatarSeal: p.avatarSeal,
+        xp: p.xp,
+        streakDays: p.streakDays,
+        lastPlayedDate: p.lastPlayedDate,
+        totalGamesPlayed: p.totalGamesPlayed,
+        totalCorrect: p.totalCorrect,
+        bestSuddenDeath: p.bestSuddenDeath,
+        unlockedAchievements: p.unlockedAchievements,
+        bookmarkedQuoteIds: p.bookmarkedQuoteIds,
+        preferredCategories: p.preferredCategories,
+        preferredDifficulty: p.preferredDifficulty,
+        locale: p.locale,
+        themeMode: p.themeMode,
+        soundsEnabled: p.soundsEnabled,
+        hapticsEnabled: p.hapticsEnabled,
+        jokerAvailability: p.jokerAvailability,
+        preferredInputStyle: p.preferredInputStyle,
+      );
 
   Future<void> save(PlayerProfile p) async {
     await _prefs.setString(_key, jsonEncode(_toJson(p)));

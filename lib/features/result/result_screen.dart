@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/achievement.dart';
@@ -40,6 +41,21 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     final flawless =
         widget.session.correctCount == widget.session.questions.length;
     if (flawless) _confetti.play();
+
+    // Fire-and-forget: Score an Supabase übermitteln, falls die Session
+    // auf ein Leaderboard gehört (Repository entscheidet das selbst).
+    // Fehler bleiben still — die Result-UI soll nicht ins Stolpern kommen.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeSubmitScore());
+  }
+
+  Future<void> _maybeSubmitScore() async {
+    final repo = ref.read(scoreRepositoryProvider);
+    final profile = ref.read(profileNotifierProvider).value;
+    if (repo == null || profile == null) return;
+    await repo.maybeSubmit(
+      session: widget.session,
+      profile: profile,
+    );
   }
 
   @override

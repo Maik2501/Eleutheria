@@ -36,6 +36,10 @@ android/key.properties
 .run.log
 .claude/
 
+# CMS-Writer-Backups (timestamped copies of the seed files)
+lib/data/seed/*.bak.*
+lib/data/seed/*.dart.bak.*
+
 # Secrets (do NOT commit)
 .env
 codemagic.yaml.local

@@ -4,15 +4,16 @@ import 'package:go_router/go_router.dart';
 
 import '../data/models/game_session.dart';
 import '../data/models/question.dart';
-import '../features/categories/categories_screen.dart';
 import '../features/crossword/crossword_screen.dart';
-import '../features/home/home_screen.dart';
+import '../features/duel/duel_lobby_screen.dart';
+import '../features/duel/duel_match_screen.dart';
+import '../features/leaderboard/leaderboard_screen.dart';
+import '../features/onboarding/profile_gate.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/quiz/game_session_controller.dart';
 import '../features/quiz/quiz_screen.dart';
 import '../features/result/result_screen.dart';
 import '../features/settings/settings_screen.dart';
-import '../shared/widgets/coming_soon_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -20,7 +21,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: '/',
-        builder: (_, __) => const HomeScreen(),
+        builder: (_, __) => const ProfileGate(),
       ),
       GoRoute(
         path: '/profile',
@@ -32,17 +33,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/leaderboard',
-        builder: (_, __) => const ComingSoonScreen(
-          title: 'Rangliste',
-          message:
-              'Die Tagesrangliste wird nach dem ersten TestFlight-Lauf freigeschaltet.',
-          icon: Icons.leaderboard_rounded,
-        ),
+        builder: (_, __) => const LeaderboardScreen(),
       ),
-      GoRoute(
-        path: '/categories',
-        builder: (_, __) => const CategoriesScreen(),
-      ),
+      // /categories archived 2026-05-16 (Roadmap Block F).
+      // CategoriesScreen + /play/category/:cat bleiben im Code, sind aber
+      // nicht mehr aus dem UI erreichbar. Bei Reaktivierung als
+      // inhaltliche Sammlungen neu gestalten, nicht 1:1 wiederherstellen.
       GoRoute(
         path: '/play',
         builder: (_, state) => QuizScreen(
@@ -93,21 +89,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/duel',
-        builder: (_, __) => const ComingSoonScreen(
-          title: 'Duell',
-          message:
-              'Der Online-Modus ist vorbereitet, bleibt für den ersten TestFlight-Test aber noch geschlossen.',
-          icon: Icons.compare_arrows_rounded,
-        ),
+        builder: (_, __) => const DuelLobbyScreen(),
       ),
       GoRoute(
         path: '/duel/:code',
-        builder: (_, __) => const ComingSoonScreen(
-          title: 'Duell',
-          message:
-              'Der Online-Modus ist vorbereitet, bleibt für den ersten TestFlight-Test aber noch geschlossen.',
-          icon: Icons.compare_arrows_rounded,
-        ),
+        builder: (_, state) =>
+            DuelMatchScreen(code: state.pathParameters['code']!.toUpperCase()),
       ),
       GoRoute(
         path: '/result',

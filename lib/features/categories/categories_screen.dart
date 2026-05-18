@@ -1,3 +1,10 @@
+// ARCHIVED 2026-05-16: Categories menu removed from the UI (Roadmap Block F).
+// Datei bleibt liegen — eventuelle spätere Umwidmung als inhaltliche
+// Sammlungen (Antike, Stoa, Feministische Philosophie etc.) wird neu
+// gestaltet, nicht 1:1 wiederhergestellt. QuestionCategory-Enum bleibt
+// unverändert, weil es weiterhin den Fragentyp markiert.
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

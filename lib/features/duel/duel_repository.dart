@@ -3,39 +3,14 @@ import 'dart:math' as math;
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../data/models/answer_input_style.dart';
+import '../../data/models/difficulty_band.dart';
+import '../../data/models/duel_config.dart';
 import '../../data/models/question.dart';
 import '../../data/repositories/question_repository.dart';
 
-/// A duel match — two players answering the same five questions.
-///
-/// Backed by Supabase tables:
-///
-/// ```sql
-/// create table duels (
-///   code text primary key,                -- 6-char join code
-///   host_id uuid not null,
-///   guest_id uuid,
-///   question_seed bigint not null,
-///   question_count int not null default 5,
-///   status text not null default 'waiting',  -- waiting | playing | finished
-///   created_at timestamptz default now()
-/// );
-///
-/// create table duel_answers (
-///   duel_code text references duels(code) on delete cascade,
-///   player_id uuid not null,
-///   question_index int not null,
-///   selected_index int not null,
-///   was_correct boolean not null,
-///   time_taken_ms int not null,
-///   points int not null,
-///   submitted_at timestamptz default now(),
-///   primary key (duel_code, player_id, question_index)
-/// );
-///
-/// alter publication supabase_realtime add table duels;
-/// alter publication supabase_realtime add table duel_answers;
-/// ```
+/// A duel match. Schema lives in `supabase/migrations/0001_init.sql` and
+/// gets extended by `0003_duel_modes.sql` with mode/time/lives/etc.
 class DuelRepository {
   DuelRepository(this._client);
 
@@ -48,34 +23,45 @@ class DuelRepository {
     return List.generate(6, (_) => chars[rng.nextInt(chars.length)]).join();
   }
 
-  Future<DuelMatch> createDuel({required String hostId}) async {
+  Future<DuelMatch> createDuel({
+    required String hostId,
+    required DuelConfig config,
+  }) async {
     final code = generateCode();
     final seed = DateTime.now().millisecondsSinceEpoch;
-    await _client.from('duels').insert({
-      'code': code,
-      'host_id': hostId,
-      'question_seed': seed,
-      'question_count': 5,
-      'status': 'waiting',
-    });
-    return DuelMatch(
-      code: code,
-      hostId: hostId,
-      guestId: null,
-      questionSeed: seed,
-      questionCount: 5,
-      status: DuelStatus.waiting,
-    );
+    final row = await _client
+        .from('duels')
+        .insert({
+          'code': code,
+          'host_id': hostId,
+          'question_seed': seed,
+          'question_count': config.questionCount,
+          'status': 'waiting',
+          'mode': config.mode.serverKey,
+          'time_limit_seconds': config.timeLimitSeconds,
+          'lives_per_player': config.livesPerPlayer,
+          'input_style': config.inputStyle.key,
+          'difficulty_band': config.difficultyBand.serverKey,
+        })
+        .select()
+        .single();
+    return DuelMatch.fromRow(row);
   }
 
+  /// The guest joins and the server stamps `started_at` — that timestamp is
+  /// the shared clock both clients use to compute remaining session time.
   Future<DuelMatch> joinDuel({
     required String code,
     required String guestId,
   }) async {
     final updated = await _client
         .from('duels')
-        .update({'guest_id': guestId, 'status': 'playing'})
+        .update({
+          'guest_id': guestId,
+          'status': 'playing',
+        })
         .eq('code', code.toUpperCase())
+        .eq('status', 'waiting')
         .isFilter('guest_id', null)
         .select()
         .maybeSingle();
@@ -90,9 +76,11 @@ class DuelRepository {
         .from('duels')
         .stream(primaryKey: ['code'])
         .eq('code', code)
-        .map((rows) => rows.isEmpty
-            ? throw const DuelException('Lobby beendet.')
-            : DuelMatch.fromRow(rows.first),);
+        .map(
+          (rows) => rows.isEmpty
+              ? throw const DuelException('Lobby beendet.')
+              : DuelMatch.fromRow(rows.first),
+        );
   }
 
   Stream<List<DuelAnswer>> watchAnswers(String code) {
@@ -112,25 +100,70 @@ class DuelRepository {
     required Duration timeTaken,
     required int points,
   }) async {
-    await _client.from('duel_answers').upsert({
-      'duel_code': code,
-      'player_id': playerId,
-      'question_index': questionIndex,
-      'selected_index': selectedIndex,
-      'was_correct': wasCorrect,
-      'time_taken_ms': timeTaken.inMilliseconds,
-      'points': points,
-    });
+    await _client.rpc<void>(
+      'submit_duel_answer',
+      params: {
+        'p_duel_code': code,
+        'p_player_id': playerId,
+        'p_question_index': questionIndex,
+        'p_selected_index': selectedIndex,
+        'p_was_correct': wasCorrect,
+        'p_time_taken_ms': timeTaken.inMilliseconds,
+        'p_points': points,
+      },
+    );
   }
 
   Future<void> finish(String code) async {
-    await _client.from('duels').update({'status': 'finished'}).eq('code', code);
+    await _client
+        .from('duels')
+        .update({'status': 'finished'})
+        .eq('code', code)
+        .eq('status', 'playing');
+  }
+
+  /// Host cancels an open lobby (or timeout expires).
+  Future<void> cancel(String code) async {
+    await _client
+        .from('duels')
+        .update({'status': 'cancelled'})
+        .eq('code', code)
+        .eq('status', 'waiting');
+  }
+
+  /// Creates a new duel with the same config as [original], then writes
+  /// the new code onto the old duel's `rematch_code` column so the opposite
+  /// player sees the invitation via their existing watchDuel subscription.
+  Future<DuelMatch> createRematch({
+    required DuelMatch original,
+    required String hostId,
+  }) async {
+    final rematch = await createDuel(hostId: hostId, config: original.config);
+    await _client
+        .from('duels')
+        .update({'rematch_code': rematch.code})
+        .eq('code', original.code)
+        .eq('status', 'finished')
+        .isFilter('rematch_code', null);
+    return rematch;
   }
 
   /// Build the same question set both players see, given the seed.
-  List<Question> resolveQuestions(int seed,
-      {required QuestionRepository questions, int count = 5,}) {
-    return questions.randomBatch(count: count, seed: seed);
+  /// Filtered by the difficulty band stored on the duel row.
+  List<Question> resolveQuestions(
+    int seed, {
+    required QuestionRepository questions,
+    int count = 100,
+    DifficultyBand band = DifficultyBand.salon,
+    bool letterboxFriendlyOnly = false,
+  }) {
+    return questions.randomBatch(
+      count: count,
+      seed: seed,
+      minDifficulty: band.min,
+      maxDifficulty: band.max,
+      letterboxFriendlyOnly: letterboxFriendlyOnly,
+    );
   }
 }
 
@@ -141,7 +174,7 @@ class DuelException implements Exception {
   String toString() => message;
 }
 
-enum DuelStatus { waiting, playing, finished }
+enum DuelStatus { waiting, playing, finished, cancelled }
 
 class DuelMatch {
   const DuelMatch({
@@ -151,6 +184,13 @@ class DuelMatch {
     required this.questionSeed,
     required this.questionCount,
     required this.status,
+    required this.mode,
+    required this.timeLimitSeconds,
+    required this.livesPerPlayer,
+    required this.inputStyle,
+    required this.difficultyBand,
+    required this.startedAt,
+    required this.rematchCode,
   });
 
   final String code;
@@ -160,7 +200,27 @@ class DuelMatch {
   final int questionCount;
   final DuelStatus status;
 
+  final DuelMode mode;
+  final int? timeLimitSeconds;
+  final int? livesPerPlayer;
+  final AnswerInputStyle inputStyle;
+  final DifficultyBand difficultyBand;
+  final DateTime? startedAt;
+
+  /// Set on this duel when a rematch is created — the new duel code.
+  /// Watch this on both clients to surface the rematch invitation.
+  final String? rematchCode;
+
   bool get hasGuest => guestId != null;
+
+  DuelConfig get config => DuelConfig(
+        mode: mode,
+        timeLimitSeconds: timeLimitSeconds,
+        livesPerPlayer: livesPerPlayer,
+        inputStyle: inputStyle,
+        difficultyBand: difficultyBand,
+        questionCount: questionCount,
+      );
 
   factory DuelMatch.fromRow(Map<String, dynamic> r) => DuelMatch(
         code: r['code'] as String,
@@ -172,6 +232,21 @@ class DuelMatch {
           (s) => s.name == r['status'],
           orElse: () => DuelStatus.waiting,
         ),
+        mode: DuelMode.fromKey(r['mode'] as String?),
+        timeLimitSeconds: (r['time_limit_seconds'] as num?)?.toInt(),
+        livesPerPlayer: (r['lives_per_player'] as num?)?.toInt(),
+        inputStyle: AnswerInputStyle.fromKey(r['input_style'] as String?),
+        difficultyBand: _bandFromKey(r['difficulty_band'] as String?),
+        startedAt: r['started_at'] == null
+            ? null
+            : DateTime.parse(r['started_at'] as String).toUtc(),
+        rematchCode: r['rematch_code'] as String?,
+      );
+
+  static DifficultyBand _bandFromKey(String? key) =>
+      DifficultyBand.values.firstWhere(
+        (b) => b.serverKey == key,
+        orElse: () => DifficultyBand.salon,
       );
 }
 

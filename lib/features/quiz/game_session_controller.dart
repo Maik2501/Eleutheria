@@ -202,6 +202,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
       categories: config.categories,
       difficultyMin: config.difficultyMin,
       difficultyMax: config.difficultyMax,
+      inputStyle: config.inputStyle,
     );
 
     return GameSessionState(
@@ -300,6 +301,9 @@ class GameSessionController extends StateNotifier<GameSessionState> {
     final wasCorrect = picked == q.correctIndex;
     final timeTaken = DateTime.now().difference(state.questionStartedAt);
     final points = _scoreFor(q, wasCorrect, timeTaken);
+    final usedJokerHere = _fiftyFiftyUsedOnCurrentQuestion
+        ? PowerUpKind.fiftyFifty
+        : null;
 
     final record = AnswerRecord(
       questionId: q.id,
@@ -307,6 +311,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
       wasCorrect: wasCorrect,
       timeTaken: timeTaken,
       points: points,
+      usedPowerUp: usedJokerHere,
     );
     state.session.answers.add(record);
     state = state.copyWith(revealed: true, selectedIndex: picked);

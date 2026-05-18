@@ -27,7 +27,10 @@ final duelRepositoryProvider = Provider<DuelRepository?>((ref) {
 });
 
 class DuelLobbyScreen extends ConsumerStatefulWidget {
-  const DuelLobbyScreen({super.key});
+  const DuelLobbyScreen({super.key, this.initialTabIndex = 0});
+
+  /// 0 = „Lobby eröffnen", 1 = „Beitreten".
+  final int initialTabIndex;
 
   @override
   ConsumerState<DuelLobbyScreen> createState() => _DuelLobbyScreenState();
@@ -52,7 +55,11 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen>
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 2, vsync: this);
+    _tab = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialTabIndex.clamp(0, 1),
+    );
   }
 
   @override

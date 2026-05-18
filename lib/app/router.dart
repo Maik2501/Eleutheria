@@ -89,7 +89,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/duel',
-        builder: (_, __) => const DuelLobbyScreen(),
+        builder: (_, state) {
+          final tab = state.extra is int ? state.extra as int : 0;
+          return DuelLobbyScreen(initialTabIndex: tab);
+        },
       ),
       GoRoute(
         path: '/duel/:code',

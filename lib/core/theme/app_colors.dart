@@ -20,8 +20,14 @@ class AppColors {
   static const goldDeep = Color(0xFFA88742);
   static const goldSoft = Color(0xFFE0C685);
 
-  static const sage = Color(0xFF7A8B6F);
-  static const terracotta = Color(0xFFC97B4A);
+  // Tertiary "book-spine" accents — keep the warm-academia mood,
+  // used per mode-card and similar list contexts to add visual variety
+  // without breaking the parchment+ink-dominant base.
+  static const sage       = Color(0xFF7A8B6F); // Klassisch
+  static const terracotta = Color(0xFFC97B4A); // Quiz-Rush
+  static const dustyTeal  = Color(0xFF4F7E80); // Kreuzworträtsel
+  static const plum       = Color(0xFF7B4C68); // Duell
+  static const mustard    = Color(0xFFB89248); // Rangliste / Daily
 
   // Semantic
   static const correct = Color(0xFF6B8E5A);

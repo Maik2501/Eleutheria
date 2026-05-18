@@ -90,6 +90,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         title: 'Quiz-Rush',
                         description:
                             'So viele richtige Antworten wie möglich. Endless endet nach drei Fehlern.',
+                        accent: AppColors.terracotta,
                         children: [
                           _OptionAction(
                             icon: Icons.timer_rounded,
@@ -128,6 +129,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         title: 'Klassik',
                         description:
                             'Feste Fragensets für konzentrierte Sessions ohne Rush-Regel.',
+                        accent: AppColors.sage,
                         children: [
                           for (final count in const [10, 15, 20])
                             _OptionAction(
@@ -154,18 +156,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         description:
                             'Live gegen eine Freundin. Race-Modus, Parallel-Modus, '
                             'eigene Zeit- und Leben-Settings.',
+                        accent: AppColors.plum,
                         children: [
                           _OptionAction(
                             icon: Icons.add_rounded,
                             label: 'Lobby eröffnen',
                             meta: 'Code teilen',
-                            onTap: () => context.push('/duel'),
+                            onTap: () => context.push('/duel', extra: 0),
                           ),
                           _OptionAction(
                             icon: Icons.login_rounded,
                             label: 'Beitreten',
                             meta: '6-Zeichen-Code',
-                            onTap: () => context.push('/duel'),
+                            onTap: () => context.push('/duel', extra: 1),
                           ),
                         ],
                       ),
@@ -177,6 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         title: 'Kreuzworträtsel',
                         description:
                             'Thematische 15×15-Rätsel mit Clue-Liste, Hints und Puzzle-Auswahl.',
+                        accent: AppColors.dustyTeal,
                         children: [
                           _OptionAction(
                             icon: Icons.keyboard_alt_rounded,
@@ -569,6 +573,7 @@ class _ModeCard extends StatelessWidget {
     required this.eyebrow,
     required this.title,
     required this.description,
+    required this.accent,
     required this.children,
   });
 
@@ -577,6 +582,7 @@ class _ModeCard extends StatelessWidget {
   final String eyebrow;
   final String title;
   final String description;
+  final Color accent;
   final List<Widget> children;
 
   @override
@@ -598,6 +604,14 @@ class _ModeCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
+          // "Buchrücken" — vertikaler Akzent-Streifen links.
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 5,
+            child: ColoredBox(color: accent),
+          ),
           Positioned(
             top: 0,
             right: -18,
@@ -611,6 +625,7 @@ class _ModeCard extends StatelessWidget {
             ),
           ),
           Positioned.fill(
+            left: 5,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -627,14 +642,14 @@ class _ModeCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(20, 16, 16, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _ModeAssetIcon(asset: iconAsset),
+                    _ModeAssetIcon(asset: iconAsset, tint: accent),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -642,7 +657,7 @@ class _ModeCard extends StatelessWidget {
                         children: [
                           Text(
                             eyebrow.toUpperCase(),
-                            style: AppTypography.eyebrow(palette.gold),
+                            style: AppTypography.eyebrow(accent),
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -684,13 +699,15 @@ class _ModeCard extends StatelessWidget {
 }
 
 class _ModeAssetIcon extends StatelessWidget {
-  const _ModeAssetIcon({required this.asset});
+  const _ModeAssetIcon({required this.asset, this.tint});
 
   final String asset;
+  final Color? tint;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final borderColor = tint?.withValues(alpha: 0.45) ?? palette.divider;
     return Container(
       width: 46,
       height: 46,
@@ -698,7 +715,7 @@ class _ModeAssetIcon extends StatelessWidget {
       decoration: BoxDecoration(
         color: palette.page,
         borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: palette.divider),
+        border: Border.all(color: borderColor, width: tint == null ? 1 : 1.3),
         boxShadow: [
           BoxShadow(
             color: AppColors.ink.withValues(alpha: 0.06),

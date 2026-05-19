@@ -322,7 +322,7 @@
   {
     "id": "habermas",
     "name": "Jürgen Habermas",
-    "years": "1929 –",
+    "years": "1929 – heute",
     "era": "zeitgenoessisch",
     "school": "Kritische Theorie",
     "tagline": "Theoretiker der Diskursethik.",
@@ -342,7 +342,7 @@
   {
     "id": "butler",
     "name": "Judith Butler",
-    "years": "1956 –",
+    "years": "1956 – heute",
     "era": "zeitgenoessisch",
     "school": "Gender Studies / Poststrukturalismus",
     "tagline": "Theoretikerin der Performativität von Gender.",
@@ -352,7 +352,7 @@
   {
     "id": "singer",
     "name": "Peter Singer",
-    "years": "1946 –",
+    "years": "1946 – heute",
     "era": "zeitgenoessisch",
     "school": "Praktische Ethik / Utilitarismus",
     "tagline": "Bekanntester zeitgenössischer Tierethiker.",
@@ -362,7 +362,7 @@
   {
     "id": "nussbaum",
     "name": "Martha Nussbaum",
-    "years": "1947 –",
+    "years": "1947 – heute",
     "era": "zeitgenoessisch",
     "school": "Tugendethik / Capabilities Approach",
     "tagline": "Verbindet antike Tugendlehre mit moderner Politik.",
@@ -398,5 +398,435 @@
     "tagline": "Vertreter des Falsifikationismus.",
     "imageAsset": "assets/images/philosophers/popper.webp",
     "aliases": []
+  },
+  {
+    "id": "hypatia",
+    "name": "Hypatia",
+    "years": "ca. 360 – 415",
+    "era": "antike",
+    "school": "Neuplatonismus",
+    "tagline": "Mathematikerin und Philosophin im spätantiken Alexandria.",
+    "aliases": [
+      "Hypatia von Alexandria"
+    ],
+    "imageAsset": "assets/images/philosophers/hypatia.webp"
+  },
+  {
+    "id": "diotima",
+    "name": "Diotima von Mantineia",
+    "years": "5. Jh. v. Chr.",
+    "era": "antike",
+    "school": "Platonische Tradition",
+    "tagline": "Philosophin im platonischen Symposion, Lehrerin des Eros.",
+    "aliases": [
+      "Diotima"
+    ],
+    "imageAsset": "assets/images/philosophers/diotima.webp"
+  },
+  {
+    "id": "aesara",
+    "name": "Aesara von Lukanien",
+    "years": "4./3. Jh. v. Chr.",
+    "era": "antike",
+    "school": "Pythagoreismus",
+    "tagline": "Pythagoreische Philosophin über Seele und Gerechtigkeit.",
+    "aliases": [
+      "Aesara",
+      "Aesara von Lucania"
+    ],
+    "imageAsset": "assets/images/philosophers/aesara.webp"
+  },
+  {
+    "id": "protagoras",
+    "name": "Protagoras",
+    "years": "ca. 490 – 420 v. Chr.",
+    "era": "antike",
+    "school": "Sophistik",
+    "tagline": "„Der Mensch ist das Maß aller Dinge.\"",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/protagoras.webp"
+  },
+  {
+    "id": "konfuzius",
+    "name": "Konfuzius",
+    "years": "551 – 479 v. Chr.",
+    "era": "antike",
+    "school": "Konfuzianismus",
+    "tagline": "Lehrer der Tugendethik und ritualisierten Mitmenschlichkeit.",
+    "aliases": [
+      "Kong Fuzi",
+      "Kongzi"
+    ],
+    "imageAsset": "assets/images/philosophers/konfuzius.webp"
+  },
+  {
+    "id": "laozi",
+    "name": "Laozi",
+    "years": "6. Jh. v. Chr. (legendär)",
+    "era": "antike",
+    "school": "Daoismus",
+    "tagline": "Zugeschriebener Verfasser des Daodejing.",
+    "aliases": [
+      "Laotse",
+      "Lao-tse"
+    ],
+    "imageAsset": "assets/images/philosophers/laozi.webp"
+  },
+  {
+    "id": "zhuangzi",
+    "name": "Zhuangzi",
+    "years": "ca. 369 – 286 v. Chr.",
+    "era": "antike",
+    "school": "Daoismus",
+    "tagline": "Meister des philosophischen Gleichnisses und Skeptikers Witz.",
+    "aliases": [
+      "Dschuang Dsi",
+      "Zhuang Zhou"
+    ],
+    "imageAsset": "assets/images/philosophers/zhuangzi.webp"
+  },
+  {
+    "id": "mengzi",
+    "name": "Mengzi",
+    "years": "ca. 372 – 289 v. Chr.",
+    "era": "antike",
+    "school": "Konfuzianismus",
+    "tagline": "Vertreter der angeborenen Gutartigkeit des Menschen.",
+    "aliases": [
+      "Mencius",
+      "Meng Ke"
+    ],
+    "imageAsset": "assets/images/philosophers/mengzi.webp"
+  },
+  {
+    "id": "xunzi",
+    "name": "Xunzi",
+    "years": "ca. 313 – 238 v. Chr.",
+    "era": "antike",
+    "school": "Konfuzianismus",
+    "tagline": "Konfuzianer der menschlichen Natur als ritualbedürftig.",
+    "aliases": [
+      "Xun Kuang"
+    ],
+    "imageAsset": "assets/images/philosophers/xunzi.webp"
+  },
+  {
+    "id": "nagarjuna",
+    "name": "Nāgārjuna",
+    "years": "ca. 150 – 250",
+    "era": "antike",
+    "school": "Madhyamaka-Buddhismus",
+    "tagline": "Begründer der Leerheits-Philosophie (śūnyatā).",
+    "aliases": [
+      "Nagarjuna"
+    ],
+    "imageAsset": "assets/images/philosophers/nagarjuna.webp"
+  },
+  {
+    "id": "hildegard",
+    "name": "Hildegard von Bingen",
+    "years": "1098 – 1179",
+    "era": "mittelalter",
+    "school": "Christliche Mystik",
+    "tagline": "Visionärin, Naturforscherin und Komponistin der Viriditas.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/hildegard.webp"
+  },
+  {
+    "id": "avicenna",
+    "name": "Avicenna",
+    "years": "980 – 1037",
+    "era": "mittelalter",
+    "school": "Islamische Philosophie",
+    "tagline": "Persischer Universalgelehrter, Vermittler des Aristotelismus.",
+    "aliases": [
+      "Ibn Sina",
+      "Ibn Sīnā"
+    ],
+    "imageAsset": "assets/images/philosophers/avicenna.webp"
+  },
+  {
+    "id": "shankara",
+    "name": "Śaṅkara",
+    "years": "ca. 788 – 820",
+    "era": "mittelalter",
+    "school": "Advaita Vedānta",
+    "tagline": "Großer Systematiker der nondualen Bewusstseinslehre.",
+    "aliases": [
+      "Shankara",
+      "Adi Shankara"
+    ],
+    "imageAsset": "assets/images/philosophers/shankara.webp"
+  },
+  {
+    "id": "christine_de_pizan",
+    "name": "Christine de Pizan",
+    "years": "1364 – ca. 1430",
+    "era": "renaissance",
+    "school": "Frühe Frauenphilosophie",
+    "tagline": "Verfasserin der „Stadt der Frauen\", erste Berufsautorin.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/christine_de_pizan.webp"
+  },
+  {
+    "id": "tullia",
+    "name": "Tullia d'Aragona",
+    "years": "ca. 1510 – 1556",
+    "era": "renaissance",
+    "school": "Italienischer Humanismus",
+    "tagline": "Dichterin und Dialogautorin der Renaissance-Liebesphilosophie.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/tullia.webp"
+  },
+  {
+    "id": "wang_yangming",
+    "name": "Wang Yangming",
+    "years": "1472 – 1529",
+    "era": "renaissance",
+    "school": "Neukonfuzianismus",
+    "tagline": "Einheit von Wissen und Handeln in der Ming-zeitlichen Schule.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/wang_yangming.webp"
+  },
+  {
+    "id": "hobbes",
+    "name": "Thomas Hobbes",
+    "years": "1588 – 1679",
+    "era": "aufklaerung",
+    "school": "Vertragstheorie",
+    "tagline": "Theoretiker des Leviathan und des Naturzustands.",
+    "aliases": [
+      "Hobbes"
+    ],
+    "imageAsset": "assets/images/philosophers/hobbes.webp"
+  },
+  {
+    "id": "cavendish",
+    "name": "Margaret Cavendish",
+    "years": "1623 – 1673",
+    "era": "aufklaerung",
+    "school": "Naturphilosophie",
+    "tagline": "Materialistin und Vorreiterin der Spekulativen Fiktion.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/cavendish.webp"
+  },
+  {
+    "id": "anne_conway",
+    "name": "Anne Conway",
+    "years": "1631 – 1679",
+    "era": "aufklaerung",
+    "school": "Cambridge-Platonismus",
+    "tagline": "Monistin, Einfluss auf Leibniz' Monadenlehre.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/anne_conway.webp"
+  },
+  {
+    "id": "astell",
+    "name": "Mary Astell",
+    "years": "1666 – 1731",
+    "era": "aufklaerung",
+    "school": "Frühe Frauenphilosophie",
+    "tagline": "Pionierin der weiblichen Bildungsphilosophie in England.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/astell.webp"
+  },
+  {
+    "id": "du_chatelet",
+    "name": "Émilie du Châtelet",
+    "years": "1706 – 1749",
+    "era": "aufklaerung",
+    "school": "Aufklärung",
+    "tagline": "Newton-Übersetzerin und Naturphilosophin der Aufklärung.",
+    "aliases": [
+      "Emilie du Chatelet",
+      "Émilie du Chatelet"
+    ],
+    "imageAsset": "assets/images/philosophers/du_chatelet.webp"
+  },
+  {
+    "id": "de_gouges",
+    "name": "Olympe de Gouges",
+    "years": "1748 – 1793",
+    "era": "aufklaerung",
+    "school": "Revolutionäre Aufklärung",
+    "tagline": "Verfasserin der Erklärung der Rechte der Frau und Bürgerin.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/de_gouges.webp"
+  },
+  {
+    "id": "wollstonecraft",
+    "name": "Mary Wollstonecraft",
+    "years": "1759 – 1797",
+    "era": "aufklaerung",
+    "school": "Frühe Frauenphilosophie",
+    "tagline": "Mitbegründerin des modernen feministischen Denkens.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/wollstonecraft.webp"
+  },
+  {
+    "id": "martineau",
+    "name": "Harriet Martineau",
+    "years": "1802 – 1876",
+    "era": "neunzehntes",
+    "school": "Soziologie / Utilitarismus",
+    "tagline": "Frühe Soziologin und Übersetzerin Comtes ins Englische.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/martineau.webp"
+  },
+  {
+    "id": "harriet_taylor_mill",
+    "name": "Harriet Taylor Mill",
+    "years": "1807 – 1858",
+    "era": "neunzehntes",
+    "school": "Liberalismus",
+    "tagline": "Mitdenkerin und Co-Autorin J. S. Mills zur Frauenfrage.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/harriet_taylor_mill.webp"
+  },
+  {
+    "id": "cooper",
+    "name": "Anna Julia Cooper",
+    "years": "1858 – 1964",
+    "era": "modernePostmoderne",
+    "school": "Schwarzer Feminismus",
+    "tagline": "Pionierin der intersektionalen Bildungs- und Rassetheorie.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/cooper.webp"
+  },
+  {
+    "id": "langer",
+    "name": "Susanne Langer",
+    "years": "1895 – 1985",
+    "era": "modernePostmoderne",
+    "school": "Symbol-Philosophie",
+    "tagline": "Philosophin der symbolischen Form und der Kunst.",
+    "aliases": [
+      "Susanne K. Langer"
+    ],
+    "imageAsset": "assets/images/philosophers/langer.webp"
+  },
+  {
+    "id": "weil",
+    "name": "Simone Weil",
+    "years": "1909 – 1943",
+    "era": "modernePostmoderne",
+    "school": "Politische Mystik",
+    "tagline": "Mystikerin der Aufmerksamkeit und Anwältin der Entwurzelten.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/weil.webp"
+  },
+  {
+    "id": "murdoch",
+    "name": "Iris Murdoch",
+    "years": "1919 – 1999",
+    "era": "modernePostmoderne",
+    "school": "Moralphilosophie",
+    "tagline": "Erneuerin der platonischen Ethik der moralischen Aufmerksamkeit.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/murdoch.webp"
+  },
+  {
+    "id": "berger",
+    "name": "Peter L. Berger",
+    "years": "1929 – 2017",
+    "era": "modernePostmoderne",
+    "school": "Wissenssoziologie",
+    "tagline": "Co-Autor der „Gesellschaftlichen Konstruktion der Wirklichkeit\".",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/berger.webp"
+  },
+  {
+    "id": "luckmann",
+    "name": "Thomas Luckmann",
+    "years": "1927 – 2016",
+    "era": "modernePostmoderne",
+    "school": "Wissenssoziologie",
+    "tagline": "Co-Autor der „Gesellschaftlichen Konstruktion der Wirklichkeit\".",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/luckmann.webp"
+  },
+  {
+    "id": "haraway",
+    "name": "Donna Haraway",
+    "years": "1944 – heute",
+    "era": "zeitgenoessisch",
+    "school": "Science Studies",
+    "tagline": "Theoretikerin des Cyborgs und der Companion Species.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/haraway.webp"
+  },
+  {
+    "id": "bell_hooks",
+    "name": "bell hooks",
+    "years": "1952 – 2021",
+    "era": "zeitgenoessisch",
+    "school": "Schwarzer Feminismus",
+    "tagline": "Theoretikerin von Klasse, Race und Liebe als Praxis.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/bell_hooks.webp"
+  },
+  {
+    "id": "fricker",
+    "name": "Miranda Fricker",
+    "years": "1966 – heute",
+    "era": "zeitgenoessisch",
+    "school": "Soziale Erkenntnistheorie",
+    "tagline": "Begründerin des Konzepts der epistemischen Ungerechtigkeit.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/fricker.webp"
+  },
+  {
+    "id": "jaeggi",
+    "name": "Rahel Jaeggi",
+    "years": "1967 – heute",
+    "era": "zeitgenoessisch",
+    "school": "Kritische Theorie",
+    "tagline": "Erneuerin der Entfremdungstheorie für die Gegenwart.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/jaeggi.webp"
+  },
+  {
+    "id": "makrina",
+    "name": "Makrina die Jüngere",
+    "years": "ca. 327 – 379",
+    "era": "antike",
+    "school": "Kappadokische Theologie",
+    "tagline": "Lehrerin ihres Bruders Gregor von Nyssa, Begründerin einer Frauen-Asketengemeinschaft.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/makrina.webp"
+  },
+  {
+    "id": "elisabeth_pfalz",
+    "name": "Elisabeth von der Pfalz",
+    "years": "1618 – 1680",
+    "era": "aufklaerung",
+    "school": "Cartesianismus",
+    "tagline": "Korrespondentin Descartes', kritische Stimme zur Leib-Seele-Problematik.",
+    "aliases": [
+      "Elisabeth von Böhmen"
+    ],
+    "imageAsset": "assets/images/philosophers/elisabeth_pfalz.webp"
+  },
+  {
+    "id": "edith_stein",
+    "name": "Edith Stein",
+    "years": "1891 – 1942",
+    "era": "modernePostmoderne",
+    "school": "Phänomenologie",
+    "tagline": "Phänomenologin und Schülerin Husserls, später Karmelitin.",
+    "aliases": [],
+    "imageAsset": "assets/images/philosophers/edith_stein.webp"
+  },
+  {
+    "id": "nishida",
+    "name": "Nishida Kitarō",
+    "years": "1870 – 1945",
+    "era": "modernePostmoderne",
+    "school": "Kyoto-Schule",
+    "tagline": "Begründer der Kyoto-Schule und Denker des absoluten Nichts.",
+    "aliases": [
+      "Nishida Kitaro"
+    ],
+    "imageAsset": "assets/images/philosophers/nishida.webp"
   }
 ]

@@ -190,6 +190,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'De Cive (Vorrede)',
     explanation: 'Hobbes übernimmt das Plautus-Diktum „homo homini lupus" und macht es zum Ausgangspunkt seines Vertragsdenkens.',
+    philosopherId: 'hobbes',
   ),
   Question(
     id: 'q_quote_017',
@@ -375,6 +376,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Konfuzius, Analekten, 1,1',
     explanation: 'Die Analekten eröffnen mit einer Verbindung von Studium und Übung. Wissen ist im Konfuzianismus nie nur Besitz, sondern kultivierte Lebensform.',
+    philosopherId: 'konfuzius',
     topicKey: 'confucius_learning',
   ),
   Question(
@@ -386,6 +388,7 @@ const kQuestions = <Question>[
     difficulty: 4,
     attribution: 'Mary Wollstonecraft, Eine Verteidigung der Rechte der Frau, Kap. 4',
     explanation: 'Wollstonecraft fordert keine Umkehr der Herrschaft, sondern Selbstregierung durch Bildung und Vernunft. Gerade darin liegt die Modernität ihres Feminismus.',
+    philosopherId: 'wollstonecraft',
     topicKey: 'wollstonecraft_rights_of_woman',
   ),
   Question(
@@ -409,6 +412,7 @@ const kQuestions = <Question>[
     difficulty: 5,
     attribution: 'Laozi, Daodejing, Kap. 1',
     explanation: 'Das Daodejing beginnt mit einer Warnung vor begrifflicher Verfestigung. Das Dao entzieht sich abschließender Benennung und bleibt dem fixierenden Zugriff voraus.',
+    philosopherId: 'laozi',
     topicKey: 'dao_ineffable',
   ),
   Question(
@@ -432,6 +436,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Mary Astell, Some Reflections upon Marriage, Vorwort',
     explanation: 'Astell dreht die Sprache natürlicher Freiheit gegen die patriarchale Eheordnung. Genau dadurch wird ihre Kritik an politischer und häuslicher Unterwerfung so schärfend.',
+    philosopherId: 'astell',
     topicKey: 'astell_marriage_slavery',
   ),
   Question(
@@ -443,6 +448,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, Art. I',
     explanation: 'De Gouges schreibt die Menschenrechtssprache der Revolution bewusst um. Ihr Punkt ist nicht Sonderrecht, sondern universale Gleichberechtigung.',
+    philosopherId: 'de_gouges',
     topicKey: 'gouges_rights_of_woman_declaration',
   ),
   Question(
@@ -466,6 +472,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Donna Haraway, Ein Manifest für Cyborgs, Schluss',
     explanation: 'Haraway nutzt die Figur des Cyborgs, um starre Gegensätze wie Natur/Kultur oder Frau/Mann aufzubrechen. Der Satz ist deshalb so berühmt, weil er Essenzialismus ironisch unterläuft.',
+    philosopherId: 'haraway',
     topicKey: 'haraway_cyborg_manifesto',
   ),
   Question(
@@ -477,6 +484,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Simone Weil, "Betrachtungen über den rechten Gebrauch der Schulstudien im Hinblick auf die Gottesliebe"',
     explanation: 'Bei Weil ist Aufmerksamkeit nicht bloß Konzentration, sondern eine ethische Übung des Entgegenkommens. Darin liegt die eigentliche Schönheit des Satzes.',
+    philosopherId: 'weil',
     topicKey: 'weil_attention_generosity',
   ),
   Question(
@@ -488,6 +496,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Iris Murdoch, Die Souveränität des Guten, "Die Idee der Vollkommenheit"',
     explanation: 'Murdoch versteht Moral als Arbeit am Blick auf die Wirklichkeit. Liebe heißt bei ihr gerade, das Andere nicht dauernd auf das eigene Ego zu reduzieren.',
+    philosopherId: 'murdoch',
     topicKey: 'murdoch_love_reality',
   ),
   Question(
@@ -499,6 +508,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Platon, Symposion 202d',
     explanation: 'Diotima ist bei Platon die Lehrerin des Sokrates in Liebesdingen. Wichtig ist dabei, sie als literarisch-philosophische Figur des Dialogs zu kennzeichnen.',
+    philosopherId: 'diotima',
     topicKey: 'diotima_eros_daimon',
   ),
   Question(
@@ -510,6 +520,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Hildegard von Bingen, Liber divinorum operum I, 1',
     explanation: 'Die Stimme spricht in Hildegards Kosmos als göttliche Lebenskraft, die die Schöpfung durchzieht. Deshalb passen bei ihr Naturbild, Theologie und Anthropologie so eng zusammen.',
+    philosopherId: 'hildegard',
     topicKey: 'hildegard_fiery_life',
   ),
   Question(
@@ -521,6 +532,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Mary Wollstonecraft, A Vindication of the Rights of Woman, Kap. 12',
     explanation: 'Wollstonecraft verbindet Bildung, Bürgerschaft und eheliche Beziehungen. Ihr Feminismus will Frauen nicht idealisieren, sondern als voll vernünftige Subjekte ernst nehmen.',
+    philosopherId: 'wollstonecraft',
     topicKey: 'wollstonecraft_rational_citizens',
   ),
   Question(
@@ -532,6 +544,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'bell hooks, Feminismus für alle, Kap. 1',
     explanation: 'bell hooks formuliert Feminismus bewusst nicht als Kampf gegen Männer, sondern gegen ein Herrschaftssystem. Darum ist ihre Definition so klar und einladend zugleich.',
+    philosopherId: 'bell_hooks',
     topicKey: 'hooks_end_sexist_oppression',
   ),
   Question(
@@ -543,6 +556,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, Art. X',
     explanation: "Der Satz legt die Heuchelei einer Politik offen, die Frauen strafen, aber nicht mitsprechen lassen will. Genau diese Symmetrie macht de Gouges' Pointe unvergesslich.",
+    philosopherId: 'de_gouges',
     topicKey: 'gouges_rights_of_woman_declaration',
   ),
   Question(
@@ -554,6 +568,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Konfuzius, Lunyu/Analekten 15.21',
     explanation: 'Der Satz passt ideal zum konfuzianischen Gedanken der Selbstkultivierung. Moral beginnt hier nicht mit Empörung über andere, sondern mit Arbeit an sich selbst.',
+    philosopherId: 'konfuzius',
     topicKey: 'confucius_self_discipline',
   ),
   Question(
@@ -565,6 +580,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Laozi, Daodejing, Kap. 8',
     explanation: 'Wasser ist bei Laozi stark, gerade weil es nicht verhärtet. Das Bild verdichtet sehr schön die daoistische Wertschätzung des Unspektakulären und Nicht-Streitenden.',
+    philosopherId: 'laozi',
     topicKey: 'laozi_water_goodness',
   ),
   Question(
@@ -576,6 +592,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Zhuangzi, Kap. 2',
     explanation: 'Der Schmetterlingstraum ist kein bloßes Rätsel, sondern ein Stachel gegen allzu starre Wirklichkeitsbegriffe. Zhuangzi macht damit Perspektivwechsel philosophisch fruchtbar.',
+    philosopherId: 'zhuangzi',
     topicKey: 'zhuangzi_butterfly_transformations',
   ),
   Question(
@@ -587,6 +604,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Mengzi 2A6',
     explanation: 'Mengzi begründet Moral mit den "Anfängen" oder Keimen der Tugend. Das ist keine fertige Heiligkeit, sondern ein zartes Potential, das erzogen werden muss.',
+    philosopherId: 'mengzi',
     topicKey: 'mencius_compassion_sprout',
   ),
   Question(
@@ -598,6 +616,7 @@ const kQuestions = <Question>[
     difficulty: 4,
     attribution: 'Nagarjuna, Mulamadhyamakakarika 24,18',
     explanation: 'Nagarjuna trennt Leerheit gerade nicht von der Welt der Beziehungen, sondern denkt beides zusammen. Darin liegt die Raffinesse des Madhyamaka.',
+    philosopherId: 'nagarjuna',
     topicKey: 'madhyamaka_nagarjuna',
   ),
   Question(
@@ -609,6 +628,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Wang Yangming, Chuanxilu',
     explanation: 'Wang richtet sich gegen bloßes Papierwissen. Wahres Wissen zeigt sich für ihn darin, dass es das Handeln bereits innerlich mitbewegt.',
+    philosopherId: 'wang_yangming',
     topicKey: 'wang_unity_of_knowing_and_acting',
   ),
   Question(
@@ -620,6 +640,7 @@ const kQuestions = <Question>[
     difficulty: 4,
     attribution: 'Xunzi, Kap. 23',
     explanation: 'Xunzi will nicht sagen, dass Menschen hoffnungslos seien. Er betont vielmehr, dass Bildung, Ritual und bewusste Formung notwendig sind.',
+    philosopherId: 'xunzi',
     topicKey: 'xunzi_human_nature_bad',
   ),
   Question(
@@ -631,6 +652,7 @@ const kQuestions = <Question>[
     difficulty: 5,
     attribution: 'Avicenna, Kitab al-Shifa, De anima I, 1',
     explanation: 'Das Gedankenexperiment des "schwebenden Menschen" soll zeigen, dass Selbstbewusstsein nicht einfach aus der Wahrnehmung des Körpers stammt. Genau darum ist es in der Philosophie des Geistes bis heute berühmt.',
+    philosopherId: 'avicenna',
     topicKey: 'avicenna_floating_person',
   ),
   Question(
@@ -765,6 +787,7 @@ const kQuestions = <Question>[
     correctIndex: 0,
     difficulty: 4,
     explanation: 'Berger und Luckmann (1966) — wissenssoziologisches Standardwerk zur sozialen Konstruktion.',
+    philosopherId: 'berger',
   ),
   Question(
     id: 'q_work_013',
@@ -794,6 +817,7 @@ const kQuestions = <Question>[
     correctIndex: 0,
     difficulty: 1,
     explanation: 'Hobbes entwirft hier seine Theorie souveräner Staatsgewalt als Antwort auf Bürgerkrieg und Angst. Frieden entsteht für ihn nur durch eine überlegene politische Macht.',
+    philosopherId: 'hobbes',
     topicKey: 'hobbes_leviathan',
   ),
   Question(
@@ -826,6 +850,7 @@ const kQuestions = <Question>[
     correctIndex: 0,
     difficulty: 5,
     explanation: 'Das Grundtext der Madhyamaka-Schule entfaltet die Lehre der Leerheit. Nāgārjuna kritisiert damit jede Vorstellung eigenständig bestehender Wesenheiten.',
+    philosopherId: 'nagarjuna',
     topicKey: 'madhyamaka_nagarjuna',
   ),
   Question(
@@ -836,6 +861,7 @@ const kQuestions = <Question>[
     correctIndex: 0,
     difficulty: 4,
     explanation: 'Wollstonecraft antwortet auf die Geschlechterordnung der Aufklärung mit einem Bildungsprogramm der Autonomie. Das Buch ist ein Schlüsseltext des frühen Feminismus.',
+    philosopherId: 'wollstonecraft',
     topicKey: 'wollstonecraft_rights_of_woman',
   ),
   Question(
@@ -858,6 +884,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Mary Astell, A Serious Proposal to the Ladies, 1694',
     explanation: 'Astell verbindet in dieser Schrift Frauenbildung mit moralischer und geistiger Selbstständigkeit. Gerade deshalb gilt sie als Schlüsseltext früher feministischer Philosophie.',
+    philosopherId: 'astell',
     topicKey: 'astell_serious_proposal',
   ),
   Question(
@@ -869,6 +896,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Anne Conway, The Principles of the Most Ancient and Modern Philosophy, 1690',
     explanation: 'Conways Hauptwerk entwickelt eine lebendige, nicht-dualistische Metaphysik. Gerade ihr Angriff auf die Vorstellung toter Materie macht das Buch so originell.',
+    philosopherId: 'anne_conway',
     topicKey: 'conway_principles_monism',
   ),
   Question(
@@ -880,6 +908,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Margaret Cavendish, Observations upon Experimental Philosophy, 1666',
     explanation: 'Cavendish nutzt das Werk, um die neue Experimentalwissenschaft kritisch zu befragen. Sie denkt Natur nicht als tote Maschine, sondern als selbstbewegte Materie.',
+    philosopherId: 'cavendish',
     topicKey: 'cavendish_observations_experimental_philosophy',
   ),
   Question(
@@ -891,6 +920,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Emilie du Chatelet, Institutions de Physique, 1740',
     explanation: 'Du Chatelet verbindet in diesem Werk Metaphysik und Physik auf bemerkenswert eigenständige Weise. Es ist weit mehr als nur ein Kommentar zu Newton.',
+    philosopherId: 'du_chatelet',
     topicKey: 'duchatelet_institutions_physics',
   ),
   Question(
@@ -902,6 +932,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Christine de Pizan, Le Livre de la Cite des Dames, 1405',
     explanation: 'Christine antwortet mit diesem Werk auf frauenfeindliche Traditionen, indem sie eine symbolische Stadt aus weiblichen Beispielen errichtet. Das ist zugleich Verteidigung und Neuschreibung kulturellen Gedächtnisses.',
+    philosopherId: 'christine_de_pizan',
     topicKey: 'pizan_city_of_ladies',
   ),
   Question(
@@ -913,6 +944,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: "Tullia d'Aragona, Dialogo della infinita d'amore, 1547",
     explanation: "Tullia d'Aragona interveniert damit in die Renaissance-Debatte über Liebe, Begehren und Geschlechterrollen. Gerade die philosophische Souveränität ihrer Stimme ist hier bemerkenswert.",
+    philosopherId: 'tullia',
     topicKey: 'tullia_infinity_of_love',
   ),
   Question(
@@ -924,6 +956,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, 1791',
     explanation: 'De Gouges schreibt die revolutionäre Rechte-Sprache um, damit Frauen nicht länger unsichtbar bleiben. Das macht den Text bis heute so lehrreich.',
+    philosopherId: 'de_gouges',
     topicKey: 'gouges_rights_of_woman_declaration',
   ),
   Question(
@@ -935,6 +968,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Harriet Taylor Mill, The Enfranchisement of Women, 1851',
     explanation: 'Der Essay gehört zu den wichtigsten frühen Texten für politisches Frauenstimmrecht im englischsprachigen Raum. Harriet Taylor Mill ist hier keineswegs nur Randfigur im Schatten Mills.',
+    philosopherId: 'harriet_taylor_mill',
     topicKey: 'harriet_taylor_enfranchisement',
   ),
   Question(
@@ -946,6 +980,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Harriet Martineau, How to Observe Morals and Manners, 1838',
     explanation: 'Martineau denkt Beobachtung nicht als neutralen Blick von oben, sondern als methodisch reflektierte Sozialforschung. Das wirkt erstaunlich modern.',
+    philosopherId: 'martineau',
     topicKey: 'martineau_observe_morals_manners',
   ),
   Question(
@@ -957,6 +992,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Anna Julia Cooper, A Voice from the South, 1892',
     explanation: 'Coopers Buch gilt als früher Grundtext schwarzen feministischen Denkens. Es verbindet Bildungsfrage, Demokratie und Rassismuskritik in ungewöhnlicher Schärfe.',
+    philosopherId: 'cooper',
     topicKey: 'cooper_voice_from_south',
   ),
   Question(
@@ -968,6 +1004,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Susanne Langer, Philosophy in a New Key, 1942',
     explanation: 'Langer macht Symbolisierung zum Schlüssel für Verstehen von Kunst, Mythos und Denken. Gerade mit dieser Weitung wurde das Buch so einflussreich.',
+    philosopherId: 'langer',
     topicKey: 'langer_new_key_symbolism',
   ),
   Question(
@@ -979,6 +1016,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Miranda Fricker, Epistemic Injustice, 2007',
     explanation: 'Frickers Buch hat einen ganzen Debattenstrang in der Gegenwartsphilosophie sichtbar gemacht. Es zeigt, dass auch Erkennen und Zeugenschaft Gerechtigkeitsfragen enthalten.',
+    philosopherId: 'fricker',
     topicKey: 'fricker_epistemic_injustice',
   ),
   Question(
@@ -990,6 +1028,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Rahel Jaeggi, Kritik von Lebensformen / Critique of Forms of Life',
     explanation: 'Jaeggi will zeigen, dass Lebensformen nicht bloß Geschmackssache sind, sondern rational kritisierbar. Darin liegt der aktuelle Reiz ihrer Sozialphilosophie.',
+    philosopherId: 'jaeggi',
     topicKey: 'jaeggi_forms_of_life',
   ),
   Question(
@@ -1001,6 +1040,7 @@ const kQuestions = <Question>[
     difficulty: 4,
     attribution: 'Shankara, Upadesasahasri',
     explanation: 'Die Upadesasahasri ist ein klassischer Text des Advaita Vedanta. Sie entfaltet den Weg zur Einsicht in die Nicht-Zweiheit von Selbst und absoluter Wirklichkeit.',
+    philosopherId: 'shankara',
     topicKey: 'shankara_upadesasahasri',
   ),
   // ------------- PHILOSOPH -> EPOCHE -------------
@@ -1062,6 +1102,7 @@ const kQuestions = <Question>[
     correctIndex: 0,
     difficulty: 2,
     explanation: 'Hypatia wirkte im Alexandria des späten 4. und frühen 5. Jahrhunderts. Sie steht exemplarisch für den gelehrten Übergang von klassischer Antike zur Spätantike.',
+    philosopherId: 'hypatia',
     topicKey: 'hypatia_era',
   ),
   Question(
@@ -1072,6 +1113,7 @@ const kQuestions = <Question>[
     correctIndex: 1,
     difficulty: 2,
     explanation: 'Avicenna, arabisch Ibn Sīnā, wirkte im 10. und 11. Jahrhundert. Seine Metaphysik und Psychologie prägten die islamische wie die lateinische Scholastik tief.',
+    philosopherId: 'avicenna',
     topicKey: 'avicenna_era',
   ),
   Question(
@@ -1127,6 +1169,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Hypatia von Alexandria, ca. 355/370-415 n. Chr.',
     explanation: 'Hypatia wirkte im spätantiken Alexandria und steht für eine letzte blühende Phase antiker Gelehrsamkeit. Gerade ihr später Kontext ist philosophisch wichtig.',
+    philosopherId: 'hypatia',
     topicKey: 'hypatia_late_antique_alexandria',
   ),
   Question(
@@ -1138,6 +1181,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Platon, Symposion; Rahmen des 5./4. Jh. v. Chr.',
     explanation: 'Diotima gehört als Figur in den Horizont der klassischen griechischen Antike. Gerade im Symposion wird sie zur philosophischen Autorität über Eros.',
+    philosopherId: 'diotima',
     topicKey: 'diotima_symposium_figure_era',
   ),
   Question(
@@ -1149,6 +1193,7 @@ const kQuestions = <Question>[
     difficulty: 5,
     attribution: 'Aesara von Lucania, zugeschriebener pythagoreischer Fragmenttext',
     explanation: 'Aesara wird gewöhnlich im pythagoreischen Kontext der spätklassischen bis hellenistischen Antike verortet. Ihre Überlieferung ist schmal, aber philosophisch aufschlussreich.',
+    philosopherId: 'aesara',
     topicKey: 'aesara_hellenistic_pythagorean',
   ),
   Question(
@@ -1160,6 +1205,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Makrina die Jüngere, ca. 327-379',
     explanation: 'Makrina ist eine Gestalt der christlichen Spätantike. In Gregors Dialog tritt sie als philosophische Lehrerin über Seele und Auferstehung hervor.',
+    philosopherId: 'makrina',
     topicKey: 'macrina_late_antiquity_dialogue',
   ),
   Question(
@@ -1171,6 +1217,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Hildegard von Bingen, 1098-1179',
     explanation: 'Hildegard ist eine Schlüsselgestalt des 12. Jahrhunderts. Ihre Werke stehen mitten im intellektuellen und theologischen Leben des Hochmittelalters.',
+    philosopherId: 'hildegard',
     topicKey: 'hildegard_high_middle_ages',
   ),
   Question(
@@ -1182,6 +1229,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Elisabeth von der Pfalz, 1618-1680',
     explanation: 'Elisabeth gehört ganz in die Debatten der frühen Neuzeit. Ihre Korrespondenz mit Descartes ist dafür ein besonders schönes Beispiel.',
+    philosopherId: 'elisabeth_pfalz',
     topicKey: 'elisabeth_early_modern_era',
   ),
   Question(
@@ -1193,6 +1241,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Anna Julia Cooper, 1858-1964; A Voice from the South, 1892',
     explanation: 'Coopers grundlegende philosophisch-politische Interventionen entstehen im ausgehenden 19. Jahrhundert. Gerade dort wird ihre Verbindung von Bildung, Race und Geschlecht sichtbar.',
+    philosopherId: 'cooper',
     topicKey: 'cooper_nineteenth_century',
   ),
   Question(
@@ -1204,6 +1253,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Edith Stein, 1891-1942',
     explanation: 'Stein gehört in die dichte philosophische Landschaft des 20. Jahrhunderts. Ihre Arbeit verbindet Phänomenologie, Anthropologie und später auch Metaphysik.',
+    philosopherId: 'edith_stein',
     topicKey: 'stein_twentieth_century',
   ),
   Question(
@@ -1215,6 +1265,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Nishida Kitaro, 1870-1945',
     explanation: 'Nishida ist ein moderner japanischer Philosoph des 20. Jahrhunderts und Gründerfigur der Kyoto-Schule. Genau darin liegt seine transkulturelle Bedeutung.',
+    philosopherId: 'nishida',
     topicKey: 'nishida_twentieth_century',
   ),
   Question(
@@ -1226,6 +1277,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Wang Yangming, 1472-1529',
     explanation: 'Wang Yangming ist ein Denker der Ming-Zeit und damit der chinesischen Frühen Neuzeit. Seine Lehre steht im Kontext des Neo-Konfuzianismus.',
+    philosopherId: 'wang_yangming',
     topicKey: 'wang_ming_early_modern_china',
   ),
   // ------------- BEGRIFF -> SCHULE -------------
@@ -1557,6 +1609,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Protagoras (überliefert bei Platon, Theaitetos)',
     explanation: "Protagoras' homo-mensura-Satz — frühe Formel des Relativismus.",
+    philosopherId: 'protagoras',
   ),
   Question(
     id: 'q_complete_004',
@@ -1674,6 +1727,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Konfuzius, Analekten, 15,21',
     explanation: 'Der Satz bringt eine konfuzianische Ethik der Selbstkultivierung auf den Punkt. Moral beginnt mit der Arbeit an sich, nicht mit dem schnellen Vorwurf an andere.',
+    philosopherId: 'konfuzius',
     topicKey: 'confucius_self_discipline',
   ),
   Question(
@@ -1685,6 +1739,7 @@ const kQuestions = <Question>[
     difficulty: 4,
     attribution: 'Laozi, Daodejing, Kap. 1',
     explanation: 'Die Lücke ist philosophisch entscheidend. Das Dao entzieht sich endgültiger Festschreibung und öffnet so einen Raum jenseits begrifflicher Herrschaft.',
+    philosopherId: 'laozi',
     topicKey: 'dao_ineffable',
   ),
   Question(
@@ -1708,6 +1763,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Mary Astell, Some Reflections upon Marriage, Vorwort',
     explanation: 'Astell verbindet hier politische Freiheit und Geschlechterordnung in einem einzigen scharfen Satz. Gerade deshalb ist die Pointe bis heute so stark.',
+    philosopherId: 'astell',
     topicKey: 'astell_marriage_slavery',
   ),
   Question(
@@ -1719,6 +1775,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Olympe de Gouges, Erklärung der Rechte der Frau und Bürgerin, Art. X',
     explanation: 'De Gouges macht sichtbar, wie absurd eine Ordnung ist, die Frauen Strafe zumutet, aber Mitsprache verweigert. Der Satz ist zugleich schnittig und systemkritisch.',
+    philosopherId: 'de_gouges',
     topicKey: 'gouges_rights_of_woman_declaration',
   ),
   Question(
@@ -1742,6 +1799,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Donna Haraway, Ein Manifest für Cyborgs, Schluss',
     explanation: 'Der Satz bekommt seine Schärfe gerade aus dem Kontrast von Hybridität und essenzialistischer Reinheitsphantasie. Deshalb ist er so merkfähig.',
+    philosopherId: 'haraway',
     topicKey: 'haraway_cyborg_manifesto',
   ),
   Question(
@@ -1753,6 +1811,7 @@ const kQuestions = <Question>[
     difficulty: 2,
     attribution: 'Simone Weil, "Betrachtungen über den rechten Gebrauch der Schulstudien im Hinblick auf die Gottesliebe"',
     explanation: 'Weil macht aus Aufmerksamkeit eine ethische Tugend. Der Satz ist kurz, aber er öffnet einen ganzen Begriff von geistiger Gastfreundschaft.',
+    philosopherId: 'weil',
     topicKey: 'weil_attention_generosity',
   ),
   Question(
@@ -1764,6 +1823,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Laozi, Daodejing, Kap. 8',
     explanation: 'Wasser ist bei Laozi nicht schwach, sondern wirksam ohne Härte. Gerade darin zeigt sich die daoistische Wertschätzung des Nachgiebigen.',
+    philosopherId: 'laozi',
     topicKey: 'laozi_water_goodness',
   ),
   Question(
@@ -1775,6 +1835,7 @@ const kQuestions = <Question>[
     difficulty: 1,
     attribution: 'Konfuzius, Lunyu/Analekten 15.21',
     explanation: 'Der Satz bringt konfuzianische Selbstkultivierung wunderbar knapp auf den Punkt. Ethische Arbeit fängt hier beim eigenen Charakter an.',
+    philosopherId: 'konfuzius',
     topicKey: 'confucius_self_discipline',
   ),
   Question(
@@ -1786,6 +1847,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Zhuangzi, Kap. 2',
     explanation: 'Die berühmte Schlusswendung kippt Perspektive gegen Perspektive. Genau dadurch untergräbt Zhuangzi allzu bequeme Gewissheiten über Identität und Wirklichkeit.',
+    philosopherId: 'zhuangzi',
     topicKey: 'zhuangzi_butterfly_transformations',
   ),
   Question(
@@ -1797,6 +1859,7 @@ const kQuestions = <Question>[
     difficulty: 3,
     attribution: 'Nagarjuna, Mulamadhyamakakarika 24,18',
     explanation: 'Die Pointe besteht darin, Leerheit nicht als Nichts zu verstehen, sondern als Beziehungscharakter aller Dinge. Das ist philosophisch viel subtiler, als es zunächst klingt.',
+    philosopherId: 'nagarjuna',
     topicKey: 'madhyamaka_nagarjuna',
   ),
   Question(
@@ -1808,6 +1871,7 @@ const kQuestions = <Question>[
     difficulty: 4,
     attribution: 'Iris Murdoch, Die Souveränität des Guten, "Die Idee der Vollkommenheit"',
     explanation: 'Murdochs Moralpsychologie lebt von diesem kleinen Wort "wirklich". Es zwingt das Ego, das Andere endlich ernst zu nehmen.',
+    philosopherId: 'murdoch',
     topicKey: 'murdoch_love_reality',
   ),
   // ------------- KRITIK & STREIT -------------

@@ -6,6 +6,7 @@ import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/achievement.dart';
+import '../../data/models/player_profile.dart';
 import '../../data/repositories/supabase_profile_repository.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
@@ -97,21 +98,7 @@ class ProfileScreen extends ConsumerWidget {
               title: 'Errungenschaften',
             ),
             const SizedBox(height: 16),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 3,
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 14,
-              childAspectRatio: 0.78,
-              children: [
-                for (final a in kAchievements)
-                  _AchievementBadge(
-                    achievement: a,
-                    unlocked: p.unlockedAchievements.contains(a.id),
-                  ),
-              ],
-            ),
+            _AchievementsPreview(profile: p),
           ],
         ),
       ),
@@ -289,54 +276,132 @@ class _Stat extends StatelessWidget {
   }
 }
 
-class _AchievementBadge extends StatelessWidget {
-  const _AchievementBadge({
-    required this.achievement,
-    required this.unlocked,
-  });
-
-  final Achievement achievement;
-  final bool unlocked;
+/// Compact summary card on the profile screen — shows the three most recent
+/// unlocks (or the next three locked teasers) and an "Alle ansehen"-CTA that
+/// pushes the dedicated gallery.
+class _AchievementsPreview extends StatelessWidget {
+  const _AchievementsPreview({required this.profile});
+  final PlayerProfile profile;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final unlockedAchievements = kAchievements
+        .where((a) => a.isAnyUnlocked(profile.unlockedAchievements))
+        .toList(growable: false);
+    final totalTiers =
+        kAchievements.fold<int>(0, (sum, a) => sum + a.tiers.length);
+    final earnedTiers = kAchievements.fold<int>(
+      0,
+      (sum, a) =>
+          sum +
+          a.tiers
+              .where(
+                (t) => profile.unlockedAchievements.contains(a.tierIdOf(t)),
+              )
+              .length,
+    );
+
+    // Preview pool: prefer unlocked achievements (best-tier glyph), pad with
+    // not-yet-unlocked visible ones so the row is always full.
+    final visible = kAchievements
+        .where((a) => !a.hidden || a.isAnyUnlocked(profile.unlockedAchievements))
+        .toList(growable: false);
+    final preview = [
+      ...unlockedAchievements,
+      ...visible.where((a) => !unlockedAchievements.contains(a)),
+    ].take(4).toList(growable: false);
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => context.push('/achievements'),
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: palette.page,
+            border: Border.all(color: palette.gold.withValues(alpha: 0.4)),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${unlockedAchievements.length} von ${kAchievements.length} entsiegelt',
+                      style: AppTypography.serif(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: palette.ink,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '$earnedTiers / $totalTiers Stufen',
+                    style:
+                        TextStyle(color: palette.inkMuted, fontSize: 12.5),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  for (final a in preview)
+                    _PreviewSeal(
+                      achievement: a,
+                      unlockedIds: profile.unlockedAchievements,
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Text(
+                    'Alle ansehen',
+                    style: TextStyle(
+                      color: palette.gold,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 18,
+                    color: palette.gold,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PreviewSeal extends StatelessWidget {
+  const _PreviewSeal({required this.achievement, required this.unlockedIds});
+  final Achievement achievement;
+  final Set<String> unlockedIds;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final best = achievement.bestUnlocked(unlockedIds);
+    final unlocked = best != null;
+    final tier = best ?? achievement.tiers.first;
+    final tint = unlocked ? tier.level.tint : palette.inkMuted;
     return Opacity(
       opacity: unlocked ? 1 : 0.32,
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: palette.page,
-          border: Border.all(
-            color: unlocked
-                ? palette.gold.withValues(alpha: 0.6)
-                : palette.divider,
-            width: unlocked ? 1.4 : 1,
-          ),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Column(
-          children: [
-            WaxSeal(
-              symbol: achievement.symbol,
-              size: 36,
-              color: unlocked ? palette.gold : palette.inkMuted,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              achievement.title,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.serif(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                height: 1.2,
-                color: palette.ink,
-              ),
-            ),
-          ],
-        ),
+      child: WaxSeal(
+        symbol: tier.symbol,
+        size: 44,
+        color: tint,
+        assetPath: achievement.assetPathOf(tier),
       ),
     );
   }

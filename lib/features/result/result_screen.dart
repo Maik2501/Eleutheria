@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
-import '../../data/models/achievement.dart';
 import '../../data/models/game_session.dart';
+import '../../data/services/achievement_engine.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
@@ -25,7 +25,7 @@ class ResultScreen extends ConsumerStatefulWidget {
 
   final GameSession session;
   final int xpGained;
-  final List<String> unlockedAchievements;
+  final List<UnlockedTier> unlockedAchievements;
 
   @override
   ConsumerState<ResultScreen> createState() => _ResultScreenState();
@@ -75,9 +75,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     final percent = total == 0 ? 0 : (correct / total * 100).round();
 
     final headline = _headlineFor(percent);
-    final unlocked = widget.unlockedAchievements
-        .map((id) => kAchievements.firstWhere((a) => a.id == id))
-        .toList();
+    final unlocked = widget.unlockedAchievements;
 
     return Scaffold(
       body: ParchmentBackground(
@@ -131,8 +129,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                         runSpacing: 14,
                         alignment: WrapAlignment.center,
                         children: [
-                          for (final a in unlocked)
-                            _AchievementChip(achievement: a),
+                          for (var i = 0; i < unlocked.length; i++)
+                            _AchievementChip(unlock: unlocked[i])
+                                .animate(delay: (90 * i).ms)
+                                .scale(
+                                  begin: const Offset(0.6, 0.6),
+                                  end: const Offset(1, 1),
+                                  duration: 420.ms,
+                                  curve: Curves.elasticOut,
+                                )
+                                .fadeIn(duration: 280.ms),
                         ],
                       ),
                     ],
@@ -281,26 +287,32 @@ class _AnswerHistogram extends StatelessWidget {
 }
 
 class _AchievementChip extends StatelessWidget {
-  const _AchievementChip({required this.achievement});
-  final Achievement achievement;
+  const _AchievementChip({required this.unlock});
+  final UnlockedTier unlock;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final tint = unlock.tier.level.tint;
     return Container(
-      width: 140,
+      width: 144,
       padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
       decoration: BoxDecoration(
         color: palette.page,
-        border: Border.all(color: palette.gold.withValues(alpha: 0.5), width: 1.2),
+        border: Border.all(color: tint.withValues(alpha: 0.65), width: 1.4),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
-          WaxSeal(symbol: achievement.symbol, size: 38, color: palette.gold),
+          WaxSeal(
+            symbol: unlock.tier.symbol,
+            size: 38,
+            color: tint,
+            assetPath: unlock.achievement.assetPathOf(unlock.tier),
+          ),
           const SizedBox(height: 10),
           Text(
-            achievement.title,
+            unlock.title,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -311,6 +323,13 @@ class _AchievementChip extends StatelessWidget {
               height: 1.25,
             ),
           ),
+          if (unlock.achievement.isMultiTier) ...[
+            const SizedBox(height: 4),
+            Text(
+              unlock.tier.level.label.toUpperCase(),
+              style: AppTypography.eyebrow(tint).copyWith(letterSpacing: 1.5),
+            ),
+          ],
         ],
       ),
     );

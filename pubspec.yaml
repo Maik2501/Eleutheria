@@ -51,4 +51,5 @@ flutter:
     - assets/textures/
     - assets/icons/
     - assets/icons/modes/
+    - assets/icons/achievements/
     - assets/data/

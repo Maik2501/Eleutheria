@@ -8,10 +8,13 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../data/models/achievement.dart';
 import '../../data/models/answer_input_style.dart';
 import '../../data/models/difficulty_band.dart';
 import '../../data/models/game_session.dart';
+import '../../data/models/player_profile.dart';
 import '../../shared/widgets/parchment_background.dart';
+import '../../shared/widgets/wax_seal.dart';
 import '../quiz/game_session_controller.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -52,6 +55,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: _HomeHeader(
                   displayName: profile?.displayName ?? '…',
                   streakDays: profile?.streakDays ?? 0,
+                  rankTitle: profile?.rankTitle ?? 'Lehrling',
+                  level: profile?.level ?? 1,
+                  unlockedCount: _unlockedAchievementCount(profile),
+                  totalCount: kAchievements.length,
                 ),
               ),
               const SliverToBoxAdapter(
@@ -372,54 +379,152 @@ class _BrandSeal extends StatelessWidget {
   }
 }
 
+int _unlockedAchievementCount(PlayerProfile? profile) {
+  if (profile == null) return 0;
+  return kAchievements
+      .where((a) => a.isAnyUnlocked(profile.unlockedAchievements))
+      .length;
+}
+
 class _HomeHeader extends StatelessWidget {
   const _HomeHeader({
     required this.displayName,
     required this.streakDays,
+    required this.rankTitle,
+    required this.level,
+    required this.unlockedCount,
+    required this.totalCount,
   });
 
   final String displayName;
   final int streakDays;
+  final String rankTitle;
+  final int level;
+  final int unlockedCount;
+  final int totalCount;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 22, 20, 0),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: () => context.push('/profile'),
-            child: const _HeaderAppIcon(size: 58),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Guten Tag,', style: AppTypography.eyebrow(palette.gold)),
-                const SizedBox(height: 3),
-                Text(
-                  displayName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.serif(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    color: palette.ink,
-                  ),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () => context.push('/profile'),
+                child: const _HeaderAppIcon(size: 58),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Guten Tag,',
+                        style: AppTypography.eyebrow(palette.gold),),
+                    const SizedBox(height: 3),
+                    Text(
+                      displayName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.serif(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: palette.ink,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              _StreakBadge(days: streakDays),
+              const SizedBox(width: 6),
+              IconButton(
+                onPressed: () => context.push('/settings'),
+                icon: const Icon(Icons.tune_rounded),
+                tooltip: 'Einstellungen',
+              ),
+            ],
           ),
-          _StreakBadge(days: streakDays),
-          const SizedBox(width: 6),
-          IconButton(
-            onPressed: () => context.push('/settings'),
-            icon: const Icon(Icons.tune_rounded),
-            tooltip: 'Einstellungen',
+          const SizedBox(height: 12),
+          _RankChip(
+            rankTitle: rankTitle,
+            level: level,
+            unlockedCount: unlockedCount,
+            totalCount: totalCount,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Tappable rank summary leading into the achievement gallery.
+class _RankChip extends StatelessWidget {
+  const _RankChip({
+    required this.rankTitle,
+    required this.level,
+    required this.unlockedCount,
+    required this.totalCount,
+  });
+
+  final String rankTitle;
+  final int level;
+  final int unlockedCount;
+  final int totalCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => context.push('/achievements'),
+        borderRadius: BorderRadius.circular(999),
+        child: Ink(
+          padding: const EdgeInsets.fromLTRB(6, 6, 14, 6),
+          decoration: BoxDecoration(
+            color: palette.page,
+            borderRadius: BorderRadius.circular(999),
+            border:
+                Border.all(color: palette.gold.withValues(alpha: 0.45)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              WaxSeal(symbol: 'Σ', size: 28, color: palette.gold),
+              const SizedBox(width: 10),
+              Text(
+                rankTitle,
+                style: AppTypography.serif(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                  color: palette.ink,
+                  letterSpacing: -0.1,
+                ),
+              ),
+              Text(
+                '  ·  Stufe $level',
+                style: TextStyle(color: palette.inkMuted, fontSize: 12.5),
+              ),
+              const SizedBox(width: 10),
+              Container(width: 1, height: 14, color: palette.divider),
+              const SizedBox(width: 10),
+              Text(
+                '$unlockedCount / $totalCount',
+                style: AppTypography.serif(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: palette.gold,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Icon(Icons.chevron_right_rounded,
+                  size: 18, color: palette.inkMuted,),
+            ],
+          ),
+        ),
       ),
     );
   }

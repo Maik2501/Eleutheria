@@ -5,11 +5,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../data/models/answer_input_style.dart';
 import '../data/models/difficulty_band.dart';
+import '../data/models/game_session.dart';
 import '../data/models/player_profile.dart';
+import '../data/models/player_stats.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/repositories/score_repository.dart';
 import '../data/repositories/supabase_profile_repository.dart';
+import '../data/seed/philosophers_seed.dart';
+import '../data/services/achievement_engine.dart';
 import '../env.dart';
 
 /// Set during bootstrap in main.dart, then injected via override.
@@ -155,27 +159,62 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     await _persist(p);
   }
 
-  /// Apply session results to the profile: XP, streak, totals, achievements.
-  /// Returns the achievement IDs unlocked by *this* session, for celebration UI.
-  Future<List<String>> applySessionResult({
+  /// Apply [session]'s outcome to the persisted profile and run the
+  /// achievement engine against the fresh stats. The returned list contains
+  /// every tier the player just unlocked, in registry order (bronze before
+  /// silver before gold per achievement) — the celebration UI can iterate it
+  /// to stagger animations.
+  ///
+  /// [wonDuel] is the one signal that can't be inferred from the session
+  /// alone — it's decided by the duel match screen comparing two players'
+  /// scores.
+  Future<List<UnlockedTier>> applySessionResult({
+    required GameSession session,
     required int xpGained,
-    required int correctAnswers,
-    required int suddenDeathStreak,
-    required bool flawlessClassic,
-    required bool wonDuel,
+    bool wonDuel = false,
   }) async {
     final p = state.value;
     if (p == null) return const [];
-    final unlocked = <String>[];
 
+    final correctAnswers = session.correctCount;
+    final fastCorrect = session.answers
+        .where((a) => a.wasCorrect && a.timeTaken.inMilliseconds < 3000)
+        .length;
+    final flawlessClassic = session.mode == GameMode.classic &&
+        correctAnswers == session.questions.length &&
+        session.questions.isNotEmpty;
+    final suddenDeathStreak =
+        session.mode == GameMode.suddenDeath ? correctAnswers : 0;
+
+    // Era coverage — look up philosopher → era for each correctly answered
+    // question that carries a philosopher id.
+    final newEras = <String>{};
+    for (final answer in session.answers) {
+      if (!answer.wasCorrect) continue;
+      final question = session.questions
+          .where((q) => q.id == answer.questionId)
+          .cast<dynamic>()
+          .firstOrNull;
+      final philId = question?.philosopherId as String?;
+      if (philId == null) continue;
+      final phil = philosopherById[philId];
+      if (phil != null) newEras.add(phil.era.name);
+    }
+
+    // ───── 1. Stat updates ─────
     p.xp += xpGained;
     p.totalGamesPlayed += 1;
     p.totalCorrect += correctAnswers;
-
+    p.fastCorrectAnswers += fastCorrect;
+    if (flawlessClassic) p.flawlessClassicCount += 1;
     if (suddenDeathStreak > p.bestSuddenDeath) {
       p.bestSuddenDeath = suddenDeathStreak;
     }
+    if (newEras.isNotEmpty) {
+      p.answeredEraKeys = {...p.answeredEraKeys, ...newEras};
+    }
 
+    // Daily streak.
     final today = DateTime.now();
     final last = p.lastPlayedDate;
     if (last == null) {
@@ -194,32 +233,29 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     }
     p.lastPlayedDate = today;
 
-    void unlock(String id) {
-      if (!p.unlockedAchievements.contains(id)) {
-        p.unlockedAchievements = {...p.unlockedAchievements, id};
-        unlocked.add(id);
+    // Hidden achievements piggyback off play time.
+    if (today.hour < 4) p.nightSessionsCount += 1;
+
+    // Duel counters.
+    if (session.mode == GameMode.vsOnline) {
+      if (wonDuel) {
+        p.duelsWon += 1;
+        p.currentDuelStreak += 1;
+        if (p.currentDuelStreak > p.bestDuelStreak) {
+          p.bestDuelStreak = p.currentDuelStreak;
+        }
+      } else {
+        p.currentDuelStreak = 0;
       }
     }
 
-    if (p.totalGamesPlayed == 1) unlock('first_steps');
-    if (p.totalCorrect >= 10) unlock('sokrates_student');
-    if (p.totalCorrect >= 50) unlock('platos_apprentice');
-    if (p.totalCorrect >= 100) unlock('aristoteles_logician');
-    if (p.streakDays >= 3) unlock('streak_3');
-    if (p.streakDays >= 7) unlock('streak_7');
-    if (p.streakDays >= 30) unlock('streak_30');
-    if (flawlessClassic) unlock('flawless_classic');
-    if (suddenDeathStreak >= 10) unlock('sudden_death_10');
-    if (suddenDeathStreak >= 25) unlock('sudden_death_25');
-    if (wonDuel && !p.unlockedAchievements.contains('first_duel_won')) {
-      unlock('first_duel_won');
-    }
-
-    final hour = DateTime.now().hour;
-    if (hour < 4) unlock('midnight_thinker');
+    // ───── 2. Achievement engine ─────
+    final stats = PlayerStats.fromProfile(p);
+    final freshlyUnlocked =
+        AchievementEngine.evaluate(profile: p, stats: stats);
 
     await _persist(p);
-    return unlocked;
+    return freshlyUnlocked;
   }
 }
 

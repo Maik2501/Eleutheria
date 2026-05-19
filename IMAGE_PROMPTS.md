@@ -235,6 +235,209 @@ Diese Personen kommen aktuell vor allem als Antwortoptionen, Co-Autor:innen oder
 
 ---
 
+## Achievement-Icons
+
+**Zielordner:** `assets/icons/achievements/`
+**Format:** WebP oder PNG, 1024×1024 px, runder Medaillon-Aufbau, Pergament-Hintergrund mit cremefarbenem Rand.
+
+Visuelle Vorlage: die Mode-Icons unter `assets/icons/modes/` — kreisförmiges Medaillon mit feinem Doppelrand (innen schmal, außen breiter), zentriertes Motiv aus 1–3 handgemalten Objekten, Lorbeerblättchen oder Schnörkel als Filler, warmes erdiges Licht.
+
+### Farb-Richtung — *gesättigter als die Mode-Icons*
+
+Tester-Feedback war, dass die App insgesamt zu farbarm wirkt. Die Achievements sind der natürliche Ort, um Farbe einzuführen — sie sind Belohnungen, sollen also herausstechen, ohne den Warm-Academia-Look zu brechen.
+
+Grundregel: **Pergament + Goldring bleiben** (Identität), aber das **zentrale Motiv darf richtig farbig sein**. Wir greifen die existierende Tertiär-Palette aus der App auf:
+
+| Token | Hex | Anwendung im Motiv |
+|---|---|---|
+| `sage` | `#7A8B6F` | Lorbeer, Olivenzweige, Evergreen, ruhige Naturtöne |
+| `terracotta` | `#C97B4A` | Feuer, Phönix, Lampenglühen, Wärme |
+| `dustyTeal` | `#4F7E80` | Nachthimmel, Wasser, Wind, Bewegung |
+| `plum` | `#7B4C68` | Dämmerung, Bändchen, Würde, Disput |
+| `mustard` | `#B89248` | Sonne, Messing, klassisches Gold |
+| `burgundy` | `#6B2737` | Wachssiegel, Lederbände, Schwerpunkt-Akzente |
+
+Jede Errungenschaft hat eine **eigene Farb-Signatur** (2 Hauptfarben + 1 Akzent), siehe pro Eintrag. So entsteht Wiedererkennung pro Achievement und gleichzeitig Vielfalt über die Galerie hinweg.
+
+### Stil-Suffix (an jeden Prompt anhängen)
+
+> *„… rendered as a circular medallion icon in warm-academia style. Cream parchment background (#F5EFE6) with a subtle double rim — narrow inner line in muted burgundy (#6B2737), thicker outer ring in antique gold (#C9A961). Centered composition, 1024×1024 square, the medallion fills most of the frame. Hand-drawn ink linework with rich watercolor wash — the central motif is meaningfully saturated and colorful, not muted, while the rim and supporting flourishes stay in the warm parchment / burgundy / gold register. Soft warm lighting from upper left, very faint paper grain. No text, no letters, no numbers anywhere in the image. Painterly, illustrative, scholarly book-plate quality with the boldness of an illuminated manuscript. Avoid photorealism, neon or modern fluorescent colors, harsh black shadows."*
+
+### Tier-Differenzierung — *am Rahmen, nicht im Motiv*
+
+Damit das Motiv farblich konsistent über alle drei Stufen bleibt, wird der **Tier-Unterschied an Rahmen und Ehrenwerk** ausgespielt, nicht in der Hauptfarbpalette. Konkret:
+
+- **Bronze** — Inner-Rim-Linie in `#A97142`, einfacher Lorbeerzweig unten, kein zusätzlicher Schmuck im Hintergrund.
+- **Silber** — Inner-Rim in `#C2BBA8`, halber Lorbeerkranz, ein dezenter Strahlenfächer hinter dem Motiv.
+- **Gold** — Inner-Rim in `#D4A24C`, geschlossener Lorbeerkranz mit Bändchen, voller Strahlenkranz, evtl. zwei kleine Sterne oder Schnörkel.
+
+Das Motiv selbst wird pro Stufe **inhaltlich reicher**, behält aber seine Farb-Signatur. Bronze ≠ entsättigte Version von Gold — alle drei sind voll farbig, nur eben mit anderem Detailgrad.
+
+### Dateinamen-Konvention
+
+- Einstufige Errungenschaft: `<id>.webp` (z. B. `first_steps.webp`)
+- Mehrstufig: `<id>_<tier>.webp` (z. B. `correct_answers_bronze.webp`)
+
+Die IDs stammen 1:1 aus `lib/data/models/achievement.dart`.
+
+---
+
+### 1. `first_steps.webp` — Erste Schritte *(einstufig)*
+
+**Farbsignatur:** burgundy + mustard + warm cream
+
+> *„An open, ancient leather-bound book lying flat on a study desk. The leather cover is a saturated burgundy with golden embossing along the spine. The first page is freshly inked with a single decorative drop-cap flourish in deep blue and gold. A quill with a creamy-white feather rests across the page. A small brass oil lamp in the upper corner glows with a warm mustard-yellow halo. Faint sage olive sprig below the book."*
+
+---
+
+### 2. `correct_answers_{tier}.webp` — Sammler der Wahrheiten *(3 Stufen)*
+
+**Farbsignatur:** terracotta + sage + warm cream marble · gemeinsame Bildwelt: wachsende Sammlung philosophischer Schriften, Antike-Atelier.
+
+**`correct_answers_bronze.webp` — Schüler des Sokrates**
+> *„A single rolled parchment scroll, tied with a saturated burgundy ribbon and sealed with a small burgundy wax stamp, resting on a warm terracotta-toned stone slab. A snub-nosed bust of Socrates peers from the right side, half in profile, painted in cream-white marble with sage-shadowed crevices. A single sage olive twig at the lower edge."*
+
+**`correct_answers_silver.webp` — Platons Geselle**
+> *„An open scroll unfurled across the medallion, its parchment a warm cream with terracotta-tinted edges, showing faint hand-drawn geometric diagrams in deep blue ink (a circle, a triangle, soft lines). A marble bust of Plato with a flowing beard sits behind the scroll, robed in sage green with cream-white drapery folds. Two olive sprigs frame the lower edge, leaves in saturated sage."*
+
+**`correct_answers_gold.webp` — Aristoteles' Logiker**
+> *„A heavy open codex on a lectern, pages a warm cream filled with faint diagrammatic sketches in burgundy and deep teal ink (branching trees, tiny squares of opposition — completely abstract and indecipherable). A stylized bust of Aristotle with a neatly trimmed beard above the lectern, draped in a rich plum-purple toga with golden trim. A full laurel wreath in saturated sage green, tied at the bottom with a burgundy ribbon, framing the medallion."*
+
+---
+
+### 3. `streaks_{tier}.webp` — Beharrlichkeit *(3 Stufen)*
+
+**Farbsignatur:** sage + dustyTeal + mustard sun · gemeinsame Bildwelt: tägliche Disziplin, wiederkehrendes Licht und Natur.
+
+**`streaks_bronze.webp` — Kontinuität (3 Tage)**
+> *„A small bronze sundial standing on weathered stone, casting a soft shadow. The sky behind shifts from soft mustard-yellow morning gold at the top to dustyTeal at the horizon. A single sage olive sprig beside it. Calm sunrise atmosphere."*
+
+**`streaks_silver.webp` — Wöchentliche Disziplin (7 Tage)**
+> *„A stone tablet engraved with seven small moon phases in a gentle arc, from a sliver crescent in deep dustyTeal night to a full silver-cream moon, back to crescent. To the side, a tall beeswax candle with a warm terracotta flame burns steadily. The background is a deep dustyTeal twilight with one bright sage-tinted star. A laurel sprig at the base in saturated sage."*
+
+**`streaks_gold.webp` — Stoische Beharrlichkeit (30 Tage)**
+> *„An evergreen cypress tree growing from rocky ground, foliage in rich sage and deep forest green, trunk in warm umber. Branches form a soft halo around a small antique sun-and-moon dial at its base — sun in mustard gold, moon in cool silver-blue. The sky behind glows from a warm mustard horizon up to a saturated dustyTeal evening. A full sage laurel wreath frames the medallion, tied with a burgundy ribbon."*
+
+---
+
+### 4. `sudden_death_{tier}.webp` — Im Angesicht des Fehlers *(3 Stufen)*
+
+**Farbsignatur:** terracotta flames + burgundy + dustyTeal stormy sky · gemeinsame Bildwelt: Wiederauferstehung, Standhaftigkeit gegen die Elemente.
+
+**`sudden_death_bronze.webp` — Phönix (10)**
+> *„A small phoenix bird rising from glowing amber-and-terracotta embers, wings opening, feathers blending burgundy, terracotta orange and warm mustard gold. Soft smoke curls upward in cool dustyTeal grey, contrasting with the warm flames. A single sage olive sprig at the lower edge."*
+
+**`sudden_death_silver.webp` — Unbeirrbar (25)**
+> *„A solitary lit candle in a brass holder on a stone pedestal, its flame a vivid terracotta-orange with a mustard core, standing tall against a stormy night. The storm background is rendered in deep dustyTeal and plum, with faint wind-streaks as ink lines. A silver-cream moon glows behind the candle. Olive twigs at base in saturated sage."*
+
+**`sudden_death_gold.webp` — Stoische Härte (50)**
+> *„An ancient stone column standing alone on a hilltop, partially weathered but unbroken, the stone showing warm cream and ochre veining. A small burning ember of mustard-gold light glows at its capital. The sky behind is a dramatic burgundy-and-plum storm broken by a shaft of warm gold sunlight from the upper left. Closed laurel wreath in saturated sage at the bottom, tied with a burgundy ribbon."*
+
+---
+
+### 5. `flawless_classic_{tier}.webp` — Tabula Perfecta *(3 Stufen)*
+
+**Farbsignatur:** mustard gold + cream + plum highlight · gemeinsame Bildwelt: makellose Schreibtafel, wird kostbarer pro Stufe.
+
+**`flawless_classic_bronze.webp`**
+> *„A pristine empty Roman wax writing tablet — wooden frame in warm honey-umber, the wax surface a soft cream-gold with a subtle sheen. A bronze stylus rests diagonally across it, its tip glinting in warm light. A small sage olive sprig in the corner. The surrounding parchment carries a faint plum wash like a calm twilight."*
+
+**`flawless_classic_silver.webp`**
+> *„A polished cream-and-pale-sage marble tablet, edges chamfered with subtle blue-grey veining, a silver stylus laid across its center. The marble reflects warm mustard light from the upper left. A half-circle of saturated sage laurel leaves arches over the top, tied with a thin plum ribbon."*
+
+**`flawless_classic_gold.webp`**
+> *„An ornate gilded wooden tablet inlaid with faint geometric patterns in deep plum and dustyTeal, a gold-tipped stylus resting on it. Rays of warm mustard-gold light radiate from behind the tablet in a fan, contrasting against a soft burgundy backdrop. A full saturated-sage laurel wreath with a flowing burgundy ribbon knot frames the medallion."*
+
+---
+
+### 6. `speed_demon_{tier}.webp` — Schnelldenker *(3 Stufen)*
+
+**Farbsignatur:** dustyTeal motion + mustard sparks + burgundy ink · gemeinsame Bildwelt: kinetische Energie, geflügelter Geist.
+
+**`speed_demon_bronze.webp`**
+> *„A quill pen with a creamy white feather caught mid-stroke, painted with soft dustyTeal motion-streaks trailing behind it, hovering above an open page covered in flowing burgundy ink marks. A small lightning-bolt-shaped flourish drawn as a manuscript decoration in saturated mustard gold. Sage olive sprig at base."*
+
+**`speed_demon_silver.webp`**
+> *„A small winged sandal (Hermes style) in cream-white leather with brass mustard buckles, resting on an open scroll. Wind lines around it rendered in dustyTeal. A silver-cream feather drifts above with a faint terracotta shadow. Light sage laurel frame at the bottom."*
+
+**`speed_demon_gold.webp`**
+> *„A streaking comet drawn as a vivid watercolor flourish across the medallion — head in saturated mustard-gold, tail blending into dustyTeal and a touch of plum, with tiny mustard sparks scattered along the trail. A small open book on a desk below, pages caught by the comet's wind, ink swirls in burgundy. Closed sage laurel wreath at the base, gold ribbon knot."*
+
+---
+
+### 7. `all_eras.webp` — Reise durch die Zeit *(einstufig)*
+
+**Farbsignatur:** ein Regenbogen der Tertiärpalette — *jede Epoche bekommt eine Farbe*.
+
+> *„An antique hourglass at the center with a warm brass frame. The sand inside forms a vivid vertical gradient through seven warm earth tones: terracotta at the very top, mustard, sage, dustyTeal, plum, burgundy, ending in deep umber at the bottom — each band visible but blended like a watercolor wash. Around the hourglass, a faint circular arrangement of seven tiny symbolic motifs etched into the medallion's inner ring, each tinted with its corresponding sand color: a Greek column (terracotta), a Gothic arch (mustard), an open Renaissance book (sage), a Cartesian compass (dustyTeal), a 19th-century pocket watch (plum), a typewriter key (burgundy), and a modern abstract spiral (umber). Antique-gold ring frames the whole composition."*
+
+---
+
+### 8. `bookmarks_{tier}.webp` — Sammler der Worte *(3 Stufen)*
+
+**Farbsignatur:** plum + dustyTeal + mustard lamp · gemeinsame Bildwelt: gemütliche Privat-Bibliothek mit bunten Bandeinbänden.
+
+**`bookmarks_bronze.webp`**
+> *„A single leather-bound book lying open, the cover a saturated plum with mustard-gold lettering on the spine (kept abstract), a burgundy silk bookmark ribbon trailing from between the pages. A small sage olive sprig beside it. Warm mustard desk-lamp light spilling from above."*
+
+**`bookmarks_silver.webp`**
+> *„A small stack of three leather books — bottom spine in dustyTeal, middle in burgundy, top in mustard — each with a different colored ribbon trailing from the top (sage, plum, terracotta). The stack sits on a warm wooden surface. A saturated sage laurel sprig at the base. Faint cozy library shelf hint in the background in plum and burgundy."*
+
+**`bookmarks_gold.webp`**
+> *„A small ornate bookshelf rendered medallion-style: rows of leather-bound books with gilded spines in saturated colors — burgundy, plum, dustyTeal, sage, terracotta — a few books pulled slightly forward with bright ribbons cascading. A glowing brass reading lamp at the top corner casts a warm mustard halo. Full sage laurel wreath wrapping the medallion, tied with a plum ribbon."*
+
+---
+
+### 9. `first_duel_won.webp` — Erster Sieg *(einstufig)*
+
+**Farbsignatur:** burgundy + cream + sage laurel
+
+> *„Two crossed quills meeting at their tips behind a small saturated-sage laurel wreath — one quill with a creamy white feather, one in a rich saturated burgundy. A modest victory ribbon in deep burgundy with golden tassels hangs below the wreath. A faint mustard-gold glow radiates softly from behind the crossing point."*
+
+---
+
+### 10. `duel_streak_{tier}.webp` — Eristik *(3 Stufen)*
+
+**Farbsignatur:** plum + mustard brass + burgundy ribbons · gemeinsame Bildwelt: wiederholter Sieg im philosophischen Streitgespräch.
+
+**`duel_streak_bronze.webp` (3 Siege)**
+> *„Three small quills arranged like a fan — feathers in cream, burgundy, and plum — their tips meeting at a small bronze coin embossed with a simple star pattern in mustard-gold. A saturated burgundy ribbon ties them at the base. Sage olive sprig in the corner."*
+
+**`duel_streak_silver.webp` (5 Siege)**
+> *„A pair of crossed quills (burgundy and dustyTeal feathers) behind a small set of antique brass scales painted in saturated mustard, one pan slightly higher than the other. A silver-cream laurel sprig curves beneath. Soft moon-like glow behind in cool plum-blue."*
+
+**`duel_streak_gold.webp` (10 Siege)**
+> *„An ornate philosopher's lectern in deep plum and gold, with a small open book on top showing burgundy script. Flanked by two tall standing quills like banners — feathers in saturated burgundy and mustard. A closed sage laurel wreath rests at the foot of the lectern with a flowing burgundy ribbon. Rays of warm mustard-gold light radiate from behind, against a soft plum twilight backdrop."*
+
+---
+
+### 11. `midnight_thinker_{tier}.webp` — Nachtwanderer *(3 Stufen, **hidden**)*
+
+**Farbsignatur:** deep dustyTeal night + plum sky + mustard-orange candle warmth · gemeinsame Bildwelt: nächtliches Studium, der dramatischste Farbkontrast der Sammlung. Diese Bilder werden in der App erst sichtbar, sobald die Bronze-Stufe fällt — bis dahin bleibt nur die Silhouette.
+
+**`midnight_thinker_bronze.webp`**
+> *„A small arched window at night, deep dustyTeal night sky visible outside with a slim cream-silver crescent moon and a few warm mustard stars. On the windowsill, a single candle with a vivid terracotta-orange flame illuminates an open book just visible by its glow, pages in warm cream tinged by the candle. The window frame is in saturated plum-purple wood. Sage olive sprig in the lower corner."*
+
+**`midnight_thinker_silver.webp`**
+> *„A brass scholar's lantern on a wooden table, casting a warm mustard-gold circle of light onto an open manuscript with faint marginal notes in burgundy ink. The light fades dramatically into deep plum-and-dustyTeal night surrounding the desk. A constellation faintly inked in saturated mustard stars across the upper half of the medallion."*
+
+**`midnight_thinker_gold.webp`**
+> *„A nighttime study scene seen from above: a desk with an open book (pages warm cream, ink in burgundy), a quill, a half-melted beeswax candle with a vivid terracotta flame in a brass holder, and a small brass celestial globe. The desk surface is rich plum-stained wood. Saturated mustard-gold constellations etched across the deep dustyTeal upper half of the medallion, including a small Orion-like figure with three bright stars. A closed saturated-sage laurel wreath at the base with a gold-and-burgundy ribbon knot."*
+
+---
+
+### Hinweise zur Generierung
+
+- **Konsistenz vor Vielfalt** — bei den 27 Bildern hilft es enorm, sie in einem Batch mit identischem Stil-Suffix zu erzeugen. Variiere nur das Motiv und die Tier-Differenzierung am Rahmen.
+- **Farb-Signaturen einhalten** — wenn du das Motiv pro Tier reicher machst, behalte die 2–3 Hauptfarben der Errungenschaft. Sonst wirken Bronze / Silber / Gold wie drei verschiedene Achievements.
+- **Tier-Erkennbarkeit** — die 3 Stufen einer Errungenschaft sollten auf den ersten Blick auseinanderhaltbar sein: Inner-Rim-Farbe + Lorbeer-Ausarbeitung (Zweig / halber Kranz / voller Kranz mit Bändchen) sind die zuverlässigste Signale.
+- **„Saturated" heißt nicht „neon"** — Watercolor-Sättigung, nicht digital-leuchtend. Wenn dein Generator zu fluoreszent kippt, schreib „muted but rich", „illuminated manuscript palette", oder „like a painted book plate".
+- **Keine Zahlen, kein Text** — die Schwellwerte (10, 25, 50 …) stehen in der UI; im Bild würden sie unscharf werden.
+- **Quadrat & zentriert** — die Galerie zeigt die Icons rund maskiert (durch das WaxSeal-Widget), aber das größere Detail-Sheet zeigt sie quadratisch. Beides muss funktionieren.
+- **Optimieren**: PNG → <https://squoosh.app> → WebP Q80 spart ~70 % Speicher.
+
+---
+
 ## Optionale Texturen
 
 **Datei:** `assets/textures/parchment.webp` (optional, 1080×2400)

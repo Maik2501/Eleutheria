@@ -60,6 +60,13 @@ class ProfileRepository {
         totalGamesPlayed: p.totalGamesPlayed,
         totalCorrect: p.totalCorrect,
         bestSuddenDeath: p.bestSuddenDeath,
+        flawlessClassicCount: p.flawlessClassicCount,
+        fastCorrectAnswers: p.fastCorrectAnswers,
+        duelsWon: p.duelsWon,
+        currentDuelStreak: p.currentDuelStreak,
+        bestDuelStreak: p.bestDuelStreak,
+        nightSessionsCount: p.nightSessionsCount,
+        answeredEraKeys: p.answeredEraKeys,
         unlockedAchievements: p.unlockedAchievements,
         bookmarkedQuoteIds: p.bookmarkedQuoteIds,
         preferredCategories: p.preferredCategories,
@@ -86,6 +93,13 @@ class ProfileRepository {
         'totalGamesPlayed': p.totalGamesPlayed,
         'totalCorrect': p.totalCorrect,
         'bestSuddenDeath': p.bestSuddenDeath,
+        'flawlessClassicCount': p.flawlessClassicCount,
+        'fastCorrectAnswers': p.fastCorrectAnswers,
+        'duelsWon': p.duelsWon,
+        'currentDuelStreak': p.currentDuelStreak,
+        'bestDuelStreak': p.bestDuelStreak,
+        'nightSessionsCount': p.nightSessionsCount,
+        'answeredEraKeys': p.answeredEraKeys.toList(),
         'unlockedAchievements': p.unlockedAchievements.toList(),
         'bookmarkedQuoteIds': p.bookmarkedQuoteIds.toList(),
         'preferredCategories': p.preferredCategories.toList(),
@@ -113,9 +127,19 @@ class ProfileRepository {
         totalGamesPlayed: (j['totalGamesPlayed'] as num).toInt(),
         totalCorrect: (j['totalCorrect'] as num).toInt(),
         bestSuddenDeath: (j['bestSuddenDeath'] as num).toInt(),
-        unlockedAchievements:
-            ((j['unlockedAchievements'] as List?)?.cast<String>() ?? const [])
+        flawlessClassicCount: (j['flawlessClassicCount'] as num?)?.toInt() ?? 0,
+        fastCorrectAnswers: (j['fastCorrectAnswers'] as num?)?.toInt() ?? 0,
+        duelsWon: (j['duelsWon'] as num?)?.toInt() ?? 0,
+        currentDuelStreak: (j['currentDuelStreak'] as num?)?.toInt() ?? 0,
+        bestDuelStreak: (j['bestDuelStreak'] as num?)?.toInt() ?? 0,
+        nightSessionsCount: (j['nightSessionsCount'] as num?)?.toInt() ?? 0,
+        answeredEraKeys:
+            ((j['answeredEraKeys'] as List?)?.cast<String>() ?? const [])
                 .toSet(),
+        unlockedAchievements: _migrateLegacyAchievementIds(
+          ((j['unlockedAchievements'] as List?)?.cast<String>() ?? const [])
+              .toSet(),
+        ),
         bookmarkedQuoteIds:
             ((j['bookmarkedQuoteIds'] as List?)?.cast<String>() ?? const [])
                 .toSet(),
@@ -138,4 +162,25 @@ class ProfileRepository {
           j['preferredInputStyle'] as String?,
         ),
       );
+
+  /// Translate persisted achievement IDs from the pre-tier era (one ID per
+  /// threshold) to the new tier-id scheme (`<id>.<tier>`). Single-tier
+  /// achievements kept their bare id and pass through untouched.
+  ///
+  /// Unknown legacy IDs survive as-is — the engine simply ignores them.
+  static Set<String> _migrateLegacyAchievementIds(Set<String> stored) {
+    if (stored.isEmpty) return stored;
+    const map = <String, String>{
+      'sokrates_student': 'correct_answers.bronze',
+      'platos_apprentice': 'correct_answers.silver',
+      'aristoteles_logician': 'correct_answers.gold',
+      'streak_3': 'streaks.bronze',
+      'streak_7': 'streaks.silver',
+      'streak_30': 'streaks.gold',
+      'sudden_death_10': 'sudden_death.bronze',
+      'sudden_death_25': 'sudden_death.silver',
+      'duel_streak_5': 'duel_streak.silver',
+    };
+    return {for (final id in stored) map[id] ?? id};
+  }
 }

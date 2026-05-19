@@ -10,6 +10,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/answer_input_style.dart';
 import '../../data/models/game_session.dart';
+import '../../shared/widgets/achievement_unlock_overlay.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
 import '../letterbox/widgets/letterbox_input.dart';
@@ -337,22 +338,23 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     final session = state.session;
 
     final xp = controller.xpForSession();
-    final isClassic = session.mode == GameMode.classic;
-    final flawless =
-        isClassic && session.correctCount == session.questions.length;
-    final suddenStreak =
-        session.mode == GameMode.suddenDeath ? session.correctCount : 0;
 
     final unlocked =
         await ref.read(profileNotifierProvider.notifier).applySessionResult(
+              session: session,
               xpGained: xp,
-              correctAnswers: session.correctCount,
-              suddenDeathStreak: suddenStreak,
-              flawlessClassic: flawless,
-              wonDuel: false,
             );
 
     if (!mounted) return;
+
+    // Celebrate freshly-unlocked tiers in front of the result screen so the
+    // moment isn't buried under stats. The overlay returns once the player
+    // has dismissed the last sheet.
+    if (unlocked.isNotEmpty) {
+      await AchievementUnlockOverlay.show(context, unlocked);
+      if (!mounted) return;
+    }
+
     context.pushReplacement('/result', extra: {
       'session': session,
       'xpGained': xp,

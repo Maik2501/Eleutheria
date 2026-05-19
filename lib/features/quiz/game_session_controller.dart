@@ -131,7 +131,6 @@ class GameSessionState {
     required this.fiftyFiftyUses,
     required this.jokerAvailability,
     required this.questionStartedAt,
-    required this.unlockedAchievements,
   });
 
   final GameSession session;
@@ -145,7 +144,6 @@ class GameSessionState {
   final int fiftyFiftyUses;
   final JokerAvailability jokerAvailability;
   final DateTime questionStartedAt;
-  final List<String> unlockedAchievements;
 
   GameSessionState copyWith({
     int? selectedIndex,
@@ -154,7 +152,6 @@ class GameSessionState {
     Set<int>? revealedLetterIndices,
     int? fiftyFiftyUses,
     DateTime? questionStartedAt,
-    List<String>? unlockedAchievements,
   }) =>
       GameSessionState(
         session: session,
@@ -167,7 +164,6 @@ class GameSessionState {
         fiftyFiftyUses: fiftyFiftyUses ?? this.fiftyFiftyUses,
         jokerAvailability: jokerAvailability,
         questionStartedAt: questionStartedAt ?? this.questionStartedAt,
-        unlockedAchievements: unlockedAchievements ?? this.unlockedAchievements,
       );
 }
 
@@ -217,7 +213,6 @@ class GameSessionController extends StateNotifier<GameSessionState> {
           ref.read(profileNotifierProvider).value?.jokerAvailability ??
               JokerAvailability.always,
       questionStartedAt: DateTime.now(),
-      unlockedAchievements: const [],
     );
   }
 

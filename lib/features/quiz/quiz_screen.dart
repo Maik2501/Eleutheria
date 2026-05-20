@@ -39,6 +39,14 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
   String _typed = '';
   final GlobalKey<LetterboxInputState> _letterboxKey = GlobalKey();
 
+  /// Wie lange die Session-Uhr insgesamt schon gestanden hat (während
+  /// Reveal-Panels gezeigt wurden). Wird vom Ticker abgezogen, damit
+  /// Spieler:innen die Erklärungen ohne Zeitdruck lesen können.
+  Duration _pausedTotal = Duration.zero;
+
+  /// Zeitstempel des aktuellen Pause-Beginns. `null` solange die Uhr läuft.
+  DateTime? _pauseStartedAt;
+
   static const _letters = ['A', 'B', 'C', 'D'];
 
   bool get _isLetterbox =>
@@ -70,8 +78,15 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         ? DateTime.now()
         : _sessionStartedAt;
     _ticker = Timer.periodic(const Duration(milliseconds: 80), (_) {
-      final elapsed = DateTime.now().difference(_startedAt);
-      final progress = elapsed.inMilliseconds / limit.inMilliseconds;
+      // Während ein Reveal-Panel offen ist, wächst das aktuelle Pause-
+      // Fenster genauso schnell wie die Roh-Dauer — die Differenz bleibt
+      // konstant, der Timer steht visuell still.
+      final raw = DateTime.now().difference(_startedAt);
+      final currentPause = _pauseStartedAt == null
+          ? Duration.zero
+          : DateTime.now().difference(_pauseStartedAt!);
+      final effective = raw - _pausedTotal - currentPause;
+      final progress = effective.inMilliseconds / limit.inMilliseconds;
       if (progress >= 1.0) {
         _ticker?.cancel();
         if (widget.config.sessionTimeLimit == null) {
@@ -84,6 +99,23 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
         setState(() => _timerProgress = progress.clamp(0.0, 1.0).toDouble());
       }
     });
+  }
+
+  /// Pausiert den Session-Timer (Quiz-Rush). No-op für Modi ohne
+  /// Session-Limit oder wenn bereits pausiert.
+  void _pauseSessionTimer() {
+    if (widget.config.sessionTimeLimit == null) return;
+    if (_pauseStartedAt != null) return;
+    _pauseStartedAt = DateTime.now();
+  }
+
+  /// Setzt den Session-Timer fort und buche das vergangene Reveal-
+  /// Fenster auf das Pausen-Konto. No-op wenn nicht pausiert.
+  void _resumeSessionTimer() {
+    final pausedSince = _pauseStartedAt;
+    if (pausedSince == null) return;
+    _pausedTotal += DateTime.now().difference(pausedSince);
+    _pauseStartedAt = null;
   }
 
   void _finishFromTimer() {
@@ -108,6 +140,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
 
   void _submitLetterbox(WidgetRef ref) {
     _stopQuestionTimer();
+    _pauseSessionTimer();
     ref
         .read(gameSessionProvider(widget.config).notifier)
         .submitTypedAnswer(_typed);
@@ -269,6 +302,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                     label: _isLetterbox ? 'Lösen' : 'Antwort bestätigen',
                     onPressed: () {
                       _stopQuestionTimer();
+                      _pauseSessionTimer();
                       if (_isLetterbox) {
                         _submitLetterbox(ref);
                       } else {
@@ -287,6 +321,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                     wasCorrect: state.session.answers.last.wasCorrect,
                     points: state.session.answers.last.points,
                     onContinue: () {
+                      _resumeSessionTimer();
                       notifier.next();
                       _typed = '';
                       _letterboxKey.currentState?.reset();

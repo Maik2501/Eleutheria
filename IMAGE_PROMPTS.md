@@ -101,6 +101,158 @@ Status: Diese 40 Basisbilder sind aktuell im Asset-Ordner vorhanden.
 
 ---
 
+## Aktueller Seed-Lückenstand (Stand 2026-05-19)
+
+Die folgenden 19 Personen sind bereits in [`lib/data/seed/philosophers_seed.dart`](lib/data/seed/philosophers_seed.dart) eingetragen, aber die Bild-Datei fehlt unter `assets/images/philosophers/`. **Dateinamen folgen exakt der `imageAsset`-Angabe im Seed — nicht umbenennen.** Wenn ein Eintrag weiter unten unter „Fehlende Porträts für Fragen- und Balance-Erweiterung" mit einem anderen Dateinamen auftaucht, gilt diese Sektion hier als kanonisch.
+
+**Generierungs-Regel**: pro Eintrag **eine** Bild-Anfrage. Niemals Batch / Multi-Image-Calls — bei größeren Schwüngen kommt es zu Stream-Abbrüchen. Workflow für Codex siehe „Codex IMAGEGEN — einzeln" am Ende des Dokuments.
+
+Jeder Prompt unten ist self-contained: er enthält Stil-Suffix, Person, Epoche und Output-Pfad in einer Anfrage.
+
+---
+
+### 1. `assets/images/philosophers/aesara.webp` — Aesara von Lukanien
+
+> *„Half-length portrait of Aesara of Lucania, a Pythagorean philosopher from the 4th–3rd century BCE who wrote about the harmony of the soul and justice. Three-quarter view, dignified contemplative gaze, simple draped Greek chiton in cream and dusty earth tones, hair gathered. Faint background motif: a stylized tripartite soul diagram or a small lyre on a parchment scroll. Soft warm lighting from the upper left. Aged parchment background (#F5EFE6) with hints of burgundy and antique gold. Painterly watercolor-and-ink style, muted earth tones, no photorealism — illustrated scholarly book-cover quality. Square 1024×1024, centered."*
+
+---
+
+### 2. `assets/images/philosophers/konfuzius.webp` — Konfuzius
+
+> *„Half-length portrait of Confucius (Kong Fuzi), Chinese teacher of virtue ethics and ritual humanity who lived 551–479 BCE. Three-quarter view, calm elder with a long thin grey beard, layered scholar's robes in cream with subtle burgundy and dusty gold trim. Hands folded calmly. Faint background: bamboo writing slips and a hint of a ritual hall column. Soft warm lighting from the upper left. Aged parchment background, muted earth tones with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
+
+---
+
+### 3. `assets/images/philosophers/makrina.webp` — Makrina die Jüngere
+
+> *„Half-length portrait of Macrina the Younger, 4th-century Cappadocian theologian and teacher of her brother Gregory of Nyssa, founder of a women's ascetic community (ca. 327–379). Three-quarter view, serene composed expression, simple early-Byzantine ascetic dress in cream and muted plum, head veiled. Faint background: a small monastic cell window with a distant Cappadocian rock landscape. Soft warm lighting from the upper left. Aged parchment background, muted earth tones with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, scholarly illustrated book-cover quality, no photorealism."*
+
+---
+
+### 4. `assets/images/philosophers/hildegard.webp` — Hildegard von Bingen
+
+> *„Half-length portrait of Hildegard of Bingen, 12th-century German Benedictine abbess, visionary, naturalist and composer (1098–1179). Three-quarter view, thoughtful contemplative gaze, full Benedictine black habit and white wimple. A small open illuminated manuscript on her lap, faint cosmological mandala motif in the background in muted dusty teal and sage. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
+
+---
+
+### 5. `assets/images/philosophers/cavendish.webp` — Margaret Cavendish
+
+> *„Half-length portrait of Margaret Cavendish, Duchess of Newcastle, 17th-century English natural philosopher and pioneer of speculative fiction (1623–1673). Three-quarter view, intelligent direct gaze, elaborate 17th-century court dress with a deep burgundy bodice and cream lace collar, hair in styled curls. Faint background: an alchemist's table with a quill and a manuscript, hint of atomistic dots in dusty gold. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 6. `assets/images/philosophers/elisabeth_pfalz.webp` — Elisabeth von der Pfalz
+
+> *„Half-length portrait of Elisabeth of the Palatinate, 17th-century princess and Cartesian philosopher (1618–1680), known for her correspondence with Descartes on mind-body interaction. Three-quarter view, composed scholarly expression, sober 17th-century court dress in deep plum and cream, modest pearl jewellery, hair pulled back. Faint background: a writing desk with sealed letters, a quill, and a hinted geometric diagram. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 7. `assets/images/philosophers/astell.webp` — Mary Astell
+
+> *„Half-length portrait of Mary Astell, late-17th- to early-18th-century English philosopher and pioneer of women's education in England (1666–1731). Three-quarter view, intelligent reserved expression, modest period dress in muted sage and cream with a soft white collar, hair pulled back simply. Faint background: a small academy or schoolroom desk, an open book and a quill. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents and a hint of burgundy. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 8. `assets/images/philosophers/du_chatelet.webp` — Émilie du Châtelet
+
+> *„Half-length portrait of Émilie du Châtelet, 18th-century French mathematician and Enlightenment natural philosopher (1706–1749), translator of Newton. Three-quarter view, sharp intelligent gaze with a faint smile, elegant 18th-century French gown in soft mustard and cream with delicate lace, hair styled and lightly powdered. Faint background: a writing desk with a Newtonian prism casting a small spectrum onto an open manuscript and a quill. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, scholarly illustrated book-cover quality, no photorealism."*
+
+---
+
+### 9. `assets/images/philosophers/de_gouges.webp` — Olympe de Gouges
+
+> *„Half-length portrait of Olympe de Gouges, French revolutionary writer and author of the Declaration of the Rights of Woman and the Female Citizen (1748–1793). Three-quarter view, resolute and engaged expression, late-18th-century French dress in muted terracotta and cream with a tricolour ribbon detail kept very subtle. A rolled manuscript held in one hand. Faint background: a print-shop or revolutionary salon, with hinted handbills on the wall. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, scholarly illustrated book-cover quality, no photorealism, no text."*
+
+---
+
+### 10. `assets/images/philosophers/wollstonecraft.webp` — Mary Wollstonecraft
+
+> *„Half-length portrait of Mary Wollstonecraft, late-18th-century English philosopher and co-founder of modern feminist thought (1759–1797). Three-quarter view, composed direct gaze, simple high-waisted Regency-era gown in muted sage and cream with a modest white fichu. Hair softly pinned. Faint background: a writing desk with quill and an open manuscript page suggesting a treatise. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 11. `assets/images/philosophers/martineau.webp` — Harriet Martineau
+
+> *„Half-length portrait of Harriet Martineau, early-19th-century English writer, early sociologist and translator of Comte (1802–1876). Three-quarter view, composed thoughtful expression, conservative dark Victorian dress in deep plum with a white lace collar, hair parted in the middle and pinned back. A small ear trumpet held discreetly to indicate her hearing loss. Faint background: an open notebook with social-statistical-looking sketches in burgundy ink. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 12. `assets/images/philosophers/cooper.webp` — Anna Julia Cooper
+
+> *„Half-length portrait of Anna Julia Cooper, African-American philosopher and pioneer of intersectional educational and racial theory (1858–1964). Three-quarter view, composed strong gaze, late-Victorian / early-20th-century academic dress in deep sage and cream with a high collar, hair styled simply. Faint background: a classroom blackboard with hinted notes, an open book on a desk. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, dignified portrait, no stereotypical caricature."*
+
+---
+
+### 13. `assets/images/philosophers/nishida.webp` — Nishida Kitarō
+
+> *„Half-length portrait of Nishida Kitarō, founder of the Kyoto School and 20th-century Japanese philosopher of absolute nothingness (1870–1945). Three-quarter view, contemplative gaze behind small round glasses, traditional Japanese scholar's haori jacket in muted plum and cream over a darker kimono. Faint background: a quiet temple garden path with a stone lantern and a hint of pine, dusty teal mist. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
+
+---
+
+### 14. `assets/images/philosophers/langer.webp` — Susanne Langer
+
+> *„Half-length portrait of Susanne K. Langer, 20th-century American philosopher of symbolic form and art (1895–1985). Three-quarter view, thoughtful intelligent gaze, mid-century academic dress in muted dusty teal with a cream blouse and a simple brooch. Hair pinned back. Faint background: an open book with abstract symbolic-form diagrams and a small musical staff motif in burgundy ink. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 15. `assets/images/philosophers/weil.webp` — Simone Weil
+
+> *„Half-length portrait of Simone Weil, early-20th-century French philosopher, political mystic and advocate for the uprooted (1909–1943). Three-quarter view, intense ascetic gaze behind small round glasses, plain dark woollen jacket in muted plum over a simple cream shirt, hair short and unfussy. Faint background: a small bare table with a notebook and a glass of water, austere candle light. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents and very restrained burgundy. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 16. `assets/images/philosophers/murdoch.webp` — Iris Murdoch
+
+> *„Half-length portrait of Iris Murdoch, 20th-century British novelist-philosopher and renewer of Platonic moral attention (1919–1999). Three-quarter view, warm intelligent gaze, mid-century academic dress in muted sage with a cream blouse, hair softly waved. Faint background: a book-lined Oxford study with a hint of a small Greek vase on a shelf, evening light. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents and a touch of burgundy. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 17. `assets/images/philosophers/haraway.webp` — Donna Haraway
+
+> *„Half-length portrait of Donna Haraway, contemporary American science-studies theorist of the cyborg and companion species (b. 1944). Three-quarter view, alert direct gaze with a slight smile, casual contemporary academic dress in deep dusty teal with a simple silver pendant, short greying hair. Faint background: a small abstract motif suggesting a chimera of organic vines and circuit lines in burgundy and antique gold, kept restrained. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
+
+---
+
+### 18. `assets/images/philosophers/fricker.webp` — Miranda Fricker
+
+> *„Half-length portrait of Miranda Fricker, contemporary British philosopher and originator of the concept of epistemic injustice (b. 1966). Three-quarter view, attentive composed gaze, contemporary academic dress in muted plum with a cream blouse, hair shoulder-length and tucked back. Faint background: an open book and a faint diagram of two figures suggesting a testimony exchange, in burgundy ink. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+### 19. `assets/images/philosophers/jaeggi.webp` — Rahel Jaeggi
+
+> *„Half-length portrait of Rahel Jaeggi, contemporary German critical theorist renewing the theory of alienation (b. 1967). Three-quarter view, calm engaged gaze, contemporary academic dress in muted sage with a simple dark scarf, hair short and styled. Faint background: an open manuscript and a small grid of urban-life sketches in burgundy ink, suggesting a critique of forms of life. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+
+---
+
+## Codex IMAGEGEN — einzeln, niemals Batch
+
+**Warum einzeln**: Multi-Image-Calls neigen bei Codex zu Stream-Abbrüchen mitten in der Antwort. Die Folge sind halbfertige Dateien und ein verworrener History-State. Eine Bild-Anfrage = eine Codex-Runde.
+
+### Workflow pro Bild
+
+1. **Codex-Panel in VSCode öffnen** (`Strg+Shift+P` → „Codex: Open Chat" o. ä.).
+2. **Eine** Anfrage absetzen, Formulierung etwa:
+
+   > „Bitte generiere ein einzelnes Bild für Eleutheria mit der Image-Gen-Funktion (IMAGEGEN). Output-Pfad: `assets/images/philosophers/<id>.webp`. Format: 1024×1024 WebP. Hier ist der Prompt: <kompletter Prompt-Block aus diesem Dokument einkopieren>. **Erzeuge nur dieses eine Bild. Keine weiteren Anfragen, keine Variationen.** Bestätige danach mit ✓."
+
+3. **Warten bis fertig** und das WebP an der erwarteten Stelle liegt. `git status` zeigt eine neue Datei.
+4. Erst dann zum nächsten Eintrag aus der Liste oben weitergehen — Schritt 2 mit dem nächsten Prompt-Block wiederholen.
+
+### Sanity-Check zwischendurch
+
+Nach 5–6 generierten Bildern App lokal starten und zur Frage-Erklärung navigieren, in der ein Philosoph mit neuem Bild als Antwort vorkommt — so siehst du, ob die Stil-Konsistenz mit den 40 Bestands-Porträts hält. Falls ein Bild aus der Reihe tanzt (Photorealismus, falsche Epoche), neu generieren mit dem expliziten Hinweis „match the style of the existing 40 philosopher portraits — watercolor-and-ink, parchment background, no photorealism".
+
+### Reihenfolge-Empfehlung
+
+Antike → Mittelalter → Aufklärung → 19. Jh. → Moderne → Zeitgenössisch — also #1 → #19 wie oben gelistet. So bleibt die Stil-Iteration mental konsistent (eine Epoche „im Kopf" zu behalten ist leichter).
+
+### Wenn ein Bild misslingt
+
+Komplett neu erzeugen. Nicht versuchen, ein schiefes Bild mit „mach das jetzt besser" zu reparieren — die Generator-Konsistenz leidet. Statt dessen: ggf. dem Prompt einen Negativ-Hinweis hinzufügen („avoid modern photographic look", „avoid neon colors", „avoid cartoonish features") und neu starten.
+
+---
+
 ## Fehlende Porträts für Fragen- und Balance-Erweiterung
 
 Alle folgenden Einträge sind als **FEHLT** markiert: Für diese Personen gibt es aktuell noch keine Datei unter `assets/images/philosophers/`. Die Priorität A enthält Personen, die in den bestehenden Fragen bereits als richtige Antwort, Hauptfigur oder wiederkehrende Option vorkommen. Priorität B ergänzt die nächsten sinnvollen Kandidat:innen für eine ausgeglichenere Fragenbasis.

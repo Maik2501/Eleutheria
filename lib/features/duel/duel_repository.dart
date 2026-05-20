@@ -259,6 +259,7 @@ class DuelAnswer {
     required this.wasCorrect,
     required this.timeTaken,
     required this.points,
+    required this.submittedAt,
   });
 
   final String duelCode;
@@ -269,6 +270,12 @@ class DuelAnswer {
   final Duration timeTaken;
   final int points;
 
+  /// Server-side timestamp (UTC) when this answer landed in `duel_answers`.
+  /// Used by both clients as the shared clock for post-round pauses, since
+  /// `now()` is set by Postgres in the insert and reaches both peers via
+  /// the realtime stream.
+  final DateTime submittedAt;
+
   factory DuelAnswer.fromRow(Map<String, dynamic> r) => DuelAnswer(
         duelCode: r['duel_code'] as String,
         playerId: r['player_id'] as String,
@@ -277,5 +284,8 @@ class DuelAnswer {
         wasCorrect: r['was_correct'] as bool,
         timeTaken: Duration(milliseconds: (r['time_taken_ms'] as num).toInt()),
         points: (r['points'] as num).toInt(),
+        submittedAt: r['submitted_at'] == null
+            ? DateTime.now().toUtc()
+            : DateTime.parse(r['submitted_at'] as String).toUtc(),
       );
 }

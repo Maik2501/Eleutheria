@@ -35,6 +35,13 @@ class DuelMatchScreen extends ConsumerStatefulWidget {
 class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   static const _letters = ['A', 'B', 'C', 'D'];
 
+  /// Race-mode post-round breathing room. After a round resolves (someone
+  /// got it right, or every alive player has answered wrong), the question
+  /// stays frozen this long while both players see who took it, then the
+  /// next question slides in. The shared session timer is paused during
+  /// this window so it doesn't punish them for the celebration.
+  static const _postRoundPause = Duration(seconds: 3);
+
   StreamSubscription<DuelMatch>? _matchSub;
   StreamSubscription<List<DuelAnswer>>? _answersSub;
   Timer? _ticker;
@@ -245,18 +252,23 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   }
 
   /// Seconds remaining in the shared session, or null if unlimited.
-  /// Negative values mean the timer expired.
+  /// Negative values mean the timer expired. In race mode, post-round
+  /// pause windows (3s each) are subtracted from the elapsed time so the
+  /// outcome overlay doesn't eat into players' answering budget.
   double? _timeRemainingSeconds(DuelMatch m) {
     final t = m.timeLimitSeconds;
     if (t == null) return null;
     final start = m.startedAt;
     if (start == null) return t.toDouble();
-    final elapsed =
-        DateTime.now().toUtc().difference(start).inMilliseconds / 1000.0;
-    return t - elapsed;
+    final rawElapsed = DateTime.now().toUtc().difference(start);
+    final effective = rawElapsed - _accumulatedPauseTime(m);
+    return t - effective.inMilliseconds / 1000.0;
   }
 
   /// In race mode, this is the index both players are currently on.
+  /// The index only advances once a round has resolved *and* its 3-second
+  /// post-round pause has fully elapsed — so during the countdown the
+  /// outcome overlay stays in place on both clients.
   int _raceIndex(DuelMatch m, List<DuelAnswer> mine, List<DuelAnswer> theirs) {
     final iAmAlive = _alive(m, mine);
     final oppAlive = _opponentId != null && _alive(m, theirs);
@@ -268,12 +280,11 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
         if (iAmAlive && !atIndex.any((a) => a.playerId == _meId)) true,
         if (oppAlive && !atIndex.any((a) => a.playerId == _opponentId)) true,
       ];
-      // Resolved when correct hit OR no alive player has work left.
-      if (anyCorrect || aliveAndPending.isEmpty) {
-        i++;
-      } else {
-        break;
-      }
+      final resolved = anyCorrect || aliveAndPending.isEmpty;
+      if (!resolved) break;
+      // Resolved — but hold on this index until the pause window elapses.
+      if (_isInPostRoundPause(m, i)) break;
+      i++;
     }
     return i;
   }
@@ -287,6 +298,110 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
 
   bool _someoneCorrectAt(int index) {
     return _allAnswers.any((a) => a.questionIndex == index && a.wasCorrect);
+  }
+
+  // ─── Round-end pause (race mode) ─────────────────────────────────────────
+
+  /// First correct answer at [index] in submission order, or null.
+  DuelAnswer? _firstCorrectAt(int index) {
+    DuelAnswer? best;
+    for (final a in _allAnswers) {
+      if (a.questionIndex != index || !a.wasCorrect) continue;
+      if (best == null || a.submittedAt.isBefore(best.submittedAt)) best = a;
+    }
+    return best;
+  }
+
+  /// How many players were alive at the *start* of round [index]. Derived
+  /// purely from the answer stream so both clients agree.
+  int _aliveAtRoundStart(DuelMatch m, int index) {
+    if (_opponentId == null) return 1;
+    final cap = m.livesPerPlayer;
+    if (cap == null) return 2;
+    var wrongsMe = 0;
+    var wrongsOpp = 0;
+    for (final a in _allAnswers) {
+      if (a.questionIndex >= index || a.wasCorrect) continue;
+      if (a.playerId == _meId) {
+        wrongsMe++;
+      } else if (a.playerId == _opponentId) {
+        wrongsOpp++;
+      }
+    }
+    final iAlive = wrongsMe < cap;
+    final oppAlive = wrongsOpp < cap;
+    return (iAlive ? 1 : 0) + (oppAlive ? 1 : 0);
+  }
+
+  /// Server-side timestamp at which round [index] resolved, or null if it's
+  /// still in flight. Resolves on (a) the first correct answer, or (b) once
+  /// every alive player has submitted (race ended without a hit).
+  DateTime? _roundResolvedAt(DuelMatch m, int index) {
+    final atIndex =
+        _allAnswers.where((a) => a.questionIndex == index).toList();
+    if (atIndex.isEmpty) return null;
+    final firstCorrect = _firstCorrectAt(index);
+    if (firstCorrect != null) return firstCorrect.submittedAt;
+    final aliveCount = _aliveAtRoundStart(m, index);
+    if (atIndex.length < aliveCount) return null;
+    return atIndex
+        .map((a) => a.submittedAt)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+  }
+
+  /// True while the current round at [index] sits inside the 3-second
+  /// post-round window. Drives both the outcome overlay and the
+  /// session-timer pause.
+  bool _isInPostRoundPause(DuelMatch m, int index) {
+    final resolvedAt = _roundResolvedAt(m, index);
+    if (resolvedAt == null) return false;
+    return DateTime.now().toUtc().difference(resolvedAt) < _postRoundPause;
+  }
+
+  /// Pause time charged against the shared game clock so far. Each resolved
+  /// round contributes up to [_postRoundPause]; an ongoing pause contributes
+  /// only its elapsed-so-far portion, so the visible session timer freezes
+  /// during the countdown and resumes when it ends.
+  Duration _accumulatedPauseTime(DuelMatch m) {
+    if (m.mode != DuelMode.race || _allAnswers.isEmpty) return Duration.zero;
+    final maxIdx = _allAnswers
+        .map((a) => a.questionIndex)
+        .reduce((a, b) => a > b ? a : b);
+    var total = Duration.zero;
+    for (var i = 0; i <= maxIdx; i++) {
+      final resolvedAt = _roundResolvedAt(m, i);
+      if (resolvedAt == null) continue;
+      final age = DateTime.now().toUtc().difference(resolvedAt);
+      total += age >= _postRoundPause
+          ? _postRoundPause
+          : (age.isNegative ? Duration.zero : age);
+    }
+    return total;
+  }
+
+  /// Outcome of the round at [index] for the round-end overlay. Returns
+  /// null while the round is still in flight.
+  _RoundOutcome? _roundOutcome(DuelMatch m, int index) {
+    final resolvedAt = _roundResolvedAt(m, index);
+    if (resolvedAt == null) return null;
+    final firstCorrect = _firstCorrectAt(index);
+    final _RoundWinner winner;
+    if (firstCorrect == null) {
+      winner = _RoundWinner.nobody;
+    } else if (firstCorrect.playerId == _meId) {
+      winner = _RoundWinner.me;
+    } else {
+      winner = _RoundWinner.opponent;
+    }
+    final secondsLeft = (_postRoundPause -
+            DateTime.now().toUtc().difference(resolvedAt))
+        .inMilliseconds /
+        1000.0;
+    return _RoundOutcome(
+      winner: winner,
+      correctAnswer: _questions[index].correctAnswer,
+      secondsLeft: secondsLeft.clamp(0, _postRoundPause.inSeconds.toDouble()),
+    );
   }
 
   // ─── Build ────────────────────────────────────────────────────────────────
@@ -388,9 +503,16 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final oppCorrectHere = m.mode == DuelMode.race
         ? theirs.any((a) => a.questionIndex == myIdx && a.wasCorrect)
         : false;
+    final oppWrongHere = m.mode == DuelMode.race &&
+        _opponentId != null &&
+        theirs.any((a) => a.questionIndex == myIdx && !a.wasCorrect);
+    final outcome =
+        m.mode == DuelMode.race ? _roundOutcome(m, myIdx) : null;
+    final inPause = outcome != null;
     final iAmLocked = !iAmAlive ||
         iAnsweredHere ||
-        (m.mode == DuelMode.race && oppCorrectHere);
+        (m.mode == DuelMode.race && oppCorrectHere) ||
+        inPause;
 
     return Scaffold(
       appBar: AppBar(
@@ -420,6 +542,8 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                   oppProgress: theirs.length,
                   myDead: !iAmAlive,
                   oppDead: _opponentId == null ? false : !oppAlive,
+                  oppWrongThisRound: oppWrongHere,
+                  timerPaused: inPause,
                 ),
                 const SizedBox(height: 12),
                 if (_opponentDisconnectSecondsLeft() != null)
@@ -427,59 +551,64 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                     secondsLeft: _opponentDisconnectSecondsLeft()!,
                   ),
                 const SizedBox(height: 4),
-                if (m.mode == DuelMode.race)
+                if (m.mode == DuelMode.race && !inPause)
                   _RaceStatusBanner(
                     myAlive: iAmAlive,
                     iAnsweredHere: iAnsweredHere,
                     oppCorrectHere: oppCorrectHere,
+                    oppWrongHere: oppWrongHere,
                   ),
                 const SizedBox(height: 4),
                 Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        QuestionPromptCard(
-                          key: ValueKey(question.id),
-                          question: question,
-                          questionNumber: myIdx + 1,
-                          totalQuestions: m.mode == DuelMode.race
-                              ? _questions.length
-                              : (mine.length + 1),
-                        ),
-                        const SizedBox(height: 18),
-                        if (m.inputStyle == AnswerInputStyle.letterbox)
-                          LetterboxInput(
-                            key: _letterboxKey,
-                            target: question.correctAnswer,
-                            revealed: iAnsweredHere,
-                            wasCorrect: _lastWasCorrect(question, mine, myIdx),
-                            onChanged: (value) => _typed = value,
-                            onSubmitted: (_) => _submit(m, question, myIdx),
-                          )
-                        else
-                          ...List.generate(question.options.length, (i) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: AnswerOptionButton(
-                                label: question.options[i],
-                                optionLetter: _letters[i],
-                                onTap: () {
-                                  if (iAmLocked) return;
-                                  HapticFeedback.selectionClick();
-                                  setState(() => _selectedIndex = i);
-                                },
-                                isSelected: _selectedIndex == i,
-                                isCorrect: i == question.correctIndex,
-                                isRevealed: iAnsweredHere,
-                                isEliminated: false,
+                  child: inPause
+                      ? _RoundOutcomeOverlay(outcome: outcome)
+                      : SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              QuestionPromptCard(
+                                key: ValueKey(question.id),
+                                question: question,
+                                questionNumber: myIdx + 1,
+                                totalQuestions: m.mode == DuelMode.race
+                                    ? _questions.length
+                                    : (mine.length + 1),
                               ),
-                            );
-                          }),
-                        const SizedBox(height: 100),
-                      ],
-                    ),
-                  ),
+                              const SizedBox(height: 18),
+                              if (m.inputStyle == AnswerInputStyle.letterbox)
+                                LetterboxInput(
+                                  key: _letterboxKey,
+                                  target: question.correctAnswer,
+                                  revealed: iAnsweredHere,
+                                  wasCorrect:
+                                      _lastWasCorrect(question, mine, myIdx),
+                                  onChanged: (value) => _typed = value,
+                                  onSubmitted: (_) =>
+                                      _submit(m, question, myIdx),
+                                )
+                              else
+                                ...List.generate(question.options.length, (i) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: AnswerOptionButton(
+                                      label: question.options[i],
+                                      optionLetter: _letters[i],
+                                      onTap: () {
+                                        if (iAmLocked) return;
+                                        HapticFeedback.selectionClick();
+                                        setState(() => _selectedIndex = i);
+                                      },
+                                      isSelected: _selectedIndex == i,
+                                      isCorrect: i == question.correctIndex,
+                                      isRevealed: iAnsweredHere,
+                                      isEliminated: false,
+                                    ),
+                                  );
+                                }),
+                              const SizedBox(height: 100),
+                            ],
+                          ),
+                        ),
                 ),
               ],
             ),
@@ -487,23 +616,25 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: PrimaryButton(
-            label: _submitLabel(
-              m,
-              iAmLocked,
-              iAnsweredHere,
-              oppCorrectHere,
-              iAmAlive,
+      floatingActionButton: inPause
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: PrimaryButton(
+                  label: _submitLabel(
+                    m,
+                    iAmLocked,
+                    iAnsweredHere,
+                    oppCorrectHere,
+                    iAmAlive,
+                  ),
+                  onPressed: iAmLocked || !_canSubmit(m)
+                      ? null
+                      : () => _submit(m, question, myIdx),
+                ),
+              ),
             ),
-            onPressed: iAmLocked || !_canSubmit(m)
-                ? null
-                : () => _submit(m, question, myIdx),
-          ),
-        ),
-      ),
       backgroundColor: palette.parchment,
     );
   }
@@ -543,6 +674,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
         wasCorrect: false,
         timeTaken: Duration.zero,
         points: 0,
+        submittedAt: DateTime.now().toUtc(),
       ),
     );
     return ans.wasCorrect;
@@ -783,6 +915,8 @@ class _StatsBar extends StatelessWidget {
     required this.oppProgress,
     required this.myDead,
     required this.oppDead,
+    this.oppWrongThisRound = false,
+    this.timerPaused = false,
   });
 
   final DuelMode mode;
@@ -796,6 +930,16 @@ class _StatsBar extends StatelessWidget {
   final bool myDead;
   final bool oppDead;
 
+  /// Opponent has already submitted a wrong answer on the current race
+  /// round. Pill on their side renders a persistent "Falsch" badge until
+  /// the round advances.
+  final bool oppWrongThisRound;
+
+  /// Shared session timer is currently frozen (between rounds). The
+  /// [_TimerStrip] picks this up to show a paused visual instead of
+  /// ticking down.
+  final bool timerPaused;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
@@ -804,7 +948,10 @@ class _StatsBar extends StatelessWidget {
         if (timeRemSeconds != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: _TimerStrip(secondsLeft: timeRemSeconds!),
+            child: _TimerStrip(
+              secondsLeft: timeRemSeconds!,
+              paused: timerPaused,
+            ),
           ),
         Row(
           children: [
@@ -827,6 +974,7 @@ class _StatsBar extends StatelessWidget {
                 progress: oppProgress,
                 isMe: false,
                 isDead: oppDead,
+                wrongThisRound: oppWrongThisRound,
               ),
             ),
           ],
@@ -844,8 +992,16 @@ class _StatsBar extends StatelessWidget {
 }
 
 class _TimerStrip extends StatelessWidget {
-  const _TimerStrip({required this.secondsLeft});
+  const _TimerStrip({
+    required this.secondsLeft,
+    this.paused = false,
+  });
   final double secondsLeft;
+
+  /// When true, the strip renders a neutral "paused" visual instead of the
+  /// low-time alarm or normal countdown. Used during the race post-round
+  /// window so the shared timer visibly stops.
+  final bool paused;
 
   @override
   Widget build(BuildContext context) {
@@ -853,15 +1009,30 @@ class _TimerStrip extends StatelessWidget {
     final s = secondsLeft.clamp(0, 9999);
     final mins = (s ~/ 60).toString();
     final secs = (s.truncate() % 60).toString().padLeft(2, '0');
-    final lowTime = s <= 10;
+    final lowTime = !paused && s <= 10;
+
+    final borderColor = paused
+        ? palette.gold.withValues(alpha: 0.6)
+        : (lowTime ? palette.incorrect : palette.divider);
+    final fillColor = paused
+        ? palette.gold.withValues(alpha: 0.10)
+        : (lowTime
+            ? palette.incorrect.withValues(alpha: 0.15)
+            : palette.page);
+    final iconColor = paused
+        ? palette.gold
+        : (lowTime ? palette.incorrect : palette.gold);
+    final textColor = paused
+        ? palette.inkMuted
+        : (lowTime ? palette.incorrect : palette.ink);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color:
-            lowTime ? palette.incorrect.withValues(alpha: 0.15) : palette.page,
+        color: fillColor,
         border: Border.all(
-          color: lowTime ? palette.incorrect : palette.divider,
-          width: lowTime ? 1.3 : 1,
+          color: borderColor,
+          width: lowTime || paused ? 1.3 : 1,
         ),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -869,9 +1040,9 @@ class _TimerStrip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.timer_rounded,
+            paused ? Icons.pause_circle_outline_rounded : Icons.timer_rounded,
             size: 14,
-            color: lowTime ? palette.incorrect : palette.gold,
+            color: iconColor,
           ),
           const SizedBox(width: 6),
           Text(
@@ -879,10 +1050,17 @@ class _TimerStrip extends StatelessWidget {
             style: AppTypography.serif(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: lowTime ? palette.incorrect : palette.ink,
+              color: textColor,
               letterSpacing: 1.2,
             ),
           ),
+          if (paused) ...[
+            const SizedBox(width: 8),
+            Text(
+              'PAUSE',
+              style: AppTypography.eyebrow(palette.gold),
+            ),
+          ],
         ],
       ),
     );
@@ -897,6 +1075,7 @@ class _PlayerPill extends StatelessWidget {
     required this.progress,
     required this.isMe,
     required this.isDead,
+    this.wrongThisRound = false,
   });
 
   final String label;
@@ -906,17 +1085,27 @@ class _PlayerPill extends StatelessWidget {
   final bool isMe;
   final bool isDead;
 
+  /// Render a persistent "FALSCH" badge plus a red border to flag that
+  /// this player has already burned their answer on the current race round.
+  /// Pulses briefly on first appearance via flutter_animate's repeat.
+  final bool wrongThisRound;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    return Container(
+    final borderColor = wrongThisRound
+        ? palette.incorrect
+        : (isMe ? palette.burgundy : palette.divider);
+    final borderWidth = wrongThisRound ? 1.6 : (isMe ? 1.4 : 1);
+    final pill = Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: isDead ? palette.parchment.withValues(alpha: 0.5) : palette.page,
-        border: Border.all(
-          color: isMe ? palette.burgundy : palette.divider,
-          width: isMe ? 1.4 : 1,
-        ),
+        color: wrongThisRound
+            ? palette.incorrect.withValues(alpha: 0.07)
+            : (isDead
+                ? palette.parchment.withValues(alpha: 0.5)
+                : palette.page),
+        border: Border.all(color: borderColor, width: borderWidth.toDouble()),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -930,6 +1119,20 @@ class _PlayerPill extends StatelessWidget {
                 Text(
                   'AUS',
                   style: AppTypography.eyebrow(palette.incorrect),
+                )
+              else if (wrongThisRound)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: palette.incorrect,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '✗ FALSCH',
+                    style: AppTypography.eyebrow(palette.page)
+                        .copyWith(color: palette.page, letterSpacing: 1.4),
+                  ),
                 ),
             ],
           ),
@@ -973,6 +1176,19 @@ class _PlayerPill extends StatelessWidget {
         ],
       ),
     );
+
+    if (!wrongThisRound) return pill;
+    // Wrong-this-round: quick attention-grabbing pulse on first appearance,
+    // then settle into a steady red-bordered state.
+    return pill
+        .animate(key: ValueKey('${label}_wrong'))
+        .shake(hz: 4, duration: 360.ms, offset: const Offset(1.4, 0))
+        .scale(
+          begin: const Offset(0.98, 0.98),
+          end: const Offset(1, 1),
+          duration: 220.ms,
+          curve: Curves.easeOutCubic,
+        );
   }
 }
 
@@ -1071,11 +1287,16 @@ class _RaceStatusBanner extends StatelessWidget {
     required this.myAlive,
     required this.iAnsweredHere,
     required this.oppCorrectHere,
+    this.oppWrongHere = false,
   });
 
   final bool myAlive;
   final bool iAnsweredHere;
   final bool oppCorrectHere;
+
+  /// Opponent has submitted a wrong answer on the current round and is now
+  /// locked out — frees me to answer at my own pace for points.
+  final bool oppWrongHere;
 
   @override
   Widget build(BuildContext context) {
@@ -1091,6 +1312,9 @@ class _RaceStatusBanner extends StatelessWidget {
     } else if (iAnsweredHere && !oppCorrectHere) {
       text = 'Du hast geantwortet — warte auf Mitspielerin.';
       color = palette.gold;
+    } else if (oppWrongHere && !iAnsweredHere) {
+      text = 'Mitspielerin hat falsch geantwortet — freie Bahn für dich.';
+      color = palette.correct;
     }
     if (text == null) return const SizedBox.shrink();
     return Container(
@@ -1412,6 +1636,154 @@ class _ScorePillar extends StatelessWidget {
             style: AppTypography.sans(fontSize: 12, color: palette.inkMuted),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─── Race round-end overlay ────────────────────────────────────────────────
+
+enum _RoundWinner { me, opponent, nobody }
+
+class _RoundOutcome {
+  const _RoundOutcome({
+    required this.winner,
+    required this.correctAnswer,
+    required this.secondsLeft,
+  });
+
+  final _RoundWinner winner;
+  final String correctAnswer;
+
+  /// Seconds remaining in the 3-second post-round window, clamped to >= 0.
+  final double secondsLeft;
+}
+
+class _RoundOutcomeOverlay extends StatelessWidget {
+  const _RoundOutcomeOverlay({required this.outcome});
+  final _RoundOutcome outcome;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+
+    final String headline;
+    final String symbol;
+    final Color accent;
+    switch (outcome.winner) {
+      case _RoundWinner.me:
+        headline = 'Du warst schneller!';
+        symbol = '✪';
+        accent = palette.gold;
+      case _RoundWinner.opponent:
+        headline = 'Mitspielerin war schneller';
+        symbol = '◎';
+        accent = palette.burgundy;
+      case _RoundWinner.nobody:
+        headline = 'Keine richtige Antwort.';
+        symbol = '◯';
+        accent = palette.inkMuted;
+    }
+
+    final ringProgress =
+        1 - (outcome.secondsLeft / _DuelMatchScreenState._postRoundPause.inSeconds);
+    final secondsDisplay = outcome.secondsLeft.ceil().clamp(0, 9);
+
+    return Center(
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 22),
+          decoration: BoxDecoration(
+            color: palette.page,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: accent.withValues(alpha: 0.5), width: 1.4),
+            boxShadow: [
+              BoxShadow(
+                color: accent.withValues(alpha: 0.18),
+                blurRadius: 28,
+                spreadRadius: 1,
+                offset: const Offset(0, 12),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              WaxSeal(symbol: symbol, size: 92, color: accent)
+                  .animate()
+                  .scale(
+                    begin: const Offset(0.5, 0.5),
+                    end: const Offset(1, 1),
+                    duration: 460.ms,
+                    curve: Curves.elasticOut,
+                  ),
+              const SizedBox(height: 18),
+              Text(
+                headline,
+                textAlign: TextAlign.center,
+                style: AppTypography.serif(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: palette.ink,
+                  letterSpacing: -0.3,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'KORREKTE ANTWORT',
+                style: AppTypography.eyebrow(palette.inkMuted),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                outcome.correctAnswer,
+                textAlign: TextAlign.center,
+                style: AppTypography.serif(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: accent,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 22),
+              SizedBox(
+                width: 64,
+                height: 64,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox.expand(
+                      child: CircularProgressIndicator(
+                        value: ringProgress.clamp(0, 1).toDouble(),
+                        strokeWidth: 4,
+                        backgroundColor: palette.divider,
+                        valueColor: AlwaysStoppedAnimation(accent),
+                      ),
+                    ),
+                    Text(
+                      '$secondsDisplay',
+                      style: AppTypography.serif(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: palette.ink,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Nächste Frage gleich …',
+                style: TextStyle(
+                  color: palette.inkMuted,
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

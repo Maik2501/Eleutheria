@@ -60,6 +60,7 @@ class ScoreRepository {
       'display_name': profile.displayName,
       'mode': mode,
       'variant': variant,
+      'input_style': session.inputStyle.key,
       'difficulty_band': band,
       'raw_score': breakdown.rawScore,
       'score': breakdown.score,
@@ -94,8 +95,10 @@ class ScoreRepository {
   }
 
   /// `null` → diese Session gehört nicht auf ein Leaderboard.
+  ///
+  /// Der `input_style` wird separat ins Insert geschrieben — Letterbox
+  /// kollabiert den GameMode also nicht mehr.
   static String? _resolveMode(GameSession session) {
-    if (session.inputStyle.key == 'letterbox') return 'letterbox';
     return switch (session.mode) {
       GameMode.classic => 'classic',
       GameMode.quizRush => 'quizRush',
@@ -113,34 +116,41 @@ class ScoreRepository {
     return 'salon';
   }
 
-  static String? _resolveVariant(GameSession session) {
-    if (session.mode != GameMode.quizRush) return null;
-    // Aktueller Konfig-Label-Stil: 'Best of 1 Minute' / 'Best of 3 Minuten' /
-    // 'Best of 5 Minuten' / 'Endless'. Wir mappen das auf die Schlüssel
-    // aus dem Schema.
-    // Falls Session-Daten das Label nicht direkt mitführen, ziehen wir es
-    // aus Heuristiken — Endless erkennt man am Fehlen eines Zeitlimits.
-    // Caller können den Variant-Schlüssel explizit liefern, wenn sie ihn
-    // kennen (z. B. aus der GameConfig).
-    return null; // explicit override siehe submitFromConfig falls nötig
-  }
+  /// Variant-Key für die Leaderboard-Filterung. Wird beim Session-Aufbau
+  /// (GameSessionController._resolveVariantKey) auf die Session geschrieben
+  /// und hier nur durchgereicht. `null` für Modi ohne Sub-Variante.
+  static String? _resolveVariant(GameSession session) => session.variantKey;
 
-  /// Fetches the top scoreboard entries with the given filters.
+  /// Holt die Top-Einträge der Bestenliste, dedupliziert auf einen Eintrag
+  /// pro Spieler:in (jeweils der beste).
   ///
-  /// [pure] = true -> nur Joker-freie Einträge. `false` bedeutet Casual:
-  /// alle Einträge, weil Joker-Fragen bereits im gespeicherten Score abgewertet
-  /// sind. [since] = null -> All-Time. [mode] = null -> alle Modi.
-  /// [onlyMine] = true -> nur Einträge des aktuellen Users.
+  /// - [pure] = true → nur Joker-freie Einträge.
+  /// - [mode] = null → alle Modi; sonst exakte mode-Spalte.
+  /// - [variant] = null → alle Varianten dieses Modus; sonst exakter Match.
+  /// - [since] = null → All-Time.
+  /// - [onlyMine] = true → nur eigene Einträge (Dedupe entfällt, weil's nur einen Spieler gibt).
+  /// - [orderByCorrect] = true → primäre Sortierung nach `correct` statt `score`
+  ///   (für Endless: dort sind Punkte irrelevant, es zählt die Anzahl der
+  ///   richtigen Antworten).
+  /// - Tiebreaker: `played_at` aufsteigend → wer den Wert zuerst erreicht hat,
+  ///   steht oben.
   Future<List<ScoreEntry>> topScores({
     required bool pure,
     String? mode,
+    String? variant,
+    String? band,
+    String? inputStyle,
     DateTime? since,
     bool onlyMine = false,
+    bool orderByCorrect = false,
     int limit = 50,
   }) async {
     var query = _client.from('scores').select();
     if (pure) query = query.eq('is_pure', true);
     if (mode != null) query = query.eq('mode', mode);
+    if (variant != null) query = query.eq('variant', variant);
+    if (band != null) query = query.eq('difficulty_band', band);
+    if (inputStyle != null) query = query.eq('input_style', inputStyle);
     if (since != null) {
       query = query.gte('played_at', since.toIso8601String());
     }
@@ -149,10 +159,34 @@ class ScoreRepository {
       if (uid == null) return const [];
       query = query.eq('player_id', uid);
     }
-    final rows = await query.order('score', ascending: false).limit(limit);
-    return (rows as List)
+    // Wir holen mehr Zeilen als nötig, damit nach dem Dedupe-Schritt genug
+    // unique Spieler:innen für die Top-50 übrig bleiben.
+    final rawLimit = onlyMine ? limit : (limit * 5).clamp(100, 500);
+    final rows = orderByCorrect
+        ? await query
+            .order('correct', ascending: false)
+            .order('played_at', ascending: true)
+            .limit(rawLimit)
+        : await query
+            .order('score', ascending: false)
+            .order('played_at', ascending: true)
+            .limit(rawLimit);
+    final entries = (rows as List)
         .map((r) => ScoreEntry.fromRow(r as Map<String, dynamic>))
         .toList();
+    if (onlyMine) return entries.take(limit).toList();
+    // Dedupe pro player_id — dank der Sortierung steht der beste Lauf
+    // zuerst, der erste Treffer pro Spieler:in ist also automatisch der
+    // anzuzeigende.
+    final seen = <String>{};
+    final out = <ScoreEntry>[];
+    for (final e in entries) {
+      if (seen.add(e.playerId)) {
+        out.add(e);
+        if (out.length >= limit) break;
+      }
+    }
+    return out;
   }
 
   static _Breakdown _computeBreakdown(List<AnswerRecord> answers) {
@@ -194,6 +228,7 @@ class ScoreEntry {
     required this.displayName,
     required this.mode,
     required this.difficultyBand,
+    required this.inputStyle,
     required this.score,
     required this.rawScore,
     required this.correct,
@@ -207,6 +242,13 @@ class ScoreEntry {
   final String displayName;
   final String mode;
   final String difficultyBand;
+
+  /// 'multipleChoice' | 'letterbox'. Vor Migration 0007 gab es Zeilen,
+  /// in denen Letterbox den Mode überschrieben hat — die Migration setzt
+  /// für diese Altzeilen input_style='letterbox' und stellt den
+  /// ursprünglichen Mode aus der Variant wieder her.
+  final String inputStyle;
+
   final int score;
   final int rawScore;
   final int correct;
@@ -220,6 +262,9 @@ class ScoreEntry {
         displayName: r['display_name'] as String,
         mode: r['mode'] as String,
         difficultyBand: r['difficulty_band'] as String,
+        // Defensiv: Altzeilen ohne Spalte könnten beim Lese-Cache
+        // theoretisch ohne Feld auftauchen.
+        inputStyle: (r['input_style'] as String?) ?? 'multipleChoice',
         score: (r['score'] as num).toInt(),
         rawScore: (r['raw_score'] as num).toInt(),
         correct: (r['correct'] as num).toInt(),

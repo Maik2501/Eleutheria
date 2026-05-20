@@ -12,6 +12,7 @@ class GameSession {
     this.difficultyMin = 1,
     this.difficultyMax = 5,
     this.inputStyle = AnswerInputStyle.multipleChoice,
+    this.variantKey,
     this.usedPowerUps = const [],
     List<AnswerRecord>? answers,
   }) : answers = answers ?? <AnswerRecord>[];
@@ -29,6 +30,11 @@ class GameSession {
   /// How the player answered (multiple-choice vs. letterbox).
   /// Kept on the session so it survives navigation to the result screen.
   final AnswerInputStyle inputStyle;
+
+  /// Sub-variant key for the leaderboard, currently used for Quiz-Rush:
+  /// `'1min' | '3min' | '5min' | 'endless' | null`. `null` means the mode
+  /// itself is the bucket (e.g. Klassisch).
+  final String? variantKey;
 
   /// Records, one per answered question.
   final List<AnswerRecord> answers;

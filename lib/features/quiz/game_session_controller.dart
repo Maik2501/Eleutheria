@@ -177,6 +177,29 @@ class GameSessionController extends StateNotifier<GameSessionState> {
   GameSessionController(Ref ref, GameConfig config)
       : super(_initial(ref, config));
 
+  /// Leitet den Leaderboard-Variant-Key aus der GameConfig ab.
+  ///
+  /// - Klassisch: '10' | '15' | '20' (Anzahl Fragen)
+  /// - Quiz-Rush: '1min' | '3min' | '5min' | 'endless'
+  /// - sonst: null (= die Modus-Spalte selbst ist die Bucket-Achse)
+  static String? _resolveVariantKey(GameConfig config) {
+    if (config.mode == GameMode.classic) {
+      final n = config.questionCount;
+      if (n == 10 || n == 15 || n == 20) return '$n';
+      return null;
+    }
+    if (config.mode == GameMode.quizRush) {
+      if (config.sessionTimeLimit == null && config.lifeLimit != null) {
+        return 'endless';
+      }
+      final mins = config.sessionTimeLimit?.inMinutes;
+      if (mins == 1) return '1min';
+      if (mins == 3) return '3min';
+      if (mins == 5) return '5min';
+    }
+    return null;
+  }
+
   static GameSessionState _initial(Ref ref, GameConfig config) {
     final repo = ref.read(questionRepositoryProvider);
     final letterboxOnly = config.inputStyle == AnswerInputStyle.letterbox;
@@ -199,6 +222,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
       difficultyMin: config.difficultyMin,
       difficultyMax: config.difficultyMax,
       inputStyle: config.inputStyle,
+      variantKey: _resolveVariantKey(config),
     );
 
     return GameSessionState(

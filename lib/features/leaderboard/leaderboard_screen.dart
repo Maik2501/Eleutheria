@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../data/models/difficulty_band.dart';
 import '../../data/repositories/score_repository.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
@@ -25,8 +26,17 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   late final TabController _tab;
 
   // Filter-State
-  _ModeFilter _mode = _ModeFilter.all;
+  _ModeGroup _modeGroup = _ModeGroup.all;
+  _VariantOption? _variant;
+  _InputStyleFilter _inputStyle = _InputStyleFilter.all;
+  _BandFilter _band = _BandFilter.all;
   _RangeFilter _range = _RangeFilter.allTime;
+
+  /// Zeigt die Modifier-Zeilen (Variant + Antwortart) unterhalb des
+  /// aktiven Modus. Klick auf einen anderen Modus expandiert
+  /// automatisch, Klick auf den **bereits aktiven** Modus toggelt nur
+  /// die Sichtbarkeit — die aktuell gewählten Modifier bleiben aktiv.
+  bool _modifiersExpanded = false;
 
   @override
   void initState() {
@@ -48,11 +58,33 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     if (repo == null) return const [];
     return repo.topScores(
       pure: _isPureTab,
-      mode: _mode.serverKey,
+      mode: _modeGroup.serverKey,
+      variant: _variant?.key,
+      band: _band.serverKey,
+      inputStyle: _inputStyle.serverKey,
       since: _range.since(),
       onlyMine: _range == _RangeFilter.myBest,
+      orderByCorrect: _variant?.metricIsCorrect ?? false,
       limit: 50,
     );
+  }
+
+  void _onModeTap(_ModeGroup g) {
+    setState(() {
+      if (_modeGroup == g) {
+        // Klick auf den aktiven Modus = Modifier ein-/ausklappen.
+        // Bisherige Variant/InputStyle-Auswahl bleibt erhalten und
+        // filtert weiter — sie ist nur unsichtbar.
+        _modifiersExpanded = !_modifiersExpanded;
+      } else {
+        _modeGroup = g;
+        // Bei Modus-Wechsel: Variant zurücksetzen (sie ist mode-spezifisch),
+        // InputStyle bleibt (orthogonal). Modifier automatisch öffnen,
+        // sofern es welche zu zeigen gibt.
+        _variant = null;
+        _modifiersExpanded = g.hasModifiers;
+      }
+    });
   }
 
   @override
@@ -94,11 +126,63 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               _FilterRow(
                 label: 'Modus',
                 children: [
-                  for (final m in _ModeFilter.values)
+                  for (final g in _ModeGroup.values)
                     _Chip(
-                      label: m.label,
-                      active: _mode == m,
-                      onTap: () => setState(() => _mode = m),
+                      label: g.label,
+                      active: _modeGroup == g,
+                      // Pfeil-Indikator nur am aktiven Modus mit
+                      // Modifiern, damit klar ist: zweiter Klick toggelt.
+                      trailingIcon: (_modeGroup == g && g.hasModifiers)
+                          ? (_modifiersExpanded
+                              ? Icons.expand_less_rounded
+                              : Icons.expand_more_rounded)
+                          : null,
+                      onTap: () => _onModeTap(g),
+                    ),
+                ],
+              ),
+              if (_modifiersExpanded && _modeGroup.hasModifiers) ...[
+                if (_modeGroup.variants.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  _FilterRow(
+                    label: 'Variante',
+                    children: [
+                      _Chip(
+                        label: 'Alle',
+                        active: _variant == null,
+                        onTap: () => setState(() => _variant = null),
+                      ),
+                      for (final v in _modeGroup.variants)
+                        _Chip(
+                          label: v.label,
+                          active: _variant?.key == v.key,
+                          onTap: () => setState(() => _variant = v),
+                        ),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 8),
+                _FilterRow(
+                  label: 'Antwortart',
+                  children: [
+                    for (final s in _InputStyleFilter.values)
+                      _Chip(
+                        label: s.label,
+                        active: _inputStyle == s,
+                        onTap: () => setState(() => _inputStyle = s),
+                      ),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 8),
+              _FilterRow(
+                label: 'Schwierigkeit',
+                children: [
+                  for (final b in _BandFilter.values)
+                    _Chip(
+                      label: b.label,
+                      active: _band == b,
+                      onTap: () => setState(() => _band = b),
                     ),
                 ],
               ),
@@ -144,8 +228,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                     return ListView.builder(
                       padding: const EdgeInsets.fromLTRB(20, 6, 20, 24),
                       itemCount: list.length,
-                      itemBuilder: (ctx, i) =>
-                          _Row(rank: i + 1, entry: list[i]),
+                      itemBuilder: (ctx, i) => _Row(
+                        rank: i + 1,
+                        entry: list[i],
+                        metricIsCorrect: _variant?.metricIsCorrect ?? false,
+                      ),
                     );
                   },
                 ),
@@ -160,17 +247,80 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
 // ───────────────────────── Filters ─────────────────────────
 
-enum _ModeFilter {
+/// Oberster Filter — entspricht den Modi-Tiles auf dem Home-Screen.
+/// `serverKey` = `mode`-Spalte in `scores`. `null` heißt „alle".
+enum _ModeGroup {
   all('Alle', null),
   classic('Klassisch', 'classic'),
-  quizRush('Quiz-Rush', 'quizRush'),
-  suddenDeath('Sudden Death', 'suddenDeath'),
-  daily('Tägliche Frage', 'daily'),
-  letterbox('Letterbox', 'letterbox');
+  quizRush('Quiz-Rush', 'quizRush');
 
-  const _ModeFilter(this.label, this.serverKey);
+  const _ModeGroup(this.label, this.serverKey);
   final String label;
   final String? serverKey;
+
+  /// Sub-Varianten, die in der Variant-Modifier-Zeile erscheinen, sobald
+  /// dieser Modus aktiv ist und die Modifier expandiert sind. `all`
+  /// liefert eine leere Liste — keine Variant-Zeile.
+  List<_VariantOption> get variants {
+    switch (this) {
+      case _ModeGroup.classic:
+        return const [
+          _VariantOption('10 Fragen', '10', false),
+          _VariantOption('15 Fragen', '15', false),
+          _VariantOption('20 Fragen', '20', false),
+        ];
+      case _ModeGroup.quizRush:
+        return const [
+          _VariantOption('1 min', '1min', false),
+          _VariantOption('3 min', '3min', false),
+          _VariantOption('5 min', '5min', false),
+          _VariantOption('Endless', 'endless', true),
+        ];
+      case _ModeGroup.all:
+        return const [];
+    }
+  }
+
+  /// Hat dieser Modus überhaupt Modifier zum Aus-/Einklappen?
+  /// `Alle` hat keine — Klick darauf macht nichts Besonderes.
+  bool get hasModifiers => this != _ModeGroup.all;
+}
+
+/// Antwortart-Filter (`input_style` in `scores`). Orthogonal zum
+/// GameMode — eine Klassik-Runde kann Multiple Choice **oder**
+/// Letterbox sein, beide landen unter mode='classic'.
+enum _InputStyleFilter {
+  all('Alle', null),
+  multipleChoice('Auswahl', 'multipleChoice'),
+  letterbox('Eingabe', 'letterbox');
+
+  const _InputStyleFilter(this.label, this.serverKey);
+  final String label;
+  final String? serverKey;
+}
+
+/// Eine Sub-Variante des aktiven Modus.
+/// `metricIsCorrect = true` → Bestenliste sortiert nach Anzahl richtiger
+/// Antworten statt Punkten (Endless).
+class _VariantOption {
+  const _VariantOption(this.label, this.key, this.metricIsCorrect);
+  final String label;
+  final String key;
+  final bool metricIsCorrect;
+}
+
+/// Schwierigkeitsband-Filter, `null` = alle Bänder.
+enum _BandFilter {
+  all('Alle', null),
+  einstieg('Einstieg', DifficultyBand.einstieg),
+  salon('Salon', DifficultyBand.salon),
+  meisterpruefung('Meisterprüfung', DifficultyBand.meisterpruefung);
+
+  const _BandFilter(this.label, this.band);
+  final String label;
+  final DifficultyBand? band;
+
+  String? get serverKey => band?.serverKey;
 }
 
 enum _RangeFilter {
@@ -237,11 +387,17 @@ class _Chip extends StatelessWidget {
     required this.label,
     required this.active,
     required this.onTap,
+    this.trailingIcon,
   });
 
   final String label;
   final bool active;
   final VoidCallback onTap;
+
+  /// Optionales Icon rechts neben dem Label — wird z. B. genutzt, um
+  /// am aktiven Modus den Expand/Collapse-Zustand seiner Modifier
+  /// anzuzeigen.
+  final IconData? trailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -265,13 +421,26 @@ class _Chip extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Text(
-            label,
-            style: AppTypography.sans(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: active ? palette.burgundy : palette.ink,
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: AppTypography.sans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: active ? palette.burgundy : palette.ink,
+                ),
+              ),
+              if (trailingIcon != null) ...[
+                const SizedBox(width: 4),
+                Icon(
+                  trailingIcon,
+                  size: 16,
+                  color: active ? palette.burgundy : palette.ink,
+                ),
+              ],
+            ],
           ),
         ),
       ),
@@ -280,9 +449,16 @@ class _Chip extends StatelessWidget {
 }
 
 class _Row extends StatelessWidget {
-  const _Row({required this.rank, required this.entry});
+  const _Row({
+    required this.rank,
+    required this.entry,
+    required this.metricIsCorrect,
+  });
   final int rank;
   final ScoreEntry entry;
+
+  /// Im Endless-Modus zählt die Anzahl richtiger Antworten, nicht Punkte.
+  final bool metricIsCorrect;
 
   @override
   Widget build(BuildContext context) {
@@ -333,8 +509,14 @@ class _Row extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${entry.correct}/${entry.answered} · ${_bandLabel(entry.difficultyBand)}'
-                  '${entry.jokersUsed > 0 ? ' · ${entry.jokersUsed} Joker' : ''}',
+                  metricIsCorrect
+                      // Endless: die richtige-Antworten-Zahl ist die
+                      // Hauptmetrik (steht rechts), Sub-Text zeigt nur
+                      // noch Band + optional Joker an.
+                      ? '${_bandLabel(entry.difficultyBand)}'
+                          '${entry.jokersUsed > 0 ? ' · ${entry.jokersUsed} Joker' : ''}'
+                      : '${entry.correct}/${entry.answered} · ${_bandLabel(entry.difficultyBand)}'
+                          '${entry.jokersUsed > 0 ? ' · ${entry.jokersUsed} Joker' : ''}',
                   style: AppTypography.sans(
                     fontSize: 11.5,
                     color: palette.inkMuted,
@@ -343,13 +525,27 @@ class _Row extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            '${entry.score} P',
-            style: AppTypography.serif(
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-              color: palette.ink,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                metricIsCorrect ? '${entry.correct}' : '${entry.score}',
+                style: AppTypography.serif(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: palette.ink,
+                ),
+              ),
+              Text(
+                metricIsCorrect ? 'Fragen' : 'Punkte',
+                style: AppTypography.sans(
+                  fontSize: 10,
+                  color: palette.inkMuted,
+                  letterSpacing: 0.4,
+                ),
+              ),
+            ],
           ),
         ],
       ),

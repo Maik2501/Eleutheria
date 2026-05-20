@@ -14,3 +14,4 @@ alter table duels
 alter table duels drop constraint if exists duels_status_check;
 alter table duels add constraint duels_status_check
   check (status in ('waiting','playing','finished','cancelled'));
+

@@ -30,6 +30,10 @@ dependencies:
   flutter_animate: ^4.5.0
   confetti: ^0.7.0
 
+  # Duell-Lobby: QR-Code anzeigen (Host) + scannen (Gast)
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^5.2.3
+
   # Utilities
   uuid: ^4.4.0
 

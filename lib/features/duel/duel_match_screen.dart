@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/providers.dart';
@@ -1432,6 +1433,31 @@ class _WaitingScaffoldState extends State<_WaitingScaffold> {
                       fontSize: 44,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 8,
+                      color: palette.ink,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                // QR-Code mit demselben 6-stelligen Lobby-Code als Payload.
+                // Der Join-Scanner extrahiert den Code wieder direkt.
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: palette.page,
+                    border: Border.all(color: palette.divider),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: QrImageView(
+                    data: widget.code,
+                    version: QrVersions.auto,
+                    size: 180,
+                    backgroundColor: palette.page,
+                    eyeStyle: QrEyeStyle(
+                      eyeShape: QrEyeShape.square,
+                      color: palette.ink,
+                    ),
+                    dataModuleStyle: QrDataModuleStyle(
+                      dataModuleShape: QrDataModuleShape.square,
                       color: palette.ink,
                     ),
                   ),

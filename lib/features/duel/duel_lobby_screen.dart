@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../app/providers.dart';
@@ -354,7 +355,144 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen>
           icon: Icons.login_rounded,
           onPressed: _busy ? null : _join,
         ),
+        const SizedBox(height: 10),
+        SecondaryButton(
+          label: 'QR-Code scannen',
+          icon: Icons.qr_code_scanner_rounded,
+          onPressed: _busy ? null : _openScanner,
+        ),
       ],
+    );
+  }
+
+  /// Bottom-Sheet mit Kamera-Vorschau zum QR-Scan. Bei einem gefundenen
+  /// 6-stelligen Code: Sheet schließen, Eingabefeld füllen, Auto-Join.
+  Future<void> _openScanner() async {
+    final scanned = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.black,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (_) => const _QrScannerSheet(),
+    );
+    if (!mounted || scanned == null) return;
+    _codeCtrl.text = scanned;
+    await _join();
+  }
+}
+
+/// Vollflächiger Kamera-Sheet. Liefert beim ersten gültigen 6-stelligen
+/// Lobby-Code via `Navigator.pop(context, code)` zurück.
+class _QrScannerSheet extends StatefulWidget {
+  const _QrScannerSheet();
+
+  @override
+  State<_QrScannerSheet> createState() => _QrScannerSheetState();
+}
+
+class _QrScannerSheetState extends State<_QrScannerSheet> {
+  final MobileScannerController _ctrl = MobileScannerController(
+    detectionSpeed: DetectionSpeed.noDuplicates,
+    formats: const [BarcodeFormat.qrCode],
+  );
+  bool _handled = false;
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  void _onDetect(BarcodeCapture cap) {
+    if (_handled) return;
+    for (final b in cap.barcodes) {
+      final raw = b.rawValue?.trim().toUpperCase() ?? '';
+      // QR-Inhalt ist der reine 6-stellige Code — Format streng prüfen,
+      // damit fremde QR-Codes nicht aus Versehen einen Join auslösen.
+      final match = RegExp(r'^[A-Z0-9]{6}$').firstMatch(raw);
+      if (match != null) {
+        _handled = true;
+        Navigator.pop(context, raw);
+        return;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
+      heightFactor: 0.85,
+      child: Stack(
+        children: [
+          MobileScanner(controller: _ctrl, onDetect: _onDetect),
+          // Halb-transparenter Maskenrahmen, damit der Scan-Bereich klar ist.
+          const _ScannerOverlay(),
+          Positioned(
+            top: 12,
+            right: 12,
+            child: IconButton.filled(
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black.withValues(alpha: 0.55),
+                foregroundColor: Colors.white,
+              ),
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 28,
+            child: Center(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.55),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  'Halte den Lobby-QR-Code in den Rahmen',
+                  style: TextStyle(color: Colors.white, fontSize: 13),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ScannerOverlay extends StatelessWidget {
+  const _ScannerOverlay();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, c) {
+        final side = (c.maxWidth.clamp(220, 320)).toDouble();
+        return Stack(
+          children: [
+            // Abdunklung außerhalb des Scan-Rahmens
+            Positioned.fill(
+              child: ColoredBox(color: Colors.black.withValues(alpha: 0.35)),
+            ),
+            Center(
+              child: Container(
+                width: side,
+                height: side,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -34,12 +34,12 @@ class AppTheme {
       textTheme: textTheme,
       extensions: const [AppPalette.light],
       splashFactory: NoSplash.splashFactory,
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        },
-      ),
+      // pageTransitionsTheme bewusst nicht überschrieben: iOS bekommt
+      // Cupertino-Übergänge ohnehin als Default. Der frühere Override
+      // erzwang Cupertino auch auf Android, aber die explizite Referenz
+      // auf CupertinoPageTransitionsBuilder bricht Codemagic-Builds (dortige
+      // Flutter-Version exportiert die Klasse anders). Wir lassen Flutter
+      // die plattformspezifischen Defaults wählen.
       appBarTheme: AppBarTheme(
         backgroundColor: palette.parchment,
         foregroundColor: palette.ink,
@@ -140,12 +140,12 @@ class AppTheme {
       textTheme: textTheme,
       extensions: const [AppPalette.dark],
       splashFactory: NoSplash.splashFactory,
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        },
-      ),
+      // pageTransitionsTheme bewusst nicht überschrieben: iOS bekommt
+      // Cupertino-Übergänge ohnehin als Default. Der frühere Override
+      // erzwang Cupertino auch auf Android, aber die explizite Referenz
+      // auf CupertinoPageTransitionsBuilder bricht Codemagic-Builds (dortige
+      // Flutter-Version exportiert die Klasse anders). Wir lassen Flutter
+      // die plattformspezifischen Defaults wählen.
       appBarTheme: AppBarTheme(
         backgroundColor: palette.parchment,
         foregroundColor: palette.ink,

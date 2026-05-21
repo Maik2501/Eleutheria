@@ -209,9 +209,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                         const SizedBox(width: 12),
                         if (!state.revealed)
                           _PowerUpButton(
-                            symbol: '½',
                             tooltip: _fiftyFiftyTooltip(notifier),
                             enabled: notifier.canUseFiftyFifty,
+                            remaining: notifier.fiftyFiftyRemaining,
                             onPressed: notifier.useFiftyFifty,
                           ),
                       ],
@@ -222,7 +222,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                       correct: state.session.correctCount,
                       total: state.session.questions.length,
                       livesRemaining: notifier.livesRemaining,
+                      totalLives: widget.config.lifeLimit,
                       timeRemaining: _timeRemaining(),
+                      timerPaused: _timerPaused,
                     ),
                     const SizedBox(height: 20),
                     Expanded(
@@ -406,12 +408,22 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
     return state.session.currentIndex / state.session.questions.length;
   }
 
+  /// Restzeit, die der Spielerin tatsächlich noch zur Verfügung steht.
+  /// Subtrahiert dieselben Reveal-Pausen wie der Ticker, damit Timer-Pill
+  /// und Progressbalken garantiert dasselbe zeigen.
   Duration? _timeRemaining() {
     final limit = widget.config.sessionTimeLimit;
     if (limit == null) return null;
-    final remaining = limit - DateTime.now().difference(_sessionStartedAt);
+    final raw = DateTime.now().difference(_sessionStartedAt);
+    final currentPause = _pauseStartedAt == null
+        ? Duration.zero
+        : DateTime.now().difference(_pauseStartedAt!);
+    final effective = raw - _pausedTotal - currentPause;
+    final remaining = limit - effective;
     return remaining.isNegative ? Duration.zero : remaining;
   }
+
+  bool get _timerPaused => _pauseStartedAt != null;
 
   String _fiftyFiftyTooltip(GameSessionController notifier) {
     final remaining = notifier.fiftyFiftyRemaining;
@@ -428,7 +440,9 @@ class _SessionMetaBar extends StatelessWidget {
     required this.correct,
     required this.total,
     required this.livesRemaining,
+    required this.totalLives,
     required this.timeRemaining,
+    this.timerPaused = false,
   });
 
   final GameConfig config;
@@ -436,7 +450,19 @@ class _SessionMetaBar extends StatelessWidget {
   final int correct;
   final int total;
   final int? livesRemaining;
+
+  /// Maximalzahl Leben für den Modus (z. B. 3 in Endless). Steuert
+  /// zusammen mit [livesRemaining] die Herzen-Reihe — gefüllt für
+  /// vorhandene, leer für verlorene Leben.
+  final int? totalLives;
+
   final Duration? timeRemaining;
+
+  /// Quiz-Rush: zeigt an, ob die Session-Uhr gerade angehalten ist
+  /// (während ein Reveal-Panel offen ist). Wechselt die Pill auf ein
+  /// Pause-Icon + Gold-Akzent, damit der gefrorene mm:ss-Wert nicht wie
+  /// ein Display-Bug wirkt.
+  final bool timerPaused;
 
   @override
   Widget build(BuildContext context) {
@@ -466,9 +492,18 @@ class _SessionMetaBar extends StatelessWidget {
           const Spacer(),
           if (timeRemaining != null)
             _MetaPill(
-              icon: Icons.timer_rounded,
-              label: _formatDuration(timeRemaining!),
-              color: palette.incorrect,
+              icon: timerPaused
+                  ? Icons.pause_circle_outline_rounded
+                  : Icons.timer_rounded,
+              label: timerPaused
+                  ? '${_formatDuration(timeRemaining!)} · Pause'
+                  : _formatDuration(timeRemaining!),
+              color: timerPaused ? palette.gold : palette.incorrect,
+            )
+          else if (livesRemaining != null && totalLives != null)
+            _HeartsRow(
+              remaining: livesRemaining!,
+              total: totalLives!,
             )
           else if (livesRemaining != null)
             _MetaPill(
@@ -535,6 +570,50 @@ class _MetaPill extends StatelessWidget {
   }
 }
 
+/// Zelda-stilige Herzen-Reihe für den Endless-Modus. Volle Herzen für
+/// verbleibende Leben, leere (Outline) für bereits verbrauchte. Das
+/// zuletzt verlorene Herz pulst kurz, damit der Verlust nicht
+/// unbemerkt vorbeiläuft.
+class _HeartsRow extends StatelessWidget {
+  const _HeartsRow({required this.remaining, required this.total});
+
+  final int remaining;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: palette.page,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: palette.divider),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < total; i++)
+            // Leeren von links nach rechts: das i-te Herz ist leer, solange
+            // weniger als (total − remaining) Herzen weiter links stehen.
+            Padding(
+              padding: EdgeInsets.only(left: i == 0 ? 0 : 4),
+              child: Icon(
+                i >= total - remaining
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                size: 18,
+                color: i >= total - remaining
+                    ? palette.burgundy
+                    : palette.inkMuted.withValues(alpha: 0.55),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SubmitBar extends StatelessWidget {
   const _SubmitBar({
     required this.enabled,
@@ -557,47 +636,106 @@ class _SubmitBar extends StatelessWidget {
 
 class _PowerUpButton extends StatelessWidget {
   const _PowerUpButton({
-    required this.symbol,
     required this.tooltip,
     required this.onPressed,
     required this.enabled,
+    required this.remaining,
   });
 
-  final String symbol;
   final String tooltip;
   final VoidCallback onPressed;
   final bool enabled;
 
+  /// Remaining joker uses for the session. `null` means unlimited — no
+  /// counter is shown in that case. `0` greys the icon out as if disabled.
+  final int? remaining;
+
   @override
   Widget build(BuildContext context) {
-    final palette = context.palette;
+    const size = 56.0;
+    // Visuell "weg" — entweder weil das App-Setting es gerade nicht erlaubt
+    // (z. B. Joker bereits auf dieser Frage genutzt) oder weil das Kontingent
+    // aufgebraucht ist. Wir behandeln beides gleich, damit der Knopf nicht
+    // halb aktiv wirkt.
+    final dimmed = !enabled || remaining == 0;
+    final iconImage = Image.asset(
+      'assets/icons/joker.webp',
+      width: size,
+      height: size,
+      filterQuality: FilterQuality.medium,
+    );
     return Tooltip(
       message: tooltip,
       child: GestureDetector(
         onTap: enabled ? onPressed : null,
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: enabled
-                ? palette.gold.withValues(alpha: 0.15)
-                : palette.parchment,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: enabled ? palette.gold : palette.divider,
-              width: 1.2,
-            ),
+        child: SizedBox(
+          width: size,
+          height: size,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              ClipOval(
+                child: dimmed
+                    ? ColorFiltered(
+                        colorFilter: const ColorFilter.matrix(<double>[
+                          0.2126, 0.7152, 0.0722, 0, 0,
+                          0.2126, 0.7152, 0.0722, 0, 0,
+                          0.2126, 0.7152, 0.0722, 0, 0,
+                          0, 0, 0, 0.55, 0,
+                        ]),
+                        child: iconImage,
+                      )
+                    : iconImage,
+              ),
+              if (remaining != null)
+                Positioned(
+                  right: -2,
+                  top: -2,
+                  child: _RemainingBadge(
+                    count: remaining!,
+                    dimmed: dimmed,
+                  ),
+                ),
+            ],
           ),
-          alignment: Alignment.center,
-          child: Text(
-            symbol,
-            style: AppTypography.serif(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: enabled ? palette.gold : palette.inkMuted,
-              height: 1.0,
-            ),
-          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Kleines, halbtransparentes Burgund-Plättchen rechts oben am Joker —
+/// zeigt die verbleibenden Nutzungen. Wird mitgegraut, sobald der Knopf
+/// disabled oder das Kontingent aufgebraucht ist.
+class _RemainingBadge extends StatelessWidget {
+  const _RemainingBadge({required this.count, required this.dimmed});
+  final int count;
+  final bool dimmed;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final bg = (dimmed ? palette.inkMuted : palette.burgundy)
+        .withValues(alpha: 0.85);
+    return Container(
+      constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: palette.parchment.withValues(alpha: 0.9),
+          width: 1.4,
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        '$count',
+        style: AppTypography.serif(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: palette.parchment,
+          height: 1.0,
         ),
       ),
     );

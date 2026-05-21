@@ -1,7 +1,7 @@
 name: philosophie_quiz
 description: "Eleutheria — ein Philosophie-Quiz im warmen Akademia-Stil."
 publish_to: 'none'
-version: 0.1.0+3
+version: 0.1.0+4
 
 environment:
   sdk: ">=3.5.0 <4.0.0"

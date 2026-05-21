@@ -13,8 +13,8 @@ import '../../data/models/answer_input_style.dart';
 import '../../data/models/difficulty_band.dart';
 import '../../data/models/game_session.dart';
 import '../../data/models/player_profile.dart';
+import '../../shared/widgets/brand_seal.dart';
 import '../../shared/widgets/parchment_background.dart';
-import '../../shared/widgets/wax_seal.dart';
 import '../quiz/game_session_controller.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -135,7 +135,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         eyebrow: 'Set',
                         title: 'Klassik',
                         description:
-                            'Feste Fragensets für konzentrierte Sessions ohne Rush-Regel.',
+                            'Feste Fragensets für konzentrierte Sessions ohne Zeitdruck.',
                         accent: AppColors.sage,
                         children: [
                           for (final count in const [10, 15, 20])
@@ -161,8 +161,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         eyebrow: 'Versus',
                         title: 'Duell',
                         description:
-                            'Live gegen eine Freundin. Race-Modus, Parallel-Modus, '
-                            'eigene Zeit- und Leben-Settings.',
+                            'Tritt live gegen eine Freundin an. Wähle deinen '
+                            'eigenen Spielstil.',
                         accent: AppColors.plum,
                         children: [
                           _OptionAction(
@@ -186,7 +186,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         eyebrow: 'Daily-ready',
                         title: 'Kreuzworträtsel',
                         description:
-                            'Thematische 15×15-Rätsel mit Clue-Liste, Hints und Puzzle-Auswahl.',
+                            'Teste dein Wissen mit herausfordernden Rätseln.',
                         accent: AppColors.dustyTeal,
                         children: [
                           _OptionAction(
@@ -303,7 +303,7 @@ class _HomeIntroPanel extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Schnelle Runden, klassische Sets, Duelle und Kreuzworträtsel im warmen Akademia-Stil.',
+                            'Schnelle Runden, klassische Sets, Duelle und Kreuzworträtsel. Antwortart und Schwierigkeit unten anpassen.',
                             maxLines: compact ? 3 : 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppTypography.sans(
@@ -317,7 +317,7 @@ class _HomeIntroPanel extends StatelessWidget {
                     ),
                     if (!compact) ...[
                       const SizedBox(width: 12),
-                      const _BrandSeal(),
+                      const BrandSeal(),
                     ],
                   ],
                 ),
@@ -326,55 +326,6 @@ class _HomeIntroPanel extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _BrandSeal extends StatelessWidget {
-  const _BrandSeal();
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.palette;
-    return SizedBox(
-      width: 104,
-      height: 104,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          gradient: RadialGradient(
-            center: const Alignment(-0.25, -0.35),
-            colors: [
-              palette.gold.withValues(alpha: 0.22),
-              palette.parchment.withValues(alpha: 0.66),
-            ],
-          ),
-          border: Border.all(color: palette.divider),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(11),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.ink.withValues(alpha: 0.14),
-                  blurRadius: 18,
-                  offset: const Offset(0, 9),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                'assets/icons/app_icon.png',
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.medium,
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -493,7 +444,14 @@ class _RankChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              WaxSeal(symbol: 'Σ', size: 28, color: palette.gold),
+              ClipOval(
+                child: Image.asset(
+                  'assets/icons/achievements.webp',
+                  width: 32,
+                  height: 32,
+                  filterQuality: FilterQuality.medium,
+                ),
+              ),
               const SizedBox(width: 10),
               Text(
                 rankTitle,

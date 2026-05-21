@@ -8,6 +8,7 @@ import '../../core/theme/app_typography.dart';
 import '../../data/models/achievement.dart';
 import '../../data/models/player_profile.dart';
 import '../../data/repositories/supabase_profile_repository.dart';
+import '../../shared/widgets/brand_seal.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/wax_seal.dart';
@@ -37,7 +38,7 @@ class ProfileScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
           children: [
             const SizedBox(height: 8),
-            Center(child: WaxSeal(symbol: p.avatarSeal, size: 92)),
+            const Center(child: BrandSeal(size: 92)),
             const SizedBox(height: 14),
             Center(
               child: GestureDetector(

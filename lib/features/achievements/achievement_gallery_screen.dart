@@ -9,6 +9,7 @@ import '../../data/models/achievement.dart';
 import '../../data/models/player_profile.dart';
 import '../../data/models/player_stats.dart';
 import '../../data/services/achievement_engine.dart';
+import '../../shared/widgets/brand_seal.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/wax_seal.dart';
@@ -175,11 +176,7 @@ class _GalleryHeader extends StatelessWidget {
               ],
             ),
           ),
-          WaxSeal(
-            symbol: profile.avatarSeal,
-            size: 60,
-            color: palette.burgundy,
-          ),
+          const BrandSeal(size: 80),
         ],
       ),
     );

@@ -45,11 +45,11 @@ Alle neuen Mode-Assets folgen dem globalen Warm-Academia-Stil: weiche watercolor
 
 ---
 
-## Basis-Philosoph:innen-Porträts (40 Bilder, vorhanden)
+## Basis-Philosoph:innen-Porträts (Stil-Referenz, 40 historische Erstgenerationen)
 
 Alle in den Ordner `assets/images/philosophers/` legen. Dateiname = `id` aus `philosophers_seed.dart` mit Endung `.webp` (oder `.png`).
 
-Status: Diese 40 Basisbilder sind aktuell im Asset-Ordner vorhanden.
+Status: Diese 40 Basisbilder sind im Asset-Ordner vorhanden und dienen als **Stil-Anker** für alle weiteren Porträts. Ab 2026-05-19 sind alle weiteren im Seed enthaltenen Philosoph:innen ebenfalls erzeugt — siehe Lückenstand-Sektion unten für die einzige verbliebene Pflicht-Lücke.
 
 **Stil-Hinweis pro Porträt:**
 > *„Half-length portrait of {NAME}, the {SCHOOL} philosopher who lived {YEARS}. Three-quarter view, contemplative gaze, subtle smile or serious thoughtful expression. Period-appropriate clothing. Soft warm lighting from the upper left. Aged parchment background with very faint architectural or symbolic motifs (e.g. columns, scrolls, an open book). Painterly watercolor-and-ink style, muted earth tones with hints of burgundy and antique gold. Centered composition, square 1024×1024. Avoid photorealism — keep an illustrated, scholarly book-cover quality."*
@@ -101,127 +101,21 @@ Status: Diese 40 Basisbilder sind aktuell im Asset-Ordner vorhanden.
 
 ---
 
-## Aktueller Seed-Lückenstand (Stand 2026-05-19)
+## Aktueller Seed-Lückenstand (Stand 2026-05-21)
 
-Die folgenden 19 Personen sind bereits in [`lib/data/seed/philosophers_seed.dart`](lib/data/seed/philosophers_seed.dart) eingetragen, aber die Bild-Datei fehlt unter `assets/images/philosophers/`. **Dateinamen folgen exakt der `imageAsset`-Angabe im Seed — nicht umbenennen.** Wenn ein Eintrag weiter unten unter „Fehlende Porträts für Fragen- und Balance-Erweiterung" mit einem anderen Dateinamen auftaucht, gilt diese Sektion hier als kanonisch.
+Cross-Check zwischen [`lib/data/seed/philosophers_seed.dart`](lib/data/seed/philosophers_seed.dart) (79 Einträge) und [`assets/images/philosophers/`](assets/images/philosophers/) zeigt **eine** echte Pflicht-Lücke: Tullia d'Aragona ist im Seed referenziert, aber die Bild-Datei fehlt.
 
-**Generierungs-Regel**: pro Eintrag **eine** Bild-Anfrage. Niemals Batch / Multi-Image-Calls — bei größeren Schwüngen kommt es zu Stream-Abbrüchen. Workflow für Codex siehe „Codex IMAGEGEN — einzeln" am Ende des Dokuments.
+Frühere FEHLT-Sektionen (Stand 2026-05-19 sowie die Tabellen unter „Fehlende Porträts für Fragen- und Balance-Erweiterung") sind durch die zwischenzeitlich erfolgten Codex-Generationen abgearbeitet — siehe die niedrig-priore Liste unten für die noch offenen Optionsnamen.
 
-Jeder Prompt unten ist self-contained: er enthält Stil-Suffix, Person, Epoche und Output-Pfad in einer Anfrage.
+**Dateinamen folgen exakt der `imageAsset`-Angabe im Seed — nicht umbenennen.**
 
----
-
-### 1. `assets/images/philosophers/aesara.webp` — Aesara von Lukanien
-
-> *„Half-length portrait of Aesara of Lucania, a Pythagorean philosopher from the 4th–3rd century BCE who wrote about the harmony of the soul and justice. Three-quarter view, dignified contemplative gaze, simple draped Greek chiton in cream and dusty earth tones, hair gathered. Faint background motif: a stylized tripartite soul diagram or a small lyre on a parchment scroll. Soft warm lighting from the upper left. Aged parchment background (#F5EFE6) with hints of burgundy and antique gold. Painterly watercolor-and-ink style, muted earth tones, no photorealism — illustrated scholarly book-cover quality. Square 1024×1024, centered."*
+**Generierungs-Regel**: pro Eintrag **eine** Bild-Anfrage. Niemals Batch / Multi-Image-Calls — bei größeren Schwüngen kommt es zu Stream-Abbrüchen. Workflow für Codex siehe „Codex IMAGEGEN — einzeln" weiter unten.
 
 ---
 
-### 2. `assets/images/philosophers/konfuzius.webp` — Konfuzius
+### 1. `assets/images/philosophers/tullia.webp` — Tullia d'Aragona
 
-> *„Half-length portrait of Confucius (Kong Fuzi), Chinese teacher of virtue ethics and ritual humanity who lived 551–479 BCE. Three-quarter view, calm elder with a long thin grey beard, layered scholar's robes in cream with subtle burgundy and dusty gold trim. Hands folded calmly. Faint background: bamboo writing slips and a hint of a ritual hall column. Soft warm lighting from the upper left. Aged parchment background, muted earth tones with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
-
----
-
-### 3. `assets/images/philosophers/makrina.webp` — Makrina die Jüngere
-
-> *„Half-length portrait of Macrina the Younger, 4th-century Cappadocian theologian and teacher of her brother Gregory of Nyssa, founder of a women's ascetic community (ca. 327–379). Three-quarter view, serene composed expression, simple early-Byzantine ascetic dress in cream and muted plum, head veiled. Faint background: a small monastic cell window with a distant Cappadocian rock landscape. Soft warm lighting from the upper left. Aged parchment background, muted earth tones with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, scholarly illustrated book-cover quality, no photorealism."*
-
----
-
-### 4. `assets/images/philosophers/hildegard.webp` — Hildegard von Bingen
-
-> *„Half-length portrait of Hildegard of Bingen, 12th-century German Benedictine abbess, visionary, naturalist and composer (1098–1179). Three-quarter view, thoughtful contemplative gaze, full Benedictine black habit and white wimple. A small open illuminated manuscript on her lap, faint cosmological mandala motif in the background in muted dusty teal and sage. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
-
----
-
-### 5. `assets/images/philosophers/cavendish.webp` — Margaret Cavendish
-
-> *„Half-length portrait of Margaret Cavendish, Duchess of Newcastle, 17th-century English natural philosopher and pioneer of speculative fiction (1623–1673). Three-quarter view, intelligent direct gaze, elaborate 17th-century court dress with a deep burgundy bodice and cream lace collar, hair in styled curls. Faint background: an alchemist's table with a quill and a manuscript, hint of atomistic dots in dusty gold. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 6. `assets/images/philosophers/elisabeth_pfalz.webp` — Elisabeth von der Pfalz
-
-> *„Half-length portrait of Elisabeth of the Palatinate, 17th-century princess and Cartesian philosopher (1618–1680), known for her correspondence with Descartes on mind-body interaction. Three-quarter view, composed scholarly expression, sober 17th-century court dress in deep plum and cream, modest pearl jewellery, hair pulled back. Faint background: a writing desk with sealed letters, a quill, and a hinted geometric diagram. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 7. `assets/images/philosophers/astell.webp` — Mary Astell
-
-> *„Half-length portrait of Mary Astell, late-17th- to early-18th-century English philosopher and pioneer of women's education in England (1666–1731). Three-quarter view, intelligent reserved expression, modest period dress in muted sage and cream with a soft white collar, hair pulled back simply. Faint background: a small academy or schoolroom desk, an open book and a quill. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents and a hint of burgundy. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 8. `assets/images/philosophers/du_chatelet.webp` — Émilie du Châtelet
-
-> *„Half-length portrait of Émilie du Châtelet, 18th-century French mathematician and Enlightenment natural philosopher (1706–1749), translator of Newton. Three-quarter view, sharp intelligent gaze with a faint smile, elegant 18th-century French gown in soft mustard and cream with delicate lace, hair styled and lightly powdered. Faint background: a writing desk with a Newtonian prism casting a small spectrum onto an open manuscript and a quill. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, scholarly illustrated book-cover quality, no photorealism."*
-
----
-
-### 9. `assets/images/philosophers/de_gouges.webp` — Olympe de Gouges
-
-> *„Half-length portrait of Olympe de Gouges, French revolutionary writer and author of the Declaration of the Rights of Woman and the Female Citizen (1748–1793). Three-quarter view, resolute and engaged expression, late-18th-century French dress in muted terracotta and cream with a tricolour ribbon detail kept very subtle. A rolled manuscript held in one hand. Faint background: a print-shop or revolutionary salon, with hinted handbills on the wall. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, scholarly illustrated book-cover quality, no photorealism, no text."*
-
----
-
-### 10. `assets/images/philosophers/wollstonecraft.webp` — Mary Wollstonecraft
-
-> *„Half-length portrait of Mary Wollstonecraft, late-18th-century English philosopher and co-founder of modern feminist thought (1759–1797). Three-quarter view, composed direct gaze, simple high-waisted Regency-era gown in muted sage and cream with a modest white fichu. Hair softly pinned. Faint background: a writing desk with quill and an open manuscript page suggesting a treatise. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 11. `assets/images/philosophers/martineau.webp` — Harriet Martineau
-
-> *„Half-length portrait of Harriet Martineau, early-19th-century English writer, early sociologist and translator of Comte (1802–1876). Three-quarter view, composed thoughtful expression, conservative dark Victorian dress in deep plum with a white lace collar, hair parted in the middle and pinned back. A small ear trumpet held discreetly to indicate her hearing loss. Faint background: an open notebook with social-statistical-looking sketches in burgundy ink. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 12. `assets/images/philosophers/cooper.webp` — Anna Julia Cooper
-
-> *„Half-length portrait of Anna Julia Cooper, African-American philosopher and pioneer of intersectional educational and racial theory (1858–1964). Three-quarter view, composed strong gaze, late-Victorian / early-20th-century academic dress in deep sage and cream with a high collar, hair styled simply. Faint background: a classroom blackboard with hinted notes, an open book on a desk. Soft warm lighting from the upper left. Aged parchment background with burgundy and antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, dignified portrait, no stereotypical caricature."*
-
----
-
-### 13. `assets/images/philosophers/nishida.webp` — Nishida Kitarō
-
-> *„Half-length portrait of Nishida Kitarō, founder of the Kyoto School and 20th-century Japanese philosopher of absolute nothingness (1870–1945). Three-quarter view, contemplative gaze behind small round glasses, traditional Japanese scholar's haori jacket in muted plum and cream over a darker kimono. Faint background: a quiet temple garden path with a stone lantern and a hint of pine, dusty teal mist. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
-
----
-
-### 14. `assets/images/philosophers/langer.webp` — Susanne Langer
-
-> *„Half-length portrait of Susanne K. Langer, 20th-century American philosopher of symbolic form and art (1895–1985). Three-quarter view, thoughtful intelligent gaze, mid-century academic dress in muted dusty teal with a cream blouse and a simple brooch. Hair pinned back. Faint background: an open book with abstract symbolic-form diagrams and a small musical staff motif in burgundy ink. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 15. `assets/images/philosophers/weil.webp` — Simone Weil
-
-> *„Half-length portrait of Simone Weil, early-20th-century French philosopher, political mystic and advocate for the uprooted (1909–1943). Three-quarter view, intense ascetic gaze behind small round glasses, plain dark woollen jacket in muted plum over a simple cream shirt, hair short and unfussy. Faint background: a small bare table with a notebook and a glass of water, austere candle light. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents and very restrained burgundy. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 16. `assets/images/philosophers/murdoch.webp` — Iris Murdoch
-
-> *„Half-length portrait of Iris Murdoch, 20th-century British novelist-philosopher and renewer of Platonic moral attention (1919–1999). Three-quarter view, warm intelligent gaze, mid-century academic dress in muted sage with a cream blouse, hair softly waved. Faint background: a book-lined Oxford study with a hint of a small Greek vase on a shelf, evening light. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents and a touch of burgundy. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 17. `assets/images/philosophers/haraway.webp` — Donna Haraway
-
-> *„Half-length portrait of Donna Haraway, contemporary American science-studies theorist of the cyborg and companion species (b. 1944). Three-quarter view, alert direct gaze with a slight smile, casual contemporary academic dress in deep dusty teal with a simple silver pendant, short greying hair. Faint background: a small abstract motif suggesting a chimera of organic vines and circuit lines in burgundy and antique gold, kept restrained. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism, no text."*
-
----
-
-### 18. `assets/images/philosophers/fricker.webp` — Miranda Fricker
-
-> *„Half-length portrait of Miranda Fricker, contemporary British philosopher and originator of the concept of epistemic injustice (b. 1966). Three-quarter view, attentive composed gaze, contemporary academic dress in muted plum with a cream blouse, hair shoulder-length and tucked back. Faint background: an open book and a faint diagram of two figures suggesting a testimony exchange, in burgundy ink. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
-
----
-
-### 19. `assets/images/philosophers/jaeggi.webp` — Rahel Jaeggi
-
-> *„Half-length portrait of Rahel Jaeggi, contemporary German critical theorist renewing the theory of alienation (b. 1967). Three-quarter view, calm engaged gaze, contemporary academic dress in muted sage with a simple dark scarf, hair short and styled. Faint background: an open manuscript and a small grid of urban-life sketches in burgundy ink, suggesting a critique of forms of life. Soft warm lighting from the upper left. Aged parchment background with antique-gold accents. Painterly watercolor-and-ink style, square 1024×1024, illustrated scholarly book-cover quality, no photorealism."*
+> *„Half-length portrait of Tullia d'Aragona, 16th-century Italian Renaissance poet and dialogue-author of love philosophy (ca. 1510–1556). Three-quarter view, composed intelligent gaze with a faint Renaissance smile, elegant Italian cinquecento dress in deep burgundy bodice over cream undergarments with antique-gold embroidery, hair styled in soft waves with a thin pearl band. A small open dialogue manuscript and a quill on a writing slope beside her, faint background of a Roman or Florentine humanist studiolo with a hint of a marble window arch. Soft warm lighting from the upper left. Aged parchment background (#F5EFE6) with burgundy and antique-gold accents. Painterly watercolor-and-ink style, muted earth tones, no photorealism — illustrated scholarly book-cover quality. Square 1024×1024, centered."*
 
 ---
 
@@ -253,122 +147,15 @@ Komplett neu erzeugen. Nicht versuchen, ein schiefes Bild mit „mach das jetzt 
 
 ---
 
-## Fehlende Porträts für Fragen- und Balance-Erweiterung
+## Fehlende Optionsnamen, niedrige Priorität
 
-Alle folgenden Einträge sind als **FEHLT** markiert: Für diese Personen gibt es aktuell noch keine Datei unter `assets/images/philosophers/`. Die Priorität A enthält Personen, die in den bestehenden Fragen bereits als richtige Antwort, Hauptfigur oder wiederkehrende Option vorkommen. Priorität B ergänzt die nächsten sinnvollen Kandidat:innen für eine ausgeglichenere Fragenbasis.
+Diese Personen kommen aktuell als Antwortoptionen, Co-Autor:innen oder plausible Distraktoren vor, sind aber **nicht** im `philosophers_seed.dart`. Bilder sind erst nötig, wenn sie als eigene Philosoph:innen ins Seed aufgenommen werden — bis dahin reine Wunschliste.
 
 **Prompt-Schema für diese Porträts:**
 > *„Half-length portrait of {NAME}, the {SCHOOL_OR_CONTEXT} thinker who lived {YEARS}. Three-quarter view, contemplative gaze, period-appropriate clothing, subtle historical context in the background without text. Soft warm lighting from the upper left. Aged parchment background with very faint symbolic motifs. Painterly watercolor-and-ink style, muted earth tones with hints of burgundy and antique gold. Centered square 1024×1024 composition. Avoid photorealism — keep an illustrated, scholarly book-cover quality."*
 
-| Datei | Status | Subjekt | Priorität | Hint |
-|---|---|---|---|---|
-| `hypatia.webp` | FEHLT | Hypatia | A | late antique Alexandrian scholar, simple philosopher's robe, astronomical diagram or scroll hint |
-| `mary_wollstonecraft.webp` | FEHLT | Mary Wollstonecraft | A | late 18th-century writer, composed direct gaze, quill and manuscript, early feminist Enlightenment context |
-| `elisabeth_von_der_pfalz.webp` | FEHLT | Élisabeth von der Pfalz | A | 17th-century princess-scholar, sober court dress, correspondence papers, Cartesian mind-body debate hint |
-| `hobbes.webp` | FEHLT | Thomas Hobbes | A | 17th-century English philosopher, dark coat, sharp eyes, Leviathan/state symbolism very faint |
-| `confucius.webp` | FEHLT | Konfuzius | A | ancient Chinese teacher, layered robes, calm elder, bamboo slips and ritual hall hint |
-| `laozi.webp` | FEHLT | Laozi | A | ancient Daoist sage, flowing robe, quiet mountain pass, soft mist, no fantasy elements |
-| `nagarjuna.webp` | FEHLT | Nāgārjuna | A | Buddhist philosopher-monk, serene posture, manuscript leaves, subtle empty-circle motif |
-| `avicenna.webp` | FEHLT | Avicenna / Ibn Sīnā | A | medieval Persian polymath, scholar's robe and turban, medical/philosophical manuscript hint |
-| `protagoras.webp` | FEHLT | Protagoras | A | Greek sophist, travelling teacher, scroll in hand, agora background hint |
-| `quine.webp` | FEHLT | W. V. O. Quine | A | 20th-century analytic philosopher, academic suit, chalkboard logic marks very faint |
-| `nozick.webp` | FEHLT | Robert Nozick | A | late 20th-century political philosopher, thoughtful professor, minimal-state diagram hint |
-| `levi_strauss.webp` | FEHLT | Claude Lévi-Strauss | A | French anthropologist-philosopher, glasses, field notes, structural pattern motif |
-| `horkheimer.webp` | FEHLT | Max Horkheimer | A | mid-century Frankfurt School thinker, suit and glasses, radio/library background hint |
-| `mary_astell.webp` | FEHLT | Mary Astell | A | early modern English philosopher, modest 17th-century dress, book and education motif |
-| `harriet_taylor_mill.webp` | FEHLT | Harriet Taylor Mill | A | Victorian feminist philosopher, poised portrait, manuscript and reform pamphlet hint |
-| `olympe_de_gouges.webp` | FEHLT | Olympe de Gouges | A | French revolutionary writer, 18th-century dress, declaration manuscript motif |
-| `margaret_cavendish.webp` | FEHLT | Margaret Cavendish | A | 17th-century natural philosopher, elaborate period dress, manuscript and atomist/nature motif |
-| `anne_conway.webp` | FEHLT | Anne Conway | A | early modern metaphysician, restrained aristocratic dress, monad-like light motif |
-| `damaris_masham.webp` | FEHLT | Damaris Cudworth Masham | A | early Enlightenment philosopher, correspondence desk, Locke-era study setting |
-| `luce_irigaray.webp` | FEHLT | Luce Irigaray | A | contemporary feminist philosopher, neutral academic portrait, language/body motif abstractly |
-| `nancy_fraser.webp` | FEHLT | Nancy Fraser | A | contemporary critical theorist, confident professor, public-sphere/capitalism motif faint |
-| `diotima.webp` | FEHLT | Diotima | B | ancient Greek priestess-philosopher as Symposium figure, dignified robe, no eroticized depiction |
-| `hildegard_von_bingen.webp` | FEHLT | Hildegard von Bingen | B | medieval abbess and thinker, manuscript illumination colors, visionary cosmology motif |
-| `christine_de_pizan.webp` | FEHLT | Christine de Pizan | B | medieval author at writing desk, blue robe, city/book motif |
-| `emilie_du_chatelet.webp` | FEHLT | Émilie du Châtelet | B | Enlightenment mathematician-philosopher, elegant study, Newtonian prism or manuscript hint |
-| `edith_stein.webp` | FEHLT | Edith Stein | B | phenomenologist, early 20th-century scholar, simple blouse or Carmelite habit variant, contemplative |
-| `simone_weil.webp` | FEHLT | Simone Weil | B | intense early 20th-century philosopher, simple work clothes, notebooks, austere light |
-| `susanne_langer.webp` | FEHLT | Susanne Langer | B | 20th-century philosopher of symbols, academic portrait, symbolic form motif |
-| `elizabeth_anscombe.webp` | FEHLT | Elizabeth Anscombe | B | analytic philosopher, mid-century Oxford look, pipe optional, manuscript and logic hint |
-| `philippa_foot.webp` | FEHLT | Philippa Foot | B | moral philosopher, composed academic portrait, trolley/virtue motif only extremely subtle |
-| `iris_murdoch.webp` | FEHLT | Iris Murdoch | B | novelist-philosopher, thoughtful gaze, book-lined study, moral attention motif |
-| `christine_korsgaard.webp` | FEHLT | Christine Korsgaard | B | contemporary Kantian ethicist, clean academic portrait, autonomy/agency motif |
-| `onora_oneill.webp` | FEHLT | Onora O'Neill | B | contemporary political philosopher, dignified academic portrait, trust/justice motif |
-| `seyla_benhabib.webp` | FEHLT | Seyla Benhabib | B | contemporary political theorist, cosmopolitan public-sphere motif, warm professional portrait |
-| `sally_haslanger.webp` | FEHLT | Sally Haslanger | B | contemporary feminist metaphysician, academic portrait, social construction motif |
-| `miranda_fricker.webp` | FEHLT | Miranda Fricker | B | contemporary epistemologist, testimonial justice motif, calm modern academic portrait |
-| `rahel_jaeggi.webp` | FEHLT | Rahel Jaeggi | B | contemporary critical theorist, modern academic look, alienation/social critique motif |
-| `chantal_mouffe.webp` | FEHLT | Chantal Mouffe | B | political theorist, agonistic democracy motif, confident contemporary portrait |
-| `bell_hooks.webp` | FEHLT | bell hooks | B | Black feminist theorist, warm direct gaze, books and classroom/community motif |
-| `gayatri_spivak.webp` | FEHLT | Gayatri Chakravorty Spivak | B | postcolonial theorist, sari or academic dress, text/voice motif, dignified portrait |
-| `donna_haraway.webp` | FEHLT | Donna Haraway | B | science studies philosopher, contemporary portrait, cyborg/companion-species motif kept subtle |
-| `zhuangzi.webp` | FEHLT | Zhuangzi | B | ancient Daoist philosopher, relaxed scholar, butterfly dream motif very subtle |
-| `mengzi.webp` | FEHLT | Mengzi / Mencius | B | Confucian thinker, scholar robe, humane governance motif |
-| `mozi.webp` | FEHLT | Mozi | B | ancient Chinese philosopher, plain robe, universal care and defensive engineering motif |
-| `xunzi.webp` | FEHLT | Xunzi | B | Confucian philosopher, stern teacher, ritual and education motif |
-| `vasubandhu.webp` | FEHLT | Vasubandhu | B | Buddhist philosopher-monk, manuscript leaves, Yogācāra consciousness motif |
-| `shankara.webp` | FEHLT | Śaṅkara | B | Advaita Vedānta philosopher, saffron robe, nondual awareness motif |
-| `averroes.webp` | FEHLT | Averroes / Ibn Rushd | B | Andalusian philosopher, judge-scholar robe, Aristotle commentary manuscript hint |
-| `maimonides.webp` | FEHLT | Maimonides | B | medieval Jewish philosopher, physician-scholar, manuscript and guide motif |
-| `al_ghazali.webp` | FEHLT | Al-Ghazali | B | Islamic theologian-philosopher, scholar robe, lamp and manuscript motif |
-| `wang_yangming.webp` | FEHLT | Wang Yangming | B | Neo-Confucian philosopher, Ming scholar robe, unity of knowledge/action motif |
-| `nishida_kitaro.webp` | FEHLT | Nishida Kitarō | B | modern Japanese philosopher, early 20th-century academic, Kyoto path/absolute nothingness motif |
-
-### Weitere fehlende Optionsnamen, niedrigere Priorität
-
-Diese Personen kommen aktuell vor allem als Antwortoptionen, Co-Autor:innen oder plausible Distraktoren vor. Bilder sind erst nötig, wenn sie als eigene Philosoph:innen in `philosophers_seed.dart` aufgenommen oder häufiger als Hauptbezug genutzt werden.
-
 | Datei | Status | Subjekt |
 |---|---|---|
-| `althusser.webp` | FEHLT | Louis Althusser |
-| `anselm.webp` | FEHLT | Anselm von Canterbury |
-| `apel.webp` | FEHLT | Karl-Otto Apel |
-| `bacon.webp` | FEHLT | Francis Bacon |
-| `bataille.webp` | FEHLT | Georges Bataille |
-| `bentham.webp` | FEHLT | Jeremy Bentham |
-| `benjamin_constant.webp` | FEHLT | Benjamin Constant |
-| `berger.webp` | FEHLT | Peter L. Berger |
-| `bloch.webp` | FEHLT | Ernst Bloch |
-| `bodin.webp` | FEHLT | Jean Bodin |
-| `boethius.webp` | FEHLT | Boethius |
-| `bourdieu.webp` | FEHLT | Pierre Bourdieu |
-| `burckhardt.webp` | FEHLT | Jacob Burckhardt |
-| `carnap.webp` | FEHLT | Rudolf Carnap |
-| `cicero.webp` | FEHLT | Cicero |
-| `cioran.webp` | FEHLT | E. M. Cioran |
-| `dignaga.webp` | FEHLT | Dignāga |
-| `diogenes.webp` | FEHLT | Diogenes |
-| `dworkin.webp` | FEHLT | Ronald Dworkin |
-| `engels.webp` | FEHLT | Friedrich Engels |
-| `epiktet.webp` | FEHLT | Epiktet |
-| `feuerbach.webp` | FEHLT | Ludwig Feuerbach |
-| `feyerabend.webp` | FEHLT | Paul Feyerabend |
-| `fichte.webp` | FEHLT | Johann Gottlieb Fichte |
-| `frankl.webp` | FEHLT | Viktor Frankl |
-| `frege.webp` | FEHLT | Gottlob Frege |
-| `fromm.webp` | FEHLT | Erich Fromm |
-| `gadamer.webp` | FEHLT | Hans-Georg Gadamer |
-| `hartmann.webp` | FEHLT | Nicolai Hartmann |
-| `hayek.webp` | FEHLT | Friedrich Hayek |
-| `heraklit.webp` | FEHLT | Heraklit |
-| `husserl.webp` | FEHLT | Edmund Husserl |
-| `hutcheson.webp` | FEHLT | Francis Hutcheson |
-| `isaiah_berlin.webp` | FEHLT | Isaiah Berlin |
-| `jaspers.webp` | FEHLT | Karl Jaspers |
-| `kuhn.webp` | FEHLT | Thomas Kuhn |
-| `lessing.webp` | FEHLT | Gotthold Ephraim Lessing |
-| `levinas.webp` | FEHLT | Emmanuel Levinas |
-| `luckmann.webp` | FEHLT | Thomas Luckmann |
-| `macintyre.webp` | FEHLT | Alasdair MacIntyre |
-| `marcuse.webp` | FEHLT | Herbert Marcuse |
-| `merleau_ponty.webp` | FEHLT | Maurice Merleau-Ponty |
-| `montaigne.webp` | FEHLT | Michel de Montaigne |
-| `parmenides.webp` | FEHLT | Parmenides |
-| `pascal.webp` | FEHLT | Blaise Pascal |
-| `plotin.webp` | FEHLT | Plotin |
-| `plutarch.webp` | FEHLT | Plutarch |
-| `pythagoras.webp` | FEHLT | Pythagoras |
 | `russell.webp` | FEHLT | Bertrand Russell |
 | `sandel.webp` | FEHLT | Michael Sandel |
 | `schelling.webp` | FEHLT | Friedrich Schelling |

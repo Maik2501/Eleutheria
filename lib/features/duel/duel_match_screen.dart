@@ -43,6 +43,12 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   /// this window so it doesn't punish them for the celebration.
   static const _postRoundPause = Duration(seconds: 3);
 
+  /// Parallel-mode local reveal window. Each player gets a brief
+  /// "Richtig/Falsch"-Einblendung over the answer area after submitting,
+  /// before the next question rolls in. Only affects the local view —
+  /// the opponent runs at their own pace.
+  static const _parallelFeedbackDuration = Duration(milliseconds: 1200);
+
   StreamSubscription<DuelMatch>? _matchSub;
   StreamSubscription<List<DuelAnswer>>? _answersSub;
   Timer? _ticker;
@@ -290,8 +296,36 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     return i;
   }
 
-  /// In parallel mode, my own progression is just my answer count.
-  int _parallelIndex(List<DuelAnswer> mine) => mine.length;
+  /// In parallel mode, my own progression is just my answer count — except
+  /// while I'm in the local Richtig/Falsch-feedback window: there we hold
+  /// on the just-answered question so the reveal can land before the next
+  /// question slides in.
+  int _parallelIndex(List<DuelAnswer> mine) {
+    if (_parallelInFeedback(mine) && mine.isNotEmpty) {
+      return mine.length - 1;
+    }
+    return mine.length;
+  }
+
+  /// Whether the local "Richtig/Falsch"-Einblendung for parallel mode is
+  /// currently active. True while the most recent answer is younger than
+  /// [_parallelFeedbackDuration]. Derived from server timestamps so it
+  /// stays consistent across rebuilds.
+  bool _parallelInFeedback(List<DuelAnswer> mine) {
+    final latest = _myLatestParallelAnswer(mine);
+    if (latest == null) return false;
+    final age = DateTime.now().toUtc().difference(latest.submittedAt);
+    return age < _parallelFeedbackDuration;
+  }
+
+  DuelAnswer? _myLatestParallelAnswer(List<DuelAnswer> mine) {
+    if (mine.isEmpty) return null;
+    DuelAnswer best = mine.first;
+    for (final a in mine.skip(1)) {
+      if (a.questionIndex > best.questionIndex) best = a;
+    }
+    return best;
+  }
 
   bool _alreadyAnsweredCurrent(int currentIndex, List<DuelAnswer> mine) {
     return mine.any((a) => a.questionIndex == currentIndex);
@@ -545,6 +579,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                   oppDead: _opponentId == null ? false : !oppAlive,
                   oppWrongThisRound: oppWrongHere,
                   timerPaused: inPause,
+                  hasOpponent: _opponentId != null,
                 ),
                 const SizedBox(height: 12),
                 if (_opponentDisconnectSecondsLeft() != null)
@@ -576,6 +611,15 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                                     : (mine.length + 1),
                               ),
                               const SizedBox(height: 18),
+                              if (m.mode == DuelMode.parallel &&
+                                  _parallelInFeedback(mine)) ...[
+                                Center(
+                                  child: _ParallelFeedbackBanner(
+                                    answer: _myLatestParallelAnswer(mine)!,
+                                  ),
+                                ),
+                                const SizedBox(height: 14),
+                              ],
                               if (m.inputStyle == AnswerInputStyle.letterbox)
                                 LetterboxInput(
                                   key: _letterboxKey,
@@ -918,6 +962,7 @@ class _StatsBar extends StatelessWidget {
     required this.oppDead,
     this.oppWrongThisRound = false,
     this.timerPaused = false,
+    this.hasOpponent = false,
   });
 
   final DuelMode mode;
@@ -941,9 +986,21 @@ class _StatsBar extends StatelessWidget {
   /// ticking down.
   final bool timerPaused;
 
+  /// Whether there's a guest player at all. While the lobby is still
+  /// solo (waiting for someone to join), the lead-highlight is
+  /// suppressed — there's nobody to be ahead of.
+  final bool hasOpponent;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    // "Führend" rein nach Score — nur wenn es überhaupt einen Gegner gibt
+    // und der Spielstand nicht gleich ist. Bei toten Spielern bleibt die
+    // Markierung aus (die "AUS"-Anzeige übernimmt den Status).
+    final myLead =
+        hasOpponent && !myDead && !oppDead && myScore > oppScore;
+    final oppLead =
+        hasOpponent && !myDead && !oppDead && oppScore > myScore;
     return Column(
       children: [
         if (timeRemSeconds != null)
@@ -964,6 +1021,7 @@ class _StatsBar extends StatelessWidget {
                 progress: myProgress,
                 isMe: true,
                 isDead: myDead,
+                leading: myLead,
               ),
             ),
             const SizedBox(width: 10),
@@ -976,6 +1034,7 @@ class _StatsBar extends StatelessWidget {
                 isMe: false,
                 isDead: oppDead,
                 wrongThisRound: oppWrongThisRound,
+                leading: oppLead,
               ),
             ),
           ],
@@ -1077,6 +1136,7 @@ class _PlayerPill extends StatelessWidget {
     required this.isMe,
     required this.isDead,
     this.wrongThisRound = false,
+    this.leading = false,
   });
 
   final String label;
@@ -1091,21 +1151,36 @@ class _PlayerPill extends StatelessWidget {
   /// Pulses briefly on first appearance via flutter_animate's repeat.
   final bool wrongThisRound;
 
+  /// This player currently has the higher score. Adds a gold accent
+  /// (border + soft tint + "FÜHRT"-Badge) so the leader is immediately
+  /// readable. Overridden by [wrongThisRound] / [isDead] which take
+  /// visual priority.
+  final bool leading;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    // Visuelle Priorität: wrongThisRound (rot) > isDead (gedimmt) >
+    // leading (gold) > isMe (burgundy) > neutral.
     final borderColor = wrongThisRound
         ? palette.incorrect
-        : (isMe ? palette.burgundy : palette.divider);
-    final borderWidth = wrongThisRound ? 1.6 : (isMe ? 1.4 : 1);
+        : (leading && !isDead
+            ? palette.gold
+            : (isMe ? palette.burgundy : palette.divider));
+    final borderWidth = wrongThisRound
+        ? 1.6
+        : (leading && !isDead ? 1.6 : (isMe ? 1.4 : 1));
+    final fillColor = wrongThisRound
+        ? palette.incorrect.withValues(alpha: 0.07)
+        : (isDead
+            ? palette.parchment.withValues(alpha: 0.5)
+            : (leading
+                ? palette.gold.withValues(alpha: 0.08)
+                : palette.page));
     final pill = Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: wrongThisRound
-            ? palette.incorrect.withValues(alpha: 0.07)
-            : (isDead
-                ? palette.parchment.withValues(alpha: 0.5)
-                : palette.page),
+        color: fillColor,
         border: Border.all(color: borderColor, width: borderWidth.toDouble()),
         borderRadius: BorderRadius.circular(14),
       ),
@@ -1131,6 +1206,20 @@ class _PlayerPill extends StatelessWidget {
                   ),
                   child: Text(
                     '✗ FALSCH',
+                    style: AppTypography.eyebrow(palette.page)
+                        .copyWith(color: palette.page, letterSpacing: 1.4),
+                  ),
+                )
+              else if (leading)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: palette.gold,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '★ FÜHRT',
                     style: AppTypography.eyebrow(palette.page)
                         .copyWith(color: palette.page, letterSpacing: 1.4),
                   ),
@@ -1280,6 +1369,55 @@ class _DisconnectWarningBanner extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+/// Local "Richtig/Falsch"-Einblendung after a parallel-mode answer.
+/// Lifetime is driven by [_DuelMatchScreenState._parallelFeedbackDuration]
+/// — the banner just renders whatever it gets and lets the parent decide
+/// when to remove it.
+class _ParallelFeedbackBanner extends StatelessWidget {
+  const _ParallelFeedbackBanner({required this.answer});
+  final DuelAnswer answer;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final ok = answer.wasCorrect;
+    final color = ok ? palette.correct : palette.incorrect;
+    final icon = ok ? Icons.check_circle_rounded : Icons.cancel_rounded;
+    final text = ok ? 'Richtig — +${answer.points} P' : 'Leider falsch';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        border: Border.all(color: color.withValues(alpha: 0.55), width: 1.3),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 22),
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: AppTypography.serif(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: color,
+              letterSpacing: -0.2,
+            ),
+          ),
+        ],
+      ),
+    ).animate(key: ValueKey('feedback_${answer.questionIndex}')).fadeIn(
+          duration: 160.ms,
+        ).scale(
+          begin: const Offset(0.85, 0.85),
+          end: const Offset(1, 1),
+          duration: 240.ms,
+          curve: Curves.easeOutBack,
+        );
   }
 }
 

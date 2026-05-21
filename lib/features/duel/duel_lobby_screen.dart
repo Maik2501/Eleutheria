@@ -14,7 +14,6 @@ import '../../data/models/duel_config.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
-import '../../shared/widgets/wax_seal.dart';
 import 'duel_repository.dart';
 
 final duelRepositoryProvider = Provider<DuelRepository?>((ref) {
@@ -138,7 +137,16 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen>
             child: Column(
               children: [
                 const SizedBox(height: 8),
-                const Center(child: WaxSeal(symbol: '⚔', size: 70)),
+                Center(
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/icons/duel.webp',
+                      width: 70,
+                      height: 70,
+                      filterQuality: FilterQuality.medium,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 18),
                 const ChapterHeading(
                   eyebrow: 'Eristik',

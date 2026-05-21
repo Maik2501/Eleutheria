@@ -9,6 +9,7 @@ import '../data/models/game_session.dart';
 import '../data/models/player_profile.dart';
 import '../data/models/player_stats.dart';
 import '../data/repositories/profile_repository.dart';
+import '../data/repositories/question_history_repository.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/repositories/score_repository.dart';
 import '../data/repositories/supabase_profile_repository.dart';
@@ -27,6 +28,15 @@ final profileRepositoryProvider = Provider<ProfileRepository>(
 
 final questionRepositoryProvider = Provider<QuestionRepository>(
   (ref) => QuestionRepository(),
+);
+
+/// Per-device cache of which questions the player has answered correctly
+/// and how recently. Read at session start by [GameSessionController] to
+/// bias the sampler away from recently-correct questions; written back
+/// on every answered question.
+final questionHistoryRepositoryProvider =
+    Provider<QuestionHistoryRepository>(
+  (ref) => QuestionHistoryRepository(ref.watch(sharedPreferencesProvider)),
 );
 
 /// Repository für die Supabase-Profiles-Tabelle. `null` wenn Supabase

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import '../../features/letterbox/answer_normalization.dart';
 import '../models/question.dart';
 import '../seed/questions_seed.dart';
+import 'question_history_repository.dart';
 
 /// Provides filtered & shuffled question batches for sessions.
 class QuestionRepository {
@@ -36,6 +37,11 @@ class QuestionRepository {
   /// spoilers of each other (e.g., "name the philosopher of this quote" and
   /// "complete this quote" on the same quote). At most one question per
   /// topicKey will be included in a single batch.
+  ///
+  /// When [history] is provided **and** [seed] is null, the sampler weights
+  /// candidates so that questions the player recently got right surface
+  /// less often. Seeded calls (Daily, Duel) keep pure shuffle so both
+  /// players see the same set.
   List<Question> randomBatch({
     required int count,
     Set<QuestionCategory> categories = const {},
@@ -43,6 +49,7 @@ class QuestionRepository {
     int maxDifficulty = 5,
     int? seed,
     bool letterboxFriendlyOnly = false,
+    Map<String, QuestionStat>? history,
   }) {
     final candidates = filter(
       categories: categories,
@@ -51,18 +58,79 @@ class QuestionRepository {
       letterboxFriendlyOnly: letterboxFriendlyOnly,
     );
     final rng = math.Random(seed ?? DateTime.now().millisecondsSinceEpoch);
-    candidates.shuffle(rng);
+    final useWeighting = seed == null && history != null && history.isNotEmpty;
 
     final picked = <Question>[];
     final seenTopics = <String>{};
-    for (final q in candidates) {
-      if (picked.length >= count) break;
-      if (q.topicKey != null && seenTopics.contains(q.topicKey)) continue;
-      picked.add(q);
-      if (q.topicKey != null) seenTopics.add(q.topicKey!);
+
+    if (useWeighting) {
+      // Weighted sampling without replacement: each pick recomputes the
+      // pool weights and draws by cumulative-weight bucket. O(N·count) —
+      // fine for ~600 questions × ≤20 picks.
+      final pool = List<Question>.from(candidates);
+      while (picked.length < count && pool.isNotEmpty) {
+        final weights = [
+          for (final q in pool) _historyWeight(q.id, history),
+        ];
+        final total = weights.fold<double>(0, (s, w) => s + w);
+        if (total <= 0) break;
+        var target = rng.nextDouble() * total;
+        var idx = pool.length - 1;
+        for (var i = 0; i < pool.length; i++) {
+          target -= weights[i];
+          if (target <= 0) {
+            idx = i;
+            break;
+          }
+        }
+        final q = pool.removeAt(idx);
+        if (q.topicKey != null && seenTopics.contains(q.topicKey)) continue;
+        picked.add(q);
+        if (q.topicKey != null) seenTopics.add(q.topicKey!);
+      }
+    } else {
+      candidates.shuffle(rng);
+      for (final q in candidates) {
+        if (picked.length >= count) break;
+        if (q.topicKey != null && seenTopics.contains(q.topicKey)) continue;
+        picked.add(q);
+        if (q.topicKey != null) seenTopics.add(q.topicKey!);
+      }
     }
 
     return picked.map((q) => _shuffleOptions(q, rng)).toList();
+  }
+
+  /// Weighting curve for [randomBatch] history mode. Returns a relative
+  /// probability multiplier — never zero, so every question can still be
+  /// drawn eventually.
+  ///
+  /// Tuning:
+  /// - Never seen → 1.0 (default).
+  /// - Last-correct < 7 days → 0.15 (strong cooldown).
+  /// - Last-correct 7–30 days → 0.5 (mild cooldown).
+  /// - Last-correct > 30 days → 1.0 (cooldown expired).
+  /// - Player struggles with this question (wrong > correct, at least one
+  ///   correct so we know it's not just a brand-new wrong) → ×1.5 to
+  ///   bias toward review.
+  static double _historyWeight(String id, Map<String, QuestionStat> history) {
+    final stat = history[id];
+    if (stat == null) return 1.0;
+    final now = DateTime.now().toUtc();
+    var w = 1.0;
+    final lastCorrect = stat.lastCorrectAt;
+    if (lastCorrect != null) {
+      final daysSince = now.difference(lastCorrect).inDays;
+      if (daysSince < 7) {
+        w = 0.15;
+      } else if (daysSince < 30) {
+        w = 0.5;
+      }
+    }
+    if (stat.wrongCount > stat.correctCount && stat.correctCount > 0) {
+      w *= 1.5;
+    }
+    return w;
   }
 
   /// Deterministic batch for the daily challenge — same questions for everyone

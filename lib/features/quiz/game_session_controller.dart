@@ -174,8 +174,12 @@ final gameSessionProvider = StateNotifierProvider.autoDispose
 );
 
 class GameSessionController extends StateNotifier<GameSessionState> {
-  GameSessionController(Ref ref, GameConfig config)
-      : super(_initial(ref, config));
+  GameSessionController(this._ref, GameConfig config)
+      : super(_initial(_ref, config));
+
+  /// Kept around so post-init callbacks (submit → history write) can read
+  /// further providers without each call site threading them through.
+  final Ref _ref;
 
   /// Leitet den Leaderboard-Variant-Key aus der GameConfig ab.
   ///
@@ -203,6 +207,9 @@ class GameSessionController extends StateNotifier<GameSessionState> {
   static GameSessionState _initial(Ref ref, GameConfig config) {
     final repo = ref.read(questionRepositoryProvider);
     final letterboxOnly = config.inputStyle == AnswerInputStyle.letterbox;
+    // Personal history weights the sampler away from recently-correct
+    // questions. Daily (seeded) ignores history — same set for everyone.
+    final history = ref.read(questionHistoryRepositoryProvider).all();
     final questions = config.mode == GameMode.daily
         ? repo.dailyBatch(DateTime.now(), count: config.questionCount)
         : repo.randomBatch(
@@ -211,6 +218,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
             minDifficulty: config.difficultyMin,
             maxDifficulty: config.difficultyMax,
             letterboxFriendlyOnly: letterboxOnly,
+            history: history,
           );
 
     final session = GameSession(
@@ -334,6 +342,18 @@ class GameSessionController extends StateNotifier<GameSessionState> {
     );
     state.session.answers.add(record);
     state = state.copyWith(revealed: true, selectedIndex: picked);
+
+    // Persist into the local history cache so the next session's sampler
+    // can weight this question down. Skip on `-1` (timeout/skip) — we
+    // don't treat non-attempts as evidence either way.
+    if (picked >= 0) {
+      final history = _ref.read(questionHistoryRepositoryProvider);
+      if (wasCorrect) {
+        history.markCorrect(q.id);
+      } else {
+        history.markWrong(q.id);
+      }
+    }
 
     if (wasCorrect) {
       HapticFeedback.mediumImpact();

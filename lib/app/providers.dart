@@ -8,6 +8,7 @@ import '../data/models/difficulty_band.dart';
 import '../data/models/game_session.dart';
 import '../data/models/player_profile.dart';
 import '../data/models/player_stats.dart';
+import '../data/repositories/feedback_repository.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_history_repository.dart';
 import '../data/repositories/question_repository.dart';
@@ -57,6 +58,18 @@ final scoreRepositoryProvider = Provider<ScoreRepository?>((ref) {
   if (!Env.hasSupabase) return null;
   try {
     return ScoreRepository(Supabase.instance.client);
+  } catch (_) {
+    return null;
+  }
+});
+
+/// Repository für die Supabase-`feedback`-Tabelle. `null` wenn Supabase
+/// nicht konfiguriert ist — der Aufrufer muss in dem Fall die Feedback-UI
+/// entsprechend dimmen / einen Fallback (mailto) anbieten.
+final feedbackRepositoryProvider = Provider<FeedbackRepository?>((ref) {
+  if (!Env.hasSupabase) return null;
+  try {
+    return FeedbackRepository(Supabase.instance.client);
   } catch (_) {
     return null;
   }
@@ -155,6 +168,13 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     final p = state.value;
     if (p == null) return;
     p.preferredDifficulty = (band.min, band.max);
+    await _persist(p);
+  }
+
+  Future<void> markGameplayHintSeen() async {
+    final p = state.value;
+    if (p == null || p.hasSeenGameplayHint) return;
+    p.hasSeenGameplayHint = true;
     await _persist(p);
   }
 

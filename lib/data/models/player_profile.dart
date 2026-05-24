@@ -30,6 +30,7 @@ class PlayerProfile {
     required this.hapticsEnabled,
     required this.jokerAvailability,
     required this.preferredInputStyle,
+    this.hasSeenGameplayHint = false,
   });
 
   factory PlayerProfile.fresh({
@@ -61,7 +62,7 @@ class PlayerProfile {
         themeMode: 'system',
         soundsEnabled: false,
         hapticsEnabled: true,
-        jokerAvailability: JokerAvailability.always,
+        jokerAvailability: JokerAvailability.three,
         preferredInputStyle: AnswerInputStyle.multipleChoice,
       );
 
@@ -109,6 +110,12 @@ class PlayerProfile {
   bool hapticsEnabled;
   JokerAvailability jokerAvailability;
   AnswerInputStyle preferredInputStyle;
+
+  /// Hat der User den einmaligen Coachmark zur Gameplay-Sektion in den
+  /// Einstellungen gesehen? Wird auf `true` gesetzt, sobald er ihn weggetippt
+  /// hat — bestehende Profile starten auf `false` und sehen den Hinweis
+  /// genau einmal nach dem Update.
+  bool hasSeenGameplayHint;
 
   /// XP curve: each level requires 250 + 100 × level XP.
   int get level {
@@ -160,6 +167,6 @@ enum JokerAvailability {
   static JokerAvailability fromKey(String? key) =>
       JokerAvailability.values.firstWhere(
         (value) => value.key == key,
-        orElse: () => JokerAvailability.always,
+        orElse: () => JokerAvailability.three,
       );
 }

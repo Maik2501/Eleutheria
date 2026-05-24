@@ -77,6 +77,7 @@ class ProfileRepository {
         hapticsEnabled: p.hapticsEnabled,
         jokerAvailability: p.jokerAvailability,
         preferredInputStyle: p.preferredInputStyle,
+        hasSeenGameplayHint: p.hasSeenGameplayHint,
       );
 
   Future<void> save(PlayerProfile p) async {
@@ -113,6 +114,7 @@ class ProfileRepository {
         'hapticsEnabled': p.hapticsEnabled,
         'jokerAvailability': p.jokerAvailability.key,
         'preferredInputStyle': p.preferredInputStyle.key,
+        'hasSeenGameplayHint': p.hasSeenGameplayHint,
       };
 
   static PlayerProfile _fromJson(Map<String, dynamic> j) => PlayerProfile(
@@ -161,6 +163,7 @@ class ProfileRepository {
         preferredInputStyle: AnswerInputStyle.fromKey(
           j['preferredInputStyle'] as String?,
         ),
+        hasSeenGameplayHint: j['hasSeenGameplayHint'] as bool? ?? false,
       );
 
   /// Translate persisted achievement IDs from the pre-tier era (one ID per

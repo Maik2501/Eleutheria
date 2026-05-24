@@ -12,7 +12,10 @@ import '../models/player_profile.dart';
 ///   score     = raw_score minus 50 % of points from questions where at
 ///               least one joker was used
 ///   jokers_used = number of questions with at least one joker
-///   is_pure   = jokers_used == 0  (server-generated)
+///   is_pure   = joker_setting == 'off'  (server-generated, siehe
+///               migration 0009 — vorher hieß "pure" nur, dass keine
+///               Joker eingesetzt wurden, jetzt heißt es, dass von
+///               vornherein keine angeboten waren)
 ///
 /// Sessions that don't belong on a leaderboard (Studierkammer/Practice,
 /// Duell-Online, Categories) are silently skipped — call sites don't

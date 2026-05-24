@@ -100,6 +100,8 @@ class ProfileScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _AchievementsPreview(profile: p),
+            const SizedBox(height: 16),
+            _BookmarksTile(count: p.bookmarkedQuoteIds.length),
           ],
         ),
       ),
@@ -375,6 +377,77 @@ class _AchievementsPreview extends StatelessWidget {
                     color: palette.gold,
                   ),
                 ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BookmarksTile extends StatelessWidget {
+  const _BookmarksTile({required this.count});
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => context.push('/bookmarks'),
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: palette.page,
+            border: Border.all(color: palette.divider),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: palette.gold.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  Icons.bookmark_rounded,
+                  color: palette.gold,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Meine Lesezeichen',
+                      style: AppTypography.serif(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: palette.ink,
+                      ),
+                    ),
+                    Text(
+                      count == 0
+                          ? 'Noch keine gesammelt'
+                          : '$count gemerkt — antippen zum Ansehen',
+                      style: TextStyle(
+                        color: palette.inkMuted,
+                        fontSize: 12.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: palette.inkMuted,
               ),
             ],
           ),

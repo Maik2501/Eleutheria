@@ -16,39 +16,26 @@ import '../../data/models/player_profile.dart';
 import '../../shared/widgets/brand_seal.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../quiz/game_session_controller.dart';
+import 'widgets/gameplay_hint_overlay.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  AnswerInputStyle _inputStyle = AnswerInputStyle.multipleChoice;
-  DifficultyBand _band = DifficultyBand.salon;
-  bool _loadedFromProfile = false;
-
-  Duration get _questionLimit => _inputStyle == AnswerInputStyle.letterbox
-      ? const Duration(seconds: 45)
-      : const Duration(seconds: 20);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(profileNotifierProvider).value;
-    if (!_loadedFromProfile && profile != null) {
-      _inputStyle = profile.preferredInputStyle;
-      _band = DifficultyBand.fromRange(
-        profile.preferredDifficulty.$1,
-        profile.preferredDifficulty.$2,
-      );
-      _loadedFromProfile = true;
-    }
+    final inputStyle =
+        profile?.preferredInputStyle ?? AnswerInputStyle.multipleChoice;
+
+    final showGameplayHint =
+        profile != null && !profile.hasSeenGameplayHint;
 
     return Scaffold(
-      body: ParchmentBackground(
-        child: SafeArea(
-          child: CustomScrollView(
+      body: Stack(
+        children: [
+          ParchmentBackground(
+            child: SafeArea(
+              child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
@@ -59,6 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   level: profile?.level ?? 1,
                   unlockedCount: _unlockedAchievementCount(profile),
                   totalCount: kAchievements.length,
+                  glowSettings: showGameplayHint,
                 ),
               ),
               const SliverToBoxAdapter(
@@ -67,26 +55,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: _HomeIntroPanel(),
                 ),
               ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 6),
-                  child: _AnswerStyleSwitch(
-                    value: _inputStyle,
-                    onChanged: _setInputStyle,
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
-                  child: _DifficultyBandSwitch(
-                    value: _band,
-                    onChanged: _setBand,
-                  ),
-                ),
-              ),
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(24, 14, 24, 32),
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate(
                     [
@@ -104,27 +74,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             label: '1 Minute',
                             meta: 'Best of',
                             onTap: () =>
-                                _startQuiz(GameConfig.quizRushOneMinute),
+                                _startQuiz(ref, context, GameConfig.quizRushOneMinute),
                           ),
                           _OptionAction(
                             icon: Icons.timer_rounded,
                             label: '3 Minuten',
                             meta: 'Best of',
-                            onTap: () =>
-                                _startQuiz(GameConfig.quizRushThreeMinutes),
+                            onTap: () => _startQuiz(ref, context,
+                                GameConfig.quizRushThreeMinutes,),
                           ),
                           _OptionAction(
                             icon: Icons.timer_rounded,
                             label: '5 Minuten',
                             meta: 'Best of',
-                            onTap: () =>
-                                _startQuiz(GameConfig.quizRushFiveMinutes),
+                            onTap: () => _startQuiz(ref, context,
+                                GameConfig.quizRushFiveMinutes,),
                           ),
                           _OptionAction(
                             icon: Icons.favorite_rounded,
                             label: 'Endless',
                             meta: '3 Leben',
-                            onTap: () => _startQuiz(GameConfig.quizRushEndless),
+                            onTap: () => _startQuiz(
+                                ref, context, GameConfig.quizRushEndless,),
                           ),
                         ],
                       ),
@@ -142,12 +113,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             _OptionAction(
                               icon: Icons.format_list_numbered_rounded,
                               label: '$count Fragen',
-                              meta: _inputStyle.shortLabel,
+                              meta: inputStyle.shortLabel,
                               onTap: () => _startQuiz(
+                                ref,
+                                context,
                                 GameConfig(
                                   mode: GameMode.classic,
                                   questionCount: count,
-                                  inputStyle: _inputStyle,
+                                  inputStyle: inputStyle,
                                   perQuestionTimeLimit: Duration.zero,
                                 ),
                               ),
@@ -209,39 +182,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
               ),
-            ],
+              ],
+            ),
           ),
         ),
+          if (showGameplayHint)
+            GameplayHintOverlay(
+              onDismiss: () => ref
+                  .read(profileNotifierProvider.notifier)
+                  .markGameplayHintSeen(),
+            ),
+        ],
       ),
     );
   }
 
-  void _startQuiz(GameConfig config) {
+  /// Startet eine Session unter Verwendung der Gameplay-Settings aus dem
+  /// Profil (Antwortart + Schwierigkeit). Diese leben nur noch in den
+  /// Einstellungen — hier auf dem Home-Screen gibt es keine Picker mehr.
+  void _startQuiz(WidgetRef ref, BuildContext context, GameConfig config) {
+    final profile = ref.read(profileNotifierProvider).value;
+    final inputStyle =
+        profile?.preferredInputStyle ?? AnswerInputStyle.multipleChoice;
+    final band = profile == null
+        ? DifficultyBand.salon
+        : DifficultyBand.fromRange(
+            profile.preferredDifficulty.$1,
+            profile.preferredDifficulty.$2,
+          );
+    final questionLimit = inputStyle == AnswerInputStyle.letterbox
+        ? const Duration(seconds: 45)
+        : const Duration(seconds: 20);
     final adjusted = config.copyWith(
-      inputStyle: _inputStyle,
-      difficultyMin: _band.min,
-      difficultyMax: _band.max,
+      inputStyle: inputStyle,
+      difficultyMin: band.min,
+      difficultyMax: band.max,
       perQuestionTimeLimit: config.perQuestionTimeLimit == Duration.zero
           ? Duration.zero
-          : _questionLimit,
+          : questionLimit,
     );
     context.push('/play', extra: adjusted);
-  }
-
-  void _setInputStyle(AnswerInputStyle value) {
-    setState(() {
-      _inputStyle = value;
-      _loadedFromProfile = true;
-    });
-    ref.read(profileNotifierProvider.notifier).setPreferredInputStyle(value);
-  }
-
-  void _setBand(DifficultyBand value) {
-    setState(() {
-      _band = value;
-      _loadedFromProfile = true;
-    });
-    ref.read(profileNotifierProvider.notifier).setDifficultyBand(value);
   }
 }
 
@@ -303,8 +283,8 @@ class _HomeIntroPanel extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Schnelle Runden, klassische Sets, Duelle und Kreuzworträtsel. Antwortart und Schwierigkeit unten anpassen.',
-                            maxLines: compact ? 3 : 2,
+                            'Schnelle Runden, klassische Sets, Duelle und Kreuzworträtsel.',
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppTypography.sans(
                               fontSize: 13.5,
@@ -345,6 +325,7 @@ class _HomeHeader extends StatelessWidget {
     required this.level,
     required this.unlockedCount,
     required this.totalCount,
+    this.glowSettings = false,
   });
 
   final String displayName;
@@ -353,6 +334,10 @@ class _HomeHeader extends StatelessWidget {
   final int level;
   final int unlockedCount;
   final int totalCount;
+
+  /// Zeigt einen pulsierenden Goldring um das Zahnrad-Icon, solange der
+  /// Onboarding-Coachmark zu den Gameplay-Einstellungen sichtbar ist.
+  final bool glowSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -391,11 +376,7 @@ class _HomeHeader extends StatelessWidget {
               ),
               _StreakBadge(days: streakDays),
               const SizedBox(width: 6),
-              IconButton(
-                onPressed: () => context.push('/settings'),
-                icon: const Icon(Icons.tune_rounded),
-                tooltip: 'Einstellungen',
-              ),
+              _SettingsIconButton(glow: glowSettings),
             ],
           ),
           const SizedBox(height: 12),
@@ -483,6 +464,67 @@ class _RankChip extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Zahnrad-IconButton mit optionalem, pulsierendem Goldring. Der Ring
+/// liegt hinter dem Icon und lebt im selben Stack — er verschiebt das
+/// Layout nicht, weil er positionsfrei in der Mitte zentriert wird.
+class _SettingsIconButton extends StatelessWidget {
+  const _SettingsIconButton({required this.glow});
+
+  final bool glow;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return SizedBox(
+      width: 48,
+      height: 48,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (glow)
+            IgnorePointer(
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: palette.gold.withValues(alpha: 0.45),
+                  boxShadow: [
+                    BoxShadow(
+                      color: palette.gold.withValues(alpha: 0.55),
+                      blurRadius: 18,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+              )
+                  .animate(
+                    onPlay: (controller) => controller.repeat(reverse: true),
+                  )
+                  .scaleXY(
+                    begin: 0.72,
+                    end: 1.18,
+                    duration: 1100.ms,
+                    curve: Curves.easeInOut,
+                  )
+                  .fade(
+                    begin: 0.35,
+                    end: 0.85,
+                    duration: 1100.ms,
+                    curve: Curves.easeInOut,
+                  ),
+            ),
+          IconButton(
+            onPressed: () => context.push('/settings'),
+            icon: const Icon(Icons.tune_rounded),
+            tooltip: 'Einstellungen',
+          ),
+        ],
       ),
     );
   }

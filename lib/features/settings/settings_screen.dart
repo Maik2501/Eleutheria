@@ -5,7 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../data/models/answer_input_style.dart';
+import '../../data/models/difficulty_band.dart';
+import '../../data/repositories/feedback_repository.dart';
 import '../../shared/widgets/parchment_background.dart';
+import '../feedback/feedback_sheet.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -29,6 +33,62 @@ class SettingsScreen extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
           children: [
+            Text('GAMEPLAY', style: AppTypography.eyebrow(palette.inkMuted)),
+            const SizedBox(height: 10),
+            _GameplaySetting(
+              label: 'Antwortart',
+              description:
+                  'Multiple Choice zeigt vier Optionen zur Auswahl. Eingabe lässt dich die Antwort über die Tastatur tippen. Schwieriger, für eine echte Herausforderung.',
+              child: _SegmentedRow(
+                value: p.preferredInputStyle.key,
+                entries: const {
+                  'multipleChoice': 'Multiple Choice',
+                  'letterbox': 'Eingabe',
+                },
+                onChanged: (key) => notifier.setPreferredInputStyle(
+                  AnswerInputStyle.fromKey(key),
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            _GameplaySetting(
+              label: 'Schwierigkeit',
+              description:
+                  'Einstieg sind die leichten Fragen, Salon mischt alles, Meisterprüfung nur die anspruchsvollen.',
+              child: _SegmentedRow(
+                value: DifficultyBand.fromRange(
+                  p.preferredDifficulty.$1,
+                  p.preferredDifficulty.$2,
+                ).name,
+                entries: const {
+                  'einstieg': 'Einstieg',
+                  'salon': 'Salon',
+                  'meisterpruefung': 'Meister',
+                },
+                onChanged: (key) {
+                  final band = DifficultyBand.values
+                      .firstWhere((b) => b.name == key);
+                  notifier.setDifficultyBand(band);
+                },
+              ),
+            ),
+            const SizedBox(height: 18),
+            _GameplaySetting(
+              label: 'Joker',
+              description:
+                  'Joker geben pro Frage einen Tipp. Eingesetzte Joker halbieren die Punkte dieser Frage. Nur mit „Aus" landest du auf der reinen Pure-Bestenliste — sonst zählt der Lauf in Casual.',
+              child: _SegmentedRow(
+                value: p.jokerAvailability.key,
+                entries: const {
+                  'off': 'Aus',
+                  'one': '1',
+                  'three': '3',
+                  'always': 'Immer',
+                },
+                onChanged: notifier.setJokerAvailability,
+              ),
+            ),
+            const SizedBox(height: 32),
             Text('DARSTELLUNG', style: AppTypography.eyebrow(palette.inkMuted)),
             const SizedBox(height: 10),
             _SegmentedRow(
@@ -64,17 +124,46 @@ class SettingsScreen extends ConsumerWidget {
               onChanged: notifier.setSounds,
             ),
             const SizedBox(height: 32),
-            Text('JOKER', style: AppTypography.eyebrow(palette.inkMuted)),
+            Text('RÜCKMELDUNG',
+                style: AppTypography.eyebrow(palette.inkMuted),),
             const SizedBox(height: 10),
-            _SegmentedRow(
-              value: p.jokerAvailability.key,
-              entries: const {
-                'off': 'Aus',
-                'one': '1 Joker',
-                'three': '3 Joker',
-                'always': 'Immer',
-              },
-              onChanged: notifier.setJokerAvailability,
+            _FeedbackTile(
+              icon: Icons.chat_bubble_outline_rounded,
+              label: 'Feedback geben',
+              subtitle: 'Idee, Lob oder Fehler — wir lesen alles.',
+              onTap: () => FeedbackSheet.show(
+                context,
+                type: FeedbackType.generalFeedback,
+                title: 'Feedback an Eleutheria',
+                intro:
+                    'Was läuft gut, was holpert, was fehlt? Erzähl es uns — kurz oder ausführlich.',
+                categories: FeedbackCategory.generalOptions,
+                showEmailField: true,
+              ),
+            ),
+            _FeedbackTile(
+              icon: Icons.menu_book_outlined,
+              label: 'Frage vorschlagen',
+              subtitle: 'Ein Zitat, eine Idee — schick es uns vor.',
+              onTap: () => FeedbackSheet.show(
+                context,
+                type: FeedbackType.questionSuggestion,
+                title: 'Frage vorschlagen',
+                intro:
+                    'Schreib uns das Zitat oder die Frage, die Quelle und kurz, warum du sie passend findest.',
+                showEmailField: true,
+                messageHint:
+                    'Zitat / Frage \nQuelle (Werk, Kapitel, Jahr) \nWarum eine schöne Frage?',
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Bist du gerade über TestFlight unterwegs? Ein Screenshot innerhalb der TestFlight-App schickt zusätzlich Bildkontext direkt an Apple.',
+              style: TextStyle(
+                fontSize: 11.5,
+                color: palette.inkMuted,
+                height: 1.45,
+              ),
             ),
             const SizedBox(height: 32),
             Text('ÜBER ELEUTHERIA',
@@ -96,6 +185,103 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _GameplaySetting extends StatelessWidget {
+  const _GameplaySetting({
+    required this.label,
+    required this.description,
+    required this.child,
+  });
+
+  final String label;
+  final String description;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
+          child: Text(
+            label,
+            style: AppTypography.serif(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: palette.ink,
+            ),
+          ),
+        ),
+        child,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+          child: Text(
+            description,
+            style: TextStyle(
+              fontSize: 12.5,
+              height: 1.45,
+              color: palette.inkMuted,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _FeedbackTile extends StatelessWidget {
+  const _FeedbackTile({
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        color: palette.page,
+        border: Border.all(color: palette.divider),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: ListTile(
+        onTap: onTap,
+        leading: Icon(icon, color: palette.burgundy),
+        title: Text(
+          label,
+          style: AppTypography.sans(
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            color: palette.ink,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(
+            fontSize: 12.5,
+            color: palette.inkMuted,
+            height: 1.35,
+          ),
+        ),
+        trailing: Icon(
+          Icons.chevron_right_rounded,
+          color: palette.inkMuted,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     );
   }

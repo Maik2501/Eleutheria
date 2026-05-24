@@ -6,8 +6,10 @@ import '../../../app/providers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../data/models/question.dart';
+import '../../../data/repositories/feedback_repository.dart';
 import '../../../data/seed/philosophers_seed.dart';
 import '../../../shared/widgets/philosopher_avatar.dart';
+import '../../feedback/feedback_sheet.dart';
 
 /// Bottom panel that animates in after answering — shows attribution,
 /// short explanation, and a "Continue" CTA.
@@ -105,6 +107,26 @@ class RevealPanel extends ConsumerWidget {
                         ? Icons.bookmark_rounded
                         : Icons.bookmark_border_rounded,
                     color: palette.gold,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Diese Frage melden',
+                  onPressed: () => FeedbackSheet.show(
+                    context,
+                    type: FeedbackType.questionReport,
+                    title: 'Diese Frage melden',
+                    intro:
+                        'Stimmt etwas mit dieser Frage nicht? Wähl eine Kategorie aus — ein erklärender Text hilft, ist aber freiwillig.',
+                    categories: FeedbackCategory.questionReportOptions,
+                    questionId: question.id,
+                    questionPreview: question.prompt,
+                    messageHint: 'Optional: weitere Details …',
+                    messageOptional: true,
+                  ),
+                  icon: Icon(
+                    Icons.flag_outlined,
+                    color: palette.inkMuted,
+                    size: 22,
                   ),
                 ),
               ],

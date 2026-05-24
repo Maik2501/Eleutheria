@@ -243,7 +243,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
       fiftyFiftyUses: 0,
       jokerAvailability:
           ref.read(profileNotifierProvider).value?.jokerAvailability ??
-              JokerAvailability.always,
+              JokerAvailability.three,
       questionStartedAt: DateTime.now(),
     );
   }

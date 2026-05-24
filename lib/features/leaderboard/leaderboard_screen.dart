@@ -12,8 +12,10 @@ import '../../shared/widgets/parchment_background.dart';
 
 /// Reads from the Supabase `scores` table.
 /// Two leaderboards live side-by-side via the `is_pure` flag:
-/// - **Pure**: nur Sessions ohne Joker (`is_pure = true`)
-/// - **Casual**: alle, Joker-Fragen mit 50 % gewertet
+/// - **Pure**: nur Sessions, die mit ausgeschalteten Jokern angetreten
+///   sind (`is_pure = true`, definiert in Migration 0009 als
+///   `joker_setting = 'off'`)
+/// - **Casual**: alles andere; Fragen mit Joker-Einsatz mit 50 % gewertet
 class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
 

@@ -9,8 +9,8 @@ void main() {
     expect(GameConfig.letterboxDefault.perQuestionTimeLimit, Duration.zero);
   });
 
-  test('joker availability defaults to always but supports off', () {
-    expect(JokerAvailability.fromKey(null), JokerAvailability.always);
+  test('joker availability defaults to three but supports off', () {
+    expect(JokerAvailability.fromKey(null), JokerAvailability.three);
     expect(JokerAvailability.fromKey('off'), JokerAvailability.disabled);
     expect(JokerAvailability.disabled.sessionLimit, 0);
   });

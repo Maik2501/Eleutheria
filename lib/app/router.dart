@@ -6,6 +6,7 @@ import '../data/models/game_session.dart';
 import '../data/models/question.dart';
 import '../data/services/achievement_engine.dart';
 import '../features/achievements/achievement_gallery_screen.dart';
+import '../features/bookmarks/bookmarks_screen.dart';
 import '../features/crossword/crossword_screen.dart';
 import '../features/duel/duel_lobby_screen.dart';
 import '../features/duel/duel_match_screen.dart';
@@ -32,6 +33,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/achievements',
         builder: (_, __) => const AchievementGalleryScreen(),
+      ),
+      GoRoute(
+        path: '/bookmarks',
+        builder: (_, __) => const BookmarksScreen(),
       ),
       GoRoute(
         path: '/settings',

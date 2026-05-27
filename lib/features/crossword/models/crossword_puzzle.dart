@@ -47,6 +47,52 @@ class CrosswordWord {
       yield direction == WordDirection.across ? (row, col + i) : (row + i, col);
     }
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'answer': answer,
+        'clue': clue,
+        'row': row,
+        'col': col,
+        'direction': direction.name,
+        'attribution': attribution,
+        'explanation': explanation,
+      };
+
+  static CrosswordWord? tryFromJson(Map<String, dynamic> json) {
+    try {
+      final id = json['id'] as String?;
+      final answer = json['answer'] as String?;
+      final clue = json['clue'] as String?;
+      final row = (json['row'] as num?)?.toInt();
+      final col = (json['col'] as num?)?.toInt();
+      final directionName = json['direction'] as String?;
+      if (id == null ||
+          answer == null ||
+          clue == null ||
+          row == null ||
+          col == null ||
+          directionName == null) {
+        return null;
+      }
+      final direction = WordDirection.values
+          .where((d) => d.name == directionName)
+          .firstOrNull;
+      if (direction == null) return null;
+      return CrosswordWord(
+        id: id,
+        answer: answer,
+        clue: clue,
+        row: row,
+        col: col,
+        direction: direction,
+        attribution: json['attribution'] as String?,
+        explanation: json['explanation'] as String?,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 /// A whole puzzle.
@@ -190,6 +236,58 @@ class CrosswordPuzzle {
     final total = playableCellCount;
     if (total == 0) return 0;
     return filledCellCount(typed) / total;
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'theme': theme,
+        'grid_rows': gridRows,
+        'grid_cols': gridCols,
+        'difficulty': difficulty,
+        'estimated_minutes': estimatedMinutes,
+        'source_label': sourceLabel,
+        'words': words.map((w) => w.toJson()).toList(),
+      };
+
+  static CrosswordPuzzle? tryFromJson(Map<String, dynamic> json) {
+    try {
+      final id = json['id'] as String?;
+      final title = json['title'] as String?;
+      final theme = json['theme'] as String?;
+      final gridRows = (json['grid_rows'] as num?)?.toInt();
+      final gridCols = (json['grid_cols'] as num?)?.toInt();
+      final wordsRaw = json['words'] as List?;
+      if (id == null ||
+          title == null ||
+          theme == null ||
+          gridRows == null ||
+          gridCols == null ||
+          wordsRaw == null) {
+        return null;
+      }
+      final words = <CrosswordWord>[];
+      for (final w in wordsRaw) {
+        if (w is! Map) continue;
+        final parsed =
+            CrosswordWord.tryFromJson(Map<String, dynamic>.from(w));
+        if (parsed != null) words.add(parsed);
+      }
+      if (words.isEmpty) return null;
+      return CrosswordPuzzle(
+        id: id,
+        title: title,
+        theme: theme,
+        gridRows: gridRows,
+        gridCols: gridCols,
+        words: words,
+        difficulty: (json['difficulty'] as String?) ?? 'Mittel',
+        estimatedMinutes: (json['estimated_minutes'] as num?)?.toInt() ?? 8,
+        sourceLabel: (json['source_label'] as String?) ?? 'Eleutheria',
+      );
+    } catch (_) {
+      return null;
+    }
   }
 }
 

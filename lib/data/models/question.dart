@@ -53,6 +53,68 @@ class Question {
   final String? topicKey;
 
   String get correctAnswer => options[correctIndex];
+
+  /// JSON-Repräsentation für den Supabase-Roundtrip. Spaltennamen sind
+  /// in snake_case, da die DB-Konvention das so vorschreibt.
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'category': category.name,
+        'prompt': prompt,
+        'options': options,
+        'correct_index': correctIndex,
+        'difficulty': difficulty,
+        'attribution': attribution,
+        'explanation': explanation,
+        'philosopher_id': philosopherId,
+        'topic_key': topicKey,
+      };
+
+  /// Defensiv: fehlende oder unbekannte Felder degradieren zu sinnvollen
+  /// Defaults, damit ein älterer Client neuere DB-Zeilen nicht crasht.
+  /// Liefert `null`, wenn Pflichtfelder fehlen oder die Kategorie
+  /// unbekannt ist (z. B. neue Kategorie in der DB, alter Client).
+  static Question? tryFromJson(Map<String, dynamic> json) {
+    try {
+      final id = json['id'] as String?;
+      final categoryName = json['category'] as String?;
+      final prompt = json['prompt'] as String?;
+      final optionsRaw = json['options'] as List?;
+      final correctIndex = (json['correct_index'] as num?)?.toInt();
+      final difficulty = (json['difficulty'] as num?)?.toInt();
+      if (id == null ||
+          categoryName == null ||
+          prompt == null ||
+          optionsRaw == null ||
+          correctIndex == null ||
+          difficulty == null) {
+        return null;
+      }
+      final category = QuestionCategory.values
+          .where((c) => c.name == categoryName)
+          .firstOrNull;
+      if (category == null) return null;
+      final options = optionsRaw.map((e) => e.toString()).toList();
+      if (options.length < 2 ||
+          correctIndex < 0 ||
+          correctIndex >= options.length) {
+        return null;
+      }
+      return Question(
+        id: id,
+        category: category,
+        prompt: prompt,
+        options: options,
+        correctIndex: correctIndex,
+        difficulty: difficulty,
+        attribution: json['attribution'] as String?,
+        explanation: json['explanation'] as String?,
+        philosopherId: json['philosopher_id'] as String?,
+        topicKey: json['topic_key'] as String?,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 enum QuestionCategory {

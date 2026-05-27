@@ -9,9 +9,9 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/wax_seal.dart';
+import '../../app/providers.dart';
 import 'crossword_controller.dart';
 import 'models/crossword_puzzle.dart';
-import 'models/puzzle_seed.dart';
 import 'widgets/active_clue_strip.dart';
 import 'widgets/crossword_grid.dart';
 import 'widgets/crossword_keyboard.dart';
@@ -29,20 +29,27 @@ class _CrosswordScreenState extends ConsumerState<CrosswordScreen> {
   int _puzzleIndex = 0;
   bool _showLetterFeedback = false;
 
-  int get _safePuzzleIndex =>
-      _puzzleIndex.clamp(0, kCrosswordPuzzles.length - 1).toInt();
-
   @override
   Widget build(BuildContext context) {
-    final selectedIndex = _safePuzzleIndex;
-    final puzzle = kCrosswordPuzzles[selectedIndex];
+    final puzzles = ref.watch(crosswordPoolProvider);
+    if (puzzles.isEmpty) {
+      // Defensive: sollte nie passieren (Bundle hat 2 Demos), aber im
+      // Falle eines verkorksten Caches lieber leeren Screen als Crash.
+      return const Scaffold(
+        body: Center(child: Text('Keine Kreuzworträtsel verfügbar.')),
+      );
+    }
+    final selectedIndex = _puzzleIndex.clamp(0, puzzles.length - 1).toInt();
+    final puzzle = puzzles[selectedIndex];
     final state = ref.watch(crosswordProvider(puzzle));
     final ctrl = ref.read(crosswordProvider(puzzle).notifier);
     final palette = context.palette;
     final activeWord = _activeWord(puzzle, state);
     final activeNumber = activeWord == null
         ? 0
-        : puzzle.numberedWords.firstWhere((nw) => nw.word == activeWord).number;
+        : puzzle.numberedWords
+            .firstWhere((NumberedWord nw) => nw.word == activeWord)
+            .number;
 
     return Scaffold(
       appBar: AppBar(
@@ -91,6 +98,7 @@ class _CrosswordScreenState extends ConsumerState<CrosswordScreen> {
                               children: [
                                 _PuzzleHeader(
                                   puzzle: puzzle,
+                                  puzzles: puzzles,
                                   progress: puzzle.progress(state.typed),
                                   selectedIndex: selectedIndex,
                                   compact: compact,
@@ -206,6 +214,7 @@ class _CrosswordScreenState extends ConsumerState<CrosswordScreen> {
 class _PuzzleHeader extends StatelessWidget {
   const _PuzzleHeader({
     required this.puzzle,
+    required this.puzzles,
     required this.progress,
     required this.selectedIndex,
     required this.compact,
@@ -214,6 +223,7 @@ class _PuzzleHeader extends StatelessWidget {
   });
 
   final CrosswordPuzzle puzzle;
+  final List<CrosswordPuzzle> puzzles;
   final double progress;
   final int selectedIndex;
   final bool compact;
@@ -266,10 +276,10 @@ class _PuzzleHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   icon: const Icon(Icons.expand_more_rounded),
                   items: [
-                    for (var i = 0; i < kCrosswordPuzzles.length; i++)
+                    for (var i = 0; i < puzzles.length; i++)
                       DropdownMenuItem(
                         value: i,
-                        child: Text(kCrosswordPuzzles[i].title),
+                        child: Text(puzzles[i].title),
                       ),
                   ],
                   onChanged: (value) {

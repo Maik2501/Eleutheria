@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,11 +8,63 @@ import '../core/theme/app_theme.dart';
 import 'providers.dart';
 import 'router.dart';
 
-class EleutheriaApp extends ConsumerWidget {
+class EleutheriaApp extends ConsumerStatefulWidget {
   const EleutheriaApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<EleutheriaApp> createState() => _EleutheriaAppState();
+}
+
+class _EleutheriaAppState extends ConsumerState<EleutheriaApp>
+    with WidgetsBindingObserver {
+  /// Mindestabstand zwischen zwei automatischen Refreshes beim Resume.
+  /// Verhindert, dass jeder kurze Tab-Wechsel einen API-Call feuert.
+  static const _staleAfter = Duration(minutes: 30);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _maybeRefresh();
+    }
+  }
+
+  /// Pull-Refresh, wenn der letzte Sync länger als [_staleAfter] her ist.
+  /// Erster Start (Cache leer) wird ausgelassen — den übernimmt der
+  /// [contentBootstrapProvider] sowieso.
+  Future<void> _maybeRefresh() async {
+    final cache = ref.read(contentCacheProvider);
+    final last = cache.lastSyncedAt;
+    if (last == null) return;
+    if (DateTime.now().difference(last) < _staleAfter) return;
+    try {
+      await refreshRemoteContent(ref);
+    } catch (e) {
+      dev.log(
+        'background refresh on resume failed: $e',
+        name: 'EleutheriaApp',
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Einmaliger Inhalts-Bootstrap (Cache hydraten + Remote-Pull). Result
+    // ist void — wir interessieren uns nur für den Side-Effect (Pool-State
+    // wird aktualisiert). Fehler werden im Provider geschluckt.
+    ref.watch(contentBootstrapProvider);
+
     final router = ref.watch(routerProvider);
     final mode = ref.watch(themeModeProvider);
     final storedLocale =

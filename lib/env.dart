@@ -15,6 +15,11 @@ class Env {
   /// Build-Code-Bump vor TestFlight).
   static const appVersion = '0.1.0+5';
 
+  /// PayPal.me-Link für die "Unterstützung"-Karte in den Einstellungen.
+  /// Leerstring → die Karte wird ausgeblendet (z. B. für Beta-Tests vor
+  /// Account-Setup). Format: `https://paypal.me/<dein-name>`.
+  static const donatePayPalUrl = 'https://paypal.me/maikpickl';
+
   /// True wenn beide Werte gesetzt sind und Supabase initialisiert werden kann.
   static bool get hasSupabase =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;

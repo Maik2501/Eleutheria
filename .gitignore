@@ -40,6 +40,10 @@ android/key.properties
 lib/data/seed/*.bak.*
 lib/data/seed/*.dart.bak.*
 
+# Python tooling artifacts
+scripts/__pycache__/
+*.pyc
+
 # Secrets (do NOT commit)
 .env
 codemagic.yaml.local

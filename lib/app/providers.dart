@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer' as dev;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,12 +11,17 @@ import '../data/models/difficulty_band.dart';
 import '../data/models/game_session.dart';
 import '../data/models/player_profile.dart';
 import '../data/models/player_stats.dart';
+import '../data/repositories/content_repository.dart';
 import '../data/repositories/feedback_repository.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_history_repository.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/repositories/score_repository.dart';
 import '../data/repositories/supabase_profile_repository.dart';
+import '../data/seed/questions_seed.dart';
+import '../data/models/question.dart';
+import '../features/crossword/models/crossword_puzzle.dart';
+import '../features/crossword/models/puzzle_seed.dart';
 import '../data/seed/philosophers_seed.dart';
 import '../data/services/achievement_engine.dart';
 import '../env.dart';
@@ -27,9 +35,109 @@ final profileRepositoryProvider = Provider<ProfileRepository>(
   (ref) => ProfileRepository(ref.watch(sharedPreferencesProvider)),
 );
 
+/// Aktueller Pool an Fragen — initial das gebundlete Set, wird vom
+/// [contentBootstrapProvider] zur Laufzeit auf Cache- oder Remote-Daten
+/// umgeschaltet. Sessions, die bereits laufen, behalten ihren ursprünglich
+/// gesampelten Batch (siehe GameSessionController), ein Pool-Update
+/// ändert also nichts mid-game.
+final questionPoolProvider =
+    StateProvider<List<Question>>((ref) => kQuestions);
+
+/// Spiegelt das gleiche Schema für Crossword-Puzzles.
+final crosswordPoolProvider =
+    StateProvider<List<CrosswordPuzzle>>((ref) => kCrosswordPuzzles);
+
 final questionRepositoryProvider = Provider<QuestionRepository>(
-  (ref) => QuestionRepository(),
+  (ref) => QuestionRepository(pool: ref.watch(questionPoolProvider)),
 );
+
+final contentCacheProvider = Provider<ContentCache>(
+  (ref) => ContentCache(ref.watch(sharedPreferencesProvider)),
+);
+
+final remoteContentRepositoryProvider =
+    Provider<RemoteContentRepository?>((ref) {
+  if (!Env.hasSupabase) return null;
+  try {
+    return RemoteContentRepository(Supabase.instance.client);
+  } catch (_) {
+    return null;
+  }
+});
+
+/// Einmaliger Bootstrap: liest erst den Cache (sofort verfügbar, blockt
+/// nichts), versucht dann den Remote-Pull. Bei Erfolg wird Cache + Pool
+/// aktualisiert. Bei Fehler bleibt der vorherige State erhalten — die App
+/// läuft im schlimmsten Fall mit Bundle weiter.
+///
+/// Reihenfolge der Quellen: **Cache → Remote → Bundle (initial)**.
+final contentBootstrapProvider = FutureProvider<void>((ref) async {
+  final cache = ref.read(contentCacheProvider);
+
+  // Schritt 1: Cache hydraten (synchron, sofort).
+  final cachedQs = cache.readQuestions();
+  if (cachedQs != null && cachedQs.isNotEmpty) {
+    ref.read(questionPoolProvider.notifier).state = cachedQs;
+  }
+  final cachedPs = cache.readCrosswordPuzzles();
+  if (cachedPs != null && cachedPs.isNotEmpty) {
+    ref.read(crosswordPoolProvider.notifier).state = cachedPs;
+  }
+
+  // Schritt 2: Remote-Pull im Hintergrund. Fehler werden geschluckt — die
+  // App bleibt mit Cache oder Bundle nutzbar.
+  final remote = ref.read(remoteContentRepositoryProvider);
+  if (remote == null) return;
+
+  unawaited(() async {
+    try {
+      final qs = await remote.fetchQuestions();
+      if (qs.isNotEmpty) {
+        await cache.writeQuestions(qs);
+        ref.read(questionPoolProvider.notifier).state = qs;
+      }
+    } catch (e, st) {
+      dev.log('remote questions fetch failed: $e',
+          name: 'ContentBootstrap', stackTrace: st,);
+    }
+    try {
+      final ps = await remote.fetchCrosswordPuzzles();
+      if (ps.isNotEmpty) {
+        await cache.writeCrosswordPuzzles(ps);
+        ref.read(crosswordPoolProvider.notifier).state = ps;
+      }
+    } catch (e, st) {
+      dev.log('remote crossword fetch failed: $e',
+          name: 'ContentBootstrap', stackTrace: st,);
+    }
+  }());
+});
+
+/// Manueller Refresh-Eingang — wird von einem Tile in den Einstellungen
+/// gefeuert. Lädt explizit beide Pools neu und aktualisiert Cache + State.
+/// Wirft, wenn kein Repo verfügbar ist (kein Supabase), damit der Aufrufer
+/// das in der UI zurückmelden kann.
+///
+/// Nimmt `WidgetRef`, weil aktuell nur aus der Settings-UI heraus aufgerufen.
+/// Sollte später auch ein Notifier das brauchen, kann eine Sibling-Funktion
+/// mit `Ref`-Signatur ergänzt werden — Body bleibt identisch.
+Future<void> refreshRemoteContent(WidgetRef ref) async {
+  final repo = ref.read(remoteContentRepositoryProvider);
+  if (repo == null) {
+    throw StateError('Kein Supabase-Repository verfügbar.');
+  }
+  final cache = ref.read(contentCacheProvider);
+  final qs = await repo.fetchQuestions();
+  if (qs.isNotEmpty) {
+    await cache.writeQuestions(qs);
+    ref.read(questionPoolProvider.notifier).state = qs;
+  }
+  final ps = await repo.fetchCrosswordPuzzles();
+  if (ps.isNotEmpty) {
+    await cache.writeCrosswordPuzzles(ps);
+    ref.read(crosswordPoolProvider.notifier).state = ps;
+  }
+}
 
 /// Per-device cache of which questions the player has answered correctly
 /// and how recently. Read at session start by [GameSessionController] to

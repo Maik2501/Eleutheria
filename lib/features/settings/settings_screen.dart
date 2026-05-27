@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
@@ -8,17 +9,52 @@ import '../../core/theme/app_typography.dart';
 import '../../data/models/answer_input_style.dart';
 import '../../data/models/difficulty_band.dart';
 import '../../data/repositories/feedback_repository.dart';
+import '../../env.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../feedback/feedback_sheet.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _refreshing = false;
+
+  Future<void> _refreshContent() async {
+    if (_refreshing) return;
+    setState(() => _refreshing = true);
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await refreshRemoteContent(ref);
+      if (!mounted) return;
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Inhalte aktualisiert.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('Aktualisierung fehlgeschlagen: $e'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _refreshing = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final palette = context.palette;
     final p = ref.watch(profileNotifierProvider).value;
     final notifier = ref.read(profileNotifierProvider.notifier);
+    final lastSyncedAt = ref.watch(contentCacheProvider).lastSyncedAt;
     if (p == null) return const SizedBox.shrink();
 
     return Scaffold(
@@ -166,6 +202,29 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 32),
+            Text('INHALTE',
+                style: AppTypography.eyebrow(palette.inkMuted),),
+            const SizedBox(height: 10),
+            _FeedbackTile(
+              icon: _refreshing
+                  ? Icons.hourglass_top_rounded
+                  : Icons.cloud_download_outlined,
+              label: _refreshing
+                  ? 'Aktualisiere …'
+                  : 'Fragen & Rätsel aktualisieren',
+              subtitle: lastSyncedAt == null
+                  ? 'Noch nicht synchronisiert. Bundle wird verwendet.'
+                  : 'Zuletzt synchronisiert: ${_formatSyncTime(lastSyncedAt)}',
+              onTap: _refreshing ? () {} : _refreshContent,
+            ),
+            if (Env.donatePayPalUrl.isNotEmpty) ...[
+              const SizedBox(height: 32),
+              Text('UNTERSTÜTZUNG',
+                  style: AppTypography.eyebrow(palette.inkMuted),),
+              const SizedBox(height: 10),
+              const _DonationCard(),
+            ],
+            const SizedBox(height: 32),
             Text('ÜBER ELEUTHERIA',
                 style: AppTypography.eyebrow(palette.inkMuted),),
             const SizedBox(height: 10),
@@ -185,6 +244,111 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Formatiert einen Sync-Zeitstempel als "heute, 14:23" / "gestern, 09:15"
+/// / "vor 3 Tagen" — nicht kalendarisch exakt, aber für den User
+/// nachvollziehbar.
+String _formatSyncTime(DateTime when) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final whenDay = DateTime(when.year, when.month, when.day);
+  final daysAgo = today.difference(whenDay).inDays;
+  final hh = when.hour.toString().padLeft(2, '0');
+  final mm = when.minute.toString().padLeft(2, '0');
+  if (daysAgo == 0) return 'heute, $hh:$mm';
+  if (daysAgo == 1) return 'gestern, $hh:$mm';
+  if (daysAgo < 7) return 'vor $daysAgo Tagen';
+  return '${when.day}.${when.month}.${when.year}';
+}
+
+/// "Unterstützung"-Karte mit warmer Akademie-Optik: kurzer Dank-Text +
+/// PayPal-Button. Tap öffnet den Link über [url_launcher] in der externen
+/// App/Browser-Sitzung. Der Aufrufer rendert die Karte nur, wenn ein
+/// echter PayPal-Link konfiguriert ist (siehe [Env.donatePayPalUrl]).
+class _DonationCard extends StatelessWidget {
+  const _DonationCard();
+
+  Future<void> _openPayPal(BuildContext context) async {
+    final uri = Uri.parse(Env.donatePayPalUrl);
+    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!ok && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('PayPal konnte nicht geöffnet werden.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+      decoration: BoxDecoration(
+        color: palette.page,
+        border: Border.all(color: palette.gold.withValues(alpha: 0.45)),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: palette.gold.withValues(alpha: 0.14),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: palette.gold,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Spende einen Kaffee',
+                  style: AppTypography.serif(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: palette.ink,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Ich hoffe, du hast Freude an Eleutheria. Das Erstellen und '
+            'die Pflege der App kosten viel Zeit — wenn du mich '
+            'unterstützen möchtest, würde ich mich über eine kleine Spende '
+            'sehr freuen.',
+            style: TextStyle(
+              color: palette.inkSoft,
+              fontSize: 13.5,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: () => _openPayPal(context),
+              icon: const Icon(Icons.open_in_new_rounded, size: 18),
+              label: const Text('Mit PayPal unterstützen'),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -4,6 +4,10 @@ Eine warme, akademische iOS-App für ein Quiz rund um Philosophie. Built with Fl
 
 > *„Die Liebe zur Weisheit beginnt mit dem Staunen."* — frei nach Aristoteles
 
+**Status:** TestFlight-Beta, Stand Mai 2026. Iterativ entwickelt, parallel zur Zusammenarbeit mit Studierenden der FU Berlin.
+**Stack:** Flutter · Dart · Riverpod · GoRouter · selbst gehostetes Supabase (Postgres / Auth / Realtime) hinter Caddy auf eigenem Server.
+**Highlights:** Sechs Fragetypen, fünf Spielmodi (inkl. Live-Duell über Realtime), XP/Streaks/Errungenschaften, Hell-/Dunkel-Modus im „Warm-Academia"-Theme, vollständig deutsch lokalisiert.
+
 ---
 
 ## Features
@@ -12,7 +16,7 @@ Eine warme, akademische iOS-App für ein Quiz rund um Philosophie. Built with Fl
 - **Klassisch** — 10 gemischte Fragen, voller Score
 - **Sudden Death** — bis zum ersten Fehler, Bestleistungen werden festgehalten
 - **Tägliche Frage** — fünf Fragen, dieselben für alle Spielerinnen weltweit am gleichen Tag, mit Tagesrangliste *(coming soon)*
-- **Duell (online, live)** — sechsstelliger Code, beide spielen dieselben Fragen, schnellere richtige Antwort gewinnt *(coming soon)*
+- **Duell (online, live)** — sechsstelliger Code, beide spielen dieselben Fragen, schnellere richtige Antwort gewinnt
 - **Studierkammer** — Übungsmodus ohne Zeitdruck, mit allen Erläuterungen
 - **Sammlung** — eine bestimmte Kategorie üben
 

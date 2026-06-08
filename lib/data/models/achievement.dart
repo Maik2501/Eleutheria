@@ -215,7 +215,7 @@ const List<Achievement> kAchievements = [
   Achievement(
     id: 'sudden_death',
     title: 'Im Angesicht des Fehlers',
-    description: 'Halte eine Serie im Sudden-Death-Modus.',
+    description: 'Halte eine lange Serie richtiger Antworten im Endless-Modus.',
     category: AchievementCategory.mastery,
     progressOf: _suddenDeathProgress,
     tiers: [

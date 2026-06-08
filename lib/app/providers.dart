@@ -321,8 +321,18 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     final flawlessClassic = session.mode == GameMode.classic &&
         correctAnswers == session.questions.length &&
         session.questions.isNotEmpty;
-    final suddenDeathStreak =
-        session.mode == GameMode.suddenDeath ? correctAnswers : 0;
+
+    // Streak-Achievement "sudden_death" zaehlt die laengste durchgehende
+    // Serie richtiger Antworten. Wird in Endless (Quiz-Rush mit Leben) und im
+    // historischen Sudden-Death-Modus angewandt — letzterer ist aus dem
+    // Hauptmenue verschwunden, das Achievement haengt jetzt am Endless-Modus,
+    // wo der Spielfluss (3 Leben) das Streak-Pattern natuerlich rahmt.
+    final isEndless =
+        session.mode == GameMode.quizRush && session.variantKey == 'endless';
+    final isSuddenDeath = session.mode == GameMode.suddenDeath;
+    final longestStreak = (isEndless || isSuddenDeath)
+        ? _longestCorrectStreak(session.answers)
+        : 0;
 
     // Era coverage — look up philosopher → era for each correctly answered
     // question that carries a philosopher id.
@@ -345,8 +355,8 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     p.totalCorrect += correctAnswers;
     p.fastCorrectAnswers += fastCorrect;
     if (flawlessClassic) p.flawlessClassicCount += 1;
-    if (suddenDeathStreak > p.bestSuddenDeath) {
-      p.bestSuddenDeath = suddenDeathStreak;
+    if (longestStreak > p.bestSuddenDeath) {
+      p.bestSuddenDeath = longestStreak;
     }
     if (newEras.isNotEmpty) {
       p.answeredEraKeys = {...p.answeredEraKeys, ...newEras};
@@ -406,3 +416,20 @@ final themeModeProvider = Provider<ThemeMode>((ref) {
     _ => ThemeMode.system,
   };
 });
+
+/// Longest stretch of consecutive correct answers in [answers]. Used by the
+/// Endless / Sudden-Death streak achievement — every wrong answer resets the
+/// running counter, the best run wins.
+int _longestCorrectStreak(List<AnswerRecord> answers) {
+  var best = 0;
+  var current = 0;
+  for (final a in answers) {
+    if (a.wasCorrect) {
+      current++;
+      if (current > best) best = current;
+    } else {
+      current = 0;
+    }
+  }
+  return best;
+}

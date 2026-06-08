@@ -1,6 +1,6 @@
-# Sophia · Fragen-Editor (lokales CMS)
+# Griphos · Fragen-Editor (lokales CMS)
 
-Internes Entwicklungswerkzeug zum Bearbeiten der Eleutheria-Fragen-Datenbank
+Internes Entwicklungswerkzeug zum Bearbeiten der Griphos-Fragen-Datenbank
 ([`lib/data/seed/questions_seed.dart`](../lib/data/seed/questions_seed.dart)).
 Pure HTML/CSS/JS plus ein winziger Python-Server, kein Build, keine
 Abhängigkeiten außer Python 3.10+.

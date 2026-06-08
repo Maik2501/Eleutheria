@@ -106,7 +106,7 @@ class CrosswordPuzzle {
     required this.words,
     this.difficulty = 'Mittel',
     this.estimatedMinutes = 8,
-    this.sourceLabel = 'Eleutheria',
+    this.sourceLabel = 'Griphos',
   });
 
   final String id;
@@ -283,7 +283,7 @@ class CrosswordPuzzle {
         words: words,
         difficulty: (json['difficulty'] as String?) ?? 'Mittel',
         estimatedMinutes: (json['estimated_minutes'] as num?)?.toInt() ?? 8,
-        sourceLabel: (json['source_label'] as String?) ?? 'Eleutheria',
+        sourceLabel: (json['source_label'] as String?) ?? 'Griphos',
       );
     } catch (_) {
       return null;

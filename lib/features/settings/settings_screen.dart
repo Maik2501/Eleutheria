@@ -170,7 +170,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onTap: () => FeedbackSheet.show(
                 context,
                 type: FeedbackType.generalFeedback,
-                title: 'Feedback an Eleutheria',
+                title: 'Feedback an Griphos',
                 intro:
                     'Was läuft gut, was holpert, was fehlt? Erzähl es uns — kurz oder ausführlich.',
                 categories: FeedbackCategory.generalOptions,
@@ -225,7 +225,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               const _DonationCard(),
             ],
             const SizedBox(height: 32),
-            Text('ÜBER ELEUTHERIA',
+            Text('ÜBER GRIPHOS',
                 style: AppTypography.eyebrow(palette.inkMuted),),
             const SizedBox(height: 10),
             Container(
@@ -236,7 +236,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                'Eleutheria ist ein liebevoll handgepflegtes Quiz für die Freundinnen und Freunde der Philosophie. '
+                'Griphos ist eine liebevoll handgepflegte Sammlung philosophischer Rätsel und Denkspiele '
+                'für die Freundinnen und Freunde der Philosophie. '
                 'Die Fragen wurden kuratiert; Quellen und Erläuterungen finden sich nach jeder Antwort.',
                 style: TextStyle(
                     color: palette.inkSoft, height: 1.55, fontSize: 14,),
@@ -329,7 +330,7 @@ class _DonationCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Ich hoffe, du hast Freude an Eleutheria. Das Erstellen und '
+            'Ich hoffe, du hast Freude an Griphos. Das Erstellen und '
             'die Pflege der App kosten viel Zeit — wenn du mich '
             'unterstützen möchtest, würde ich mich über eine kleine Spende '
             'sehr freuen.',

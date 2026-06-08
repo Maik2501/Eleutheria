@@ -1,4 +1,4 @@
-# Sophia — Supabase stoppen (Daten bleiben in Docker-Volumes erhalten)
+# Griphos — Supabase stoppen (Daten bleiben in Docker-Volumes erhalten)
 $ErrorActionPreference = 'Stop'
 Push-Location 'C:\src\supabase\docker'
 try {

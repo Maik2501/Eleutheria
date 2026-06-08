@@ -8,14 +8,14 @@ import '../core/theme/app_theme.dart';
 import 'providers.dart';
 import 'router.dart';
 
-class EleutheriaApp extends ConsumerStatefulWidget {
-  const EleutheriaApp({super.key});
+class GriphosApp extends ConsumerStatefulWidget {
+  const GriphosApp({super.key});
 
   @override
-  ConsumerState<EleutheriaApp> createState() => _EleutheriaAppState();
+  ConsumerState<GriphosApp> createState() => _GriphosAppState();
 }
 
-class _EleutheriaAppState extends ConsumerState<EleutheriaApp>
+class _GriphosAppState extends ConsumerState<GriphosApp>
     with WidgetsBindingObserver {
   /// Mindestabstand zwischen zwei automatischen Refreshes beim Resume.
   /// Verhindert, dass jeder kurze Tab-Wechsel einen API-Call feuert.
@@ -53,7 +53,7 @@ class _EleutheriaAppState extends ConsumerState<EleutheriaApp>
     } catch (e) {
       dev.log(
         'background refresh on resume failed: $e',
-        name: 'EleutheriaApp',
+        name: 'GriphosApp',
       );
     }
   }
@@ -72,7 +72,7 @@ class _EleutheriaAppState extends ConsumerState<EleutheriaApp>
     final locale = storedLocale == 'de' ? storedLocale : 'de';
 
     return MaterialApp.router(
-      title: 'Eleutheria',
+      title: 'Griphos',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),

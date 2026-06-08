@@ -1,4 +1,4 @@
-# Sophia -- lokales Supabase via Docker starten + Schema migrieren.
+# Griphos -- lokales Supabase via Docker starten + Schema migrieren.
 # Nutzung:  .\scripts\supabase-up.ps1
 #
 # Idempotent: jede *.sql in supabase/migrations/ wird lexikographisch

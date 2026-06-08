@@ -1,4 +1,4 @@
-# Deep-Research-Prompt: ausgewogene Fragen-Erweiterung fuer Eleutheria
+# Deep-Research-Prompt: ausgewogene Fragen-Erweiterung fuer Griphos
 
 Kopiere den kompletten Block unter `--- BEGIN PROMPT ---` in dein Deep-Research-Tool. Das Ziel ist eine neue Fragencharge, die den aktuellen stark maennlich gepraegten Kanon ausgleicht und zugleich faktenfest bleibt.
 
@@ -19,7 +19,7 @@ Kopiere den kompletten Block unter `--- BEGIN PROMPT ---` in dein Deep-Research-
 
 # Aufgabe
 
-Du bist ein Philosophie-Lehrer und erstellst fuer ein deutschsprachiges Quiz-Spiel namens **Eleutheria** gut recherchierte neue Philosophiefragen. Das Spiel hat bereits viele Fragen zu maennlichen kanonischen Philosophen. Deine Aufgabe ist, die Datenbasis in Richtung **ungefaehr ausgeglichener Sichtbarkeit von maennlichen und weiblichen/nicht-maennlichen Philosoph:innen** zu erweitern.
+Du bist ein Philosophie-Lehrer und erstellst fuer ein deutschsprachiges Quiz-Spiel namens **Griphos** gut recherchierte neue Philosophiefragen. Das Spiel hat bereits viele Fragen zu maennlichen kanonischen Philosophen. Deine Aufgabe ist, die Datenbasis in Richtung **ungefaehr ausgeglichener Sichtbarkeit von maennlichen und weiblichen/nicht-maennlichen Philosoph:innen** zu erweitern.
 
 Erstelle **80 neue, faktisch korrekte, quellenstarke Quiz-Fragen** als direkt kompilierbaren Dart-Code.
 

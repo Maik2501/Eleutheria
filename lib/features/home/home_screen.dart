@@ -268,7 +268,7 @@ class _HomeIntroPanel extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'ELEUTHERIA',
+                            'GRIPHOS',
                             style: AppTypography.eyebrow(palette.gold),
                           ),
                           const SizedBox(height: 8),

@@ -1,4 +1,4 @@
-# Eleutheria — Roadmap
+# Griphos — Roadmap
 
 Stand: 2026-05-15
 
@@ -243,7 +243,7 @@ Im Detail (siehe Todo-Liste in der laufenden Session):
 
 ## Memory-Referenzen
 
-Die wichtigsten Entscheidungen aus der Planung sind als Memory-Notizen abgelegt unter `C:\Users\maikp\.claude\projects\c--Projekte-Eleutheria\memory\`:
+Die wichtigsten Entscheidungen aus der Planung sind als Memory-Notizen abgelegt unter `C:\Users\maikp\.claude\projects\c--Projekte-Griphos\memory\`:
 
 - `feedback_leaderboard_scoring.md` — Pure/Casual + 50 %-Joker-Abzug
 - `project_duel_modes.md` — Friend Pflicht, Auto-Pairing später
@@ -252,4 +252,4 @@ Die wichtigsten Entscheidungen aus der Planung sind als Memory-Notizen abgelegt 
 - `project_supabase_hosting.md` — Self-Hosted Supabase
 - `project_server_environment.md` — Ubuntu 24.04 + Caddy, sicherheitsbewusst
 - `project_auth_model.md` — Anonymous Auth + profiles-Tabelle
-- `project_eleutheria_overview.md` — Was ist Eleutheria, Stack, aktueller Stand
+- `project_eleutheria_overview.md` — Was ist Griphos, Stack, aktueller Stand

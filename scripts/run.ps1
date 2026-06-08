@@ -1,4 +1,4 @@
-# Sophia — App in Chrome starten (mit lokalem Supabase)
+# Griphos — App in Chrome starten (mit lokalem Supabase)
 # Nutzung:  .\scripts\run.ps1
 #
 # Ports:

@@ -5,9 +5,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
+import '../../shared/widgets/brand_seal.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
-import '../../shared/widgets/wax_seal.dart';
 import '../home/home_screen.dart';
 import 'profile_setup_screen.dart';
 
@@ -74,15 +74,25 @@ class _Splash extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const WaxSeal(symbol: 'Σ', size: 76),
+              const BrandSeal(size: 92),
               const SizedBox(height: 22),
               Text(
-                'Eleutheria',
+                'Griphos',
                 style: AppTypography.serif(
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
                   color: palette.ink,
                   letterSpacing: -0.5,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'philosophische Rätsel und Denkspiele',
+                textAlign: TextAlign.center,
+                style: AppTypography.sans(
+                  fontSize: 13.5,
+                  height: 1.4,
+                  color: palette.inkMuted,
                 ),
               ),
               const SizedBox(height: 18),

@@ -1,4 +1,4 @@
-"""Tiny dev-only HTTP server for the Eleutheria question CMS.
+"""Tiny dev-only HTTP server for the Griphos question CMS.
 
 Workflow:
   1. python cms/serve.py

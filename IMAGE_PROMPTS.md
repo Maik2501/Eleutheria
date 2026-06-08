@@ -1,4 +1,4 @@
-# Bilder für Eleutheria
+# Bilder für Griphos
 
 Dies ist die Liste aller Bilder, die für die App generiert werden müssen. Das Designkonzept ist **Warm Academia** — Pergament, Burgunder, Antik-Gold, weiches Licht.
 
@@ -128,7 +128,7 @@ Frühere FEHLT-Sektionen (Stand 2026-05-19 sowie die Tabellen unter „Fehlende 
 1. **Codex-Panel in VSCode öffnen** (`Strg+Shift+P` → „Codex: Open Chat" o. ä.).
 2. **Eine** Anfrage absetzen, Formulierung etwa:
 
-   > „Bitte generiere ein einzelnes Bild für Eleutheria mit der Image-Gen-Funktion (IMAGEGEN). Output-Pfad: `assets/images/philosophers/<id>.webp`. Format: 1024×1024 WebP. Hier ist der Prompt: <kompletter Prompt-Block aus diesem Dokument einkopieren>. **Erzeuge nur dieses eine Bild. Keine weiteren Anfragen, keine Variationen.** Bestätige danach mit ✓."
+   > „Bitte generiere ein einzelnes Bild für Griphos mit der Image-Gen-Funktion (IMAGEGEN). Output-Pfad: `assets/images/philosophers/<id>.webp`. Format: 1024×1024 WebP. Hier ist der Prompt: <kompletter Prompt-Block aus diesem Dokument einkopieren>. **Erzeuge nur dieses eine Bild. Keine weiteren Anfragen, keine Variationen.** Bestätige danach mit ✓."
 
 3. **Warten bis fertig** und das WebP an der erwarteten Stelle liegt. `git status` zeigt eine neue Datei.
 4. Erst dann zum nächsten Eintrag aus der Liste oben weitergehen — Schritt 2 mit dem nächsten Prompt-Block wiederholen.

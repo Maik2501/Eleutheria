@@ -1,4 +1,4 @@
-# Eleutheria
+# Griphos
 
 Eine warme, akademische iOS-App für ein Quiz rund um Philosophie. Built with Flutter.
 
@@ -189,7 +189,7 @@ Für **iOS-Live-Preview auf einem echten iPhone von Windows aus** brauchst du **
    - Codemagic generiert/verwaltet Profile automatisch
 6. **Distribution**: TestFlight aktivieren.
 7. „Start new build" → nach ~12 Minuten landet die App in TestFlight.
-8. Auf dem iPhone: TestFlight-App installieren, Eleutheria testen.
+8. Auf dem iPhone: TestFlight-App installieren, Griphos testen.
 
 ### B. App Store Connect (für die echte Veröffentlichung)
 1. <https://appstoreconnect.apple.com> → „Mein Apps" → „+" → Neue App.

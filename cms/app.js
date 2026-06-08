@@ -1,4 +1,4 @@
-/* Eleutheria Editor — Vanilla JS, no framework.
+/* Griphos Editor — Vanilla JS, no framework.
    Loaded from serve.py at http://localhost:8765/.
 
    State of truth in memory:

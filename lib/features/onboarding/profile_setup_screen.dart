@@ -5,10 +5,10 @@ import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/repositories/supabase_profile_repository.dart';
+import '../../shared/widgets/brand_seal.dart';
 import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
-import '../../shared/widgets/wax_seal.dart';
 
 /// First-time profile setup. Asked once after anonymous sign-in succeeded
 /// and before the player can reach the home screen. Reserves a globally
@@ -108,7 +108,7 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Center(child: WaxSeal(symbol: 'Σ', size: 76)),
+                  const Center(child: BrandSeal(size: 92)),
                   const SizedBox(height: 28),
                   const ChapterHeading(
                     eyebrow: 'Willkommen',

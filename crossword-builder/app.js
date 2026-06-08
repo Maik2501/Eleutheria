@@ -1,4 +1,4 @@
-// Sophia Kreuzworträtsel-Werkstatt — application logic.
+// Griphos Kreuzworträtsel-Werkstatt — application logic.
 // Single-file vanilla JS. Persists nothing on its own; user exports JSON.
 
 (() => {
@@ -1159,7 +1159,7 @@
     const a = document.createElement('a');
     const ts = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
     a.href = url;
-    a.download = `sophia-kreuzwortraetsel-${ts}.json`;
+    a.download = `griphos-kreuzwortraetsel-${ts}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }

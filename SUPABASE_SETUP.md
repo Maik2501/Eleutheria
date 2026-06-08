@@ -1,4 +1,4 @@
-# Supabase Self-Hosting Setup für Eleutheria
+# Supabase Self-Hosting Setup für Griphos
 
 Stand: 2026-05-15. Dieses Dokument hält den Fortschritt der Einrichtung fest, damit wir bei Chat-/Session-Abbrüchen nahtlos weitermachen können.
 
@@ -93,7 +93,7 @@ POOLER_PROXY_PORT_TRANSACTION=127.0.0.1:6543
 
 ```bash
 cat > docker-compose.override.yml << 'YAMLEOF'
-# Eleutheria-spezifische Hardening-Overrides.
+# Griphos-spezifische Hardening-Overrides.
 # Wird automatisch mit docker-compose.yml gemerged.
 services:
   # Postgres niemals an den Host exposen — auf dem System

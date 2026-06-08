@@ -1,6 +1,6 @@
-# Sophia · Kreuzworträtsel-Werkstatt
+# Griphos · Kreuzworträtsel-Werkstatt
 
-Internes Entwicklungswerkzeug zum Konstruieren von Kreuzworträtseln für Sophia. Reines HTML/CSS/JS, kein Build, keine Abhängigkeiten — `index.html` per Doppelklick im Browser öffnen.
+Internes Entwicklungswerkzeug zum Konstruieren von Kreuzworträtseln für Griphos. Reines HTML/CSS/JS, kein Build, keine Abhängigkeiten — `index.html` per Doppelklick im Browser öffnen.
 
 ## Was drin ist
 

@@ -160,7 +160,7 @@ def extract_crossword_puzzles() -> list[dict]:
         grid_cols = _find_int("gridCols", body)
         difficulty = _find_quoted("difficulty", body) or "Mittel"
         est_min   = _find_int("estimatedMinutes", body) or 8
-        source    = _find_quoted("sourceLabel", body) or "Eleutheria"
+        source    = _find_quoted("sourceLabel", body) or "Griphos"
 
         # Words-Liste extrahieren
         words_m = re.search(r"words:\s*\[(.+)\]", body, re.DOTALL)

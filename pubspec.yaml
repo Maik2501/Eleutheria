@@ -1,7 +1,7 @@
 name: philosophie_quiz
-description: "Eleutheria — ein Philosophie-Quiz im warmen Akademia-Stil."
+description: "Griphos — philosophische Rätsel und Denkspiele."
 publish_to: 'none'
-version: 0.1.0+6
+version: 0.1.0+7
 
 environment:
   sdk: ">=3.5.0 <4.0.0"

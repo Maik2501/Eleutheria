@@ -69,7 +69,7 @@ create table if not exists crossword_puzzles (
   grid_cols         int  not null check (grid_cols between 1 and 64),
   difficulty        text not null default 'Mittel',
   estimated_minutes int  not null default 8 check (estimated_minutes > 0),
-  source_label      text not null default 'Eleutheria',
+  source_label      text not null default 'Griphos',
   words             jsonb not null,
   updated_at        timestamptz not null default now(),
   constraint crossword_words_array

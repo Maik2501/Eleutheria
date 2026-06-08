@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Typography for Eleutheria.
+/// Typography for Griphos.
 ///
 /// Display uses Fraunces (warm serif with optical sizing) for headlines and quotes,
 /// body uses Inter for legibility.

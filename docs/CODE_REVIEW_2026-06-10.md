@@ -34,7 +34,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   bekannter Rejection-Trigger. Der Ausweg ist schon gebaut: Leerstring blendet die Karte aus.
   **Empfehlung:** Für die Erst-Einreichung `donatePayPalUrl = ''`, nach Approval per Update erneut probieren.
 
-- [ ] 🟡 **A4 — iOS-Privacy-Pflichten.**
+- [x] 🟡 **A4 — iOS-Privacy-Pflichten.** *(erledigt: PrivacyInfo.xcprivacy + ITSAppUsesNonExemptEncryption; Privacy-Label/Policy-URL siehe docs/APP_STORE_CHECKLIST.md)*
   Kein `ios/Runner/PrivacyInfo.xcprivacy` (App-Level-Manifest empfohlen; die Plugin-Manifeste
   decken nur die Plugin-eigenen Required-Reason-APIs ab). Kein `ITSAppUsesNonExemptEncryption`
   in der Info.plist (sonst Export-Compliance-Frage bei jedem Upload). Privacy-Label in App Store
@@ -46,7 +46,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   taggen den falschen Build; der manuelle Sync ist bereits zweimal gerissen.
   **Fix:** `package_info_plus` zur Laufzeit oder Version als `--dart-define` durchreichen.
 
-- [ ] ⚪ **A6 — Orientierungs-Inkonsistenz.**
+- [x] ⚪ **A6 — Orientierungs-Inkonsistenz.** *(erledigt: Portrait-only deklariert + UIRequiresFullScreen für iPad-Validierung)*
   `main.dart` erzwingt Portrait, `ios/Runner/Info.plist` deklariert zusätzlich Landscape
   (inkl. iPad-Sektion). Auf iPad prüft Apple das deklarierte Verhalten gern. Deklaration angleichen.
 

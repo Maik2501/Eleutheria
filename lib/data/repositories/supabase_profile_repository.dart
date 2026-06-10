@@ -66,6 +66,21 @@ class SupabaseProfileRepository {
     }
   }
 
+  /// Löscht das Konto des Callers vollständig (RPC `delete_account`,
+  /// Migration 0011): auth.users-Row weg, profiles/scores/duel_ratings
+  /// cascaden, Duelle werden serverseitig aufgeräumt, Feedback bleibt
+  /// anonymisiert. Gibt `false` zurück, wenn der Call fehlschlägt — der
+  /// lokale Zustand darf dann NICHT zurückgesetzt werden.
+  Future<bool> deleteAccount() async {
+    if (_uid == null) return false;
+    try {
+      await _client.rpc<void>('delete_account');
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Client-side validation mirroring the SQL check-constraints from
   /// migration 0002.  Returns an error message or `null` when valid.
   static String? _validate(String name) {

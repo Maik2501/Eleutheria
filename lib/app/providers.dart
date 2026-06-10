@@ -235,6 +235,13 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     await _persist(p);
   }
 
+  /// Nach Account-Löschung: lokalen Spielstand auf ein frisches Profil
+  /// zurücksetzen. Die neue ID kommt aus der (neuen) Supabase-Session,
+  /// falls vorhanden.
+  Future<void> resetToFresh() async {
+    state = AsyncData(await _repo.resetToFresh());
+  }
+
   Future<void> setAvatarSeal(String symbol) async {
     final p = state.value;
     if (p == null) return;

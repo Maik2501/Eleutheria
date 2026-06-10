@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/providers.dart';
@@ -22,6 +23,93 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _refreshing = false;
+  bool _deletingAccount = false;
+
+  /// Konto-Löschung (Apple 5.1.1(v)): Server-RPC räumt alles ab, danach
+  /// lokale Session + Spielstand zurücksetzen und eine frische anonyme
+  /// Identität starten — die App landet wie beim Erststart im Setup.
+  Future<void> _deleteAccount() async {
+    if (_deletingAccount) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final repo = ref.read(supabaseProfileRepositoryProvider);
+    if (repo == null) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Dafür wird eine Internetverbindung benötigt.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    final palette = context.palette;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Konto löschen?'),
+        content: const Text(
+          'Dein Anzeigename wird freigegeben, deine Bestenlisten-Einträge '
+          'und Duell-Daten werden endgültig vom Server gelöscht. Auch der '
+          'lokale Spielfortschritt (XP, Erfolge, Lesezeichen) wird '
+          'zurückgesetzt.\n\n'
+          'Das kann nicht rückgängig gemacht werden.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Abbrechen'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: palette.incorrect,
+            ),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Endgültig löschen'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _deletingAccount = true);
+    final ok = await repo.deleteAccount();
+    if (!mounted) return;
+
+    if (!ok) {
+      setState(() => _deletingAccount = false);
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Löschen fehlgeschlagen. Prüfe deine Verbindung und versuch es erneut.',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    // Tote Session loswerden und direkt eine neue anonyme Identität holen,
+    // damit Setup/Online-Features ohne App-Neustart funktionieren.
+    final auth = Supabase.instance.client.auth;
+    try {
+      await auth.signOut();
+    } catch (_) {}
+    try {
+      await auth.signInAnonymously();
+    } catch (_) {}
+    await ref.read(profileSetupFlagProvider).reset();
+    await ref.read(profileNotifierProvider.notifier).resetToFresh();
+    ref.invalidate(remoteProfileProvider);
+
+    if (!mounted) return;
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Dein Konto wurde gelöscht.'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+    context.go('/');
+  }
 
   Future<void> _refreshContent() async {
     if (_refreshing) return;
@@ -243,6 +331,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: palette.inkSoft, height: 1.55, fontSize: 14,),
               ),
             ),
+            const SizedBox(height: 32),
+            Text('KONTO', style: AppTypography.eyebrow(palette.inkMuted)),
+            const SizedBox(height: 10),
+            _FeedbackTile(
+              icon: _deletingAccount
+                  ? Icons.hourglass_top_rounded
+                  : Icons.delete_outline_rounded,
+              iconColor: palette.incorrect,
+              label: _deletingAccount ? 'Lösche …' : 'Konto löschen',
+              subtitle:
+                  'Anzeigename, Bestenlisten- und Duell-Daten endgültig löschen.',
+              onTap: _deletingAccount ? () {} : _deleteAccount,
+            ),
           ],
         ),
       ),
@@ -406,12 +507,16 @@ class _FeedbackTile extends StatelessWidget {
     required this.label,
     required this.subtitle,
     required this.onTap,
+    this.iconColor,
   });
 
   final IconData icon;
   final String label;
   final String subtitle;
   final VoidCallback onTap;
+
+  /// Default: burgundy. Destruktive Aktionen übergeben palette.incorrect.
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -425,7 +530,7 @@ class _FeedbackTile extends StatelessWidget {
       ),
       child: ListTile(
         onTap: onTap,
-        leading: Icon(icon, color: palette.burgundy),
+        leading: Icon(icon, color: iconColor ?? palette.burgundy),
         title: Text(
           label,
           style: AppTypography.sans(

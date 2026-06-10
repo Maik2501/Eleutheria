@@ -13,6 +13,7 @@ class ProfileRepository {
   ProfileRepository(this._prefs);
 
   static const _key = 'player_profile_v1';
+  static const defaultDisplayName = 'Schülerin der Philosophie';
   final SharedPreferences _prefs;
 
   /// Returns the Supabase auth UID if signed in, else null. We prefer this
@@ -32,7 +33,7 @@ class ProfileRepository {
     if (raw == null) {
       final p = PlayerProfile.fresh(
         id: authUid ?? const Uuid().v4(),
-        displayName: 'Schülerin der Philosophie',
+        displayName: defaultDisplayName,
       );
       await save(p);
       return p;
@@ -48,7 +49,7 @@ class ProfileRepository {
       await _prefs.setString('${_key}_quarantined', raw);
       final p = PlayerProfile.fresh(
         id: authUid ?? const Uuid().v4(),
-        displayName: 'Schülerin der Philosophie',
+        displayName: defaultDisplayName,
       );
       await save(p);
       return p;
@@ -96,6 +97,17 @@ class ProfileRepository {
 
   Future<void> save(PlayerProfile p) async {
     await _prefs.setString(_key, jsonEncode(_toJson(p)));
+  }
+
+  /// Nach Account-Löschung: lokalen Spielstand komplett auf ein frisches
+  /// Profil zurücksetzen (XP, Erfolge, Lesezeichen, Einstellungen).
+  Future<PlayerProfile> resetToFresh() async {
+    final p = PlayerProfile.fresh(
+      id: _supabaseUid ?? const Uuid().v4(),
+      displayName: defaultDisplayName,
+    );
+    await save(p);
+    return p;
   }
 
   static Map<String, dynamic> _toJson(PlayerProfile p) => {

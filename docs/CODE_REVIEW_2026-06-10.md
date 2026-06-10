@@ -22,7 +22,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   **Fix:** Im Error-Fall "Offline weiterspielen"-Button zum HomeScreen anbieten, oder ein lokales
   "Setup abgeschlossen"-Flag cachen und den Retry-Screen nur beim allerersten Start zeigen.
 
-- [ ] 🔴 **A2 — Keine Account-Löschung (Apple 5.1.1(v), DSGVO).**
+- [x] 🔴 **A2 — Keine Account-Löschung (Apple 5.1.1(v), DSGVO).** *(erledigt: Migration 0011 `delete_account()`-RPC + Settings-Eintrag mit Bestätigung; Migration muss noch auf dem Server angewendet werden)*
   Die App legt serverseitig Profil, Scores und Feedback an, bietet aber weder Sign-out noch
   Löschung (Settings durchsucht: nichts). Apple verlangt bei Apps mit Account-Erstellung eine
   In-App-Löschfunktion — auch bei anonymen Accounts mit Profildaten ein realistischer
@@ -97,7 +97,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   offline (Supabase, Duelle, Leaderboard, Content-Sync tot). Für iOS irrelevant, für jeden
   Android-Release ein Blocker. **Fix:** `<uses-permission android:name="android.permission.INTERNET"/>`.
 
-- [ ] ⚪ **B7 — Legacy-Tabelle `daily_scores` droppen.** *(verifiziert)*
+- [x] ⚪ **B7 — Legacy-Tabelle `daily_scores` droppen.** *(erledigt: Drop in Migration 0011)*
   Weltlesbar, mit freiem `display_name` beschreibbar (`0002:165-172`), von keinem Code-Pfad
   genutzt — latente Missbrauchsfläche.
 

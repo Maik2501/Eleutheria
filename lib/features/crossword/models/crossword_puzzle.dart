@@ -79,6 +79,9 @@ class CrosswordWord {
           .where((d) => d.name == directionName)
           .firstOrNull;
       if (direction == null) return null;
+      // Leere Antworten und negative Koordinaten erzeugen später beim
+      // lazy Grid-Bau RangeErrors außerhalb jedes try/catch (F5).
+      if (answer.trim().isEmpty || row < 0 || col < 0) return null;
       return CrosswordWord(
         id: id,
         answer: answer,
@@ -266,15 +269,46 @@ class CrosswordPuzzle {
           wordsRaw == null) {
         return null;
       }
+      // Anders als bei Fragen sind Wörter nicht unabhängig: Ein still
+      // verworfenes Wort hinterlässt Löcher im Grid. Ein einziges
+      // unparsbares Wort verwirft deshalb das ganze Puzzle (F5).
       final words = <CrosswordWord>[];
       for (final w in wordsRaw) {
-        if (w is! Map) continue;
+        if (w is! Map) return null;
         final parsed =
             CrosswordWord.tryFromJson(Map<String, dynamic>.from(w));
-        if (parsed != null) words.add(parsed);
+        if (parsed == null) return null;
+        words.add(parsed);
       }
       if (words.isEmpty) return null;
-      return CrosswordPuzzle(
+
+      // Grid-Plausibilität: Dimensionen, Wort-Bounds und Kreuzungs-
+      // Konflikte VOR dem Bau prüfen — der RangeError aus dem lazy
+      // `late final grid` entkäme sonst diesem try/catch und flöge erst
+      // beim Öffnen des Modus, mit der defekten Row bereits im Cache (F5).
+      if (gridRows < 1 || gridCols < 1 || gridRows > 64 || gridCols > 64) {
+        return null;
+      }
+      final lettersByCell = <(int, int), String>{};
+      for (final w in words) {
+        final endRow = w.direction == WordDirection.down
+            ? w.row + w.answer.length - 1
+            : w.row;
+        final endCol = w.direction == WordDirection.across
+            ? w.col + w.answer.length - 1
+            : w.col;
+        if (endRow >= gridRows || endCol >= gridCols) return null;
+        var i = 0;
+        for (final cell in w.cells()) {
+          final letter = w.answer[i].toUpperCase();
+          i++;
+          final existing = lettersByCell[cell];
+          if (existing != null && existing != letter) return null;
+          lettersByCell[cell] = letter;
+        }
+      }
+
+      final puzzle = CrosswordPuzzle(
         id: id,
         title: title,
         theme: theme,
@@ -285,6 +319,11 @@ class CrosswordPuzzle {
         estimatedMinutes: (json['estimated_minutes'] as num?)?.toInt() ?? 8,
         sourceLabel: (json['source_label'] as String?) ?? 'Griphos',
       );
+      // Lazy-Felder einmal forcieren: Restfehler landen hier im catch und
+      // die Row wird verworfen statt als Crash-Loop gecacht.
+      puzzle.grid;
+      puzzle.numberedWords;
+      return puzzle;
     } catch (_) {
       return null;
     }

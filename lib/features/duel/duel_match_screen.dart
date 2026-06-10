@@ -13,6 +13,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/answer_input_style.dart';
 import '../../data/models/duel_config.dart';
+import '../../data/models/game_session.dart';
 import '../../data/models/question.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../../shared/widgets/primary_button.dart';
@@ -63,6 +64,11 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   DateTime _questionStartedAt = DateTime.now();
   final GlobalKey<LetterboxInputState> _letterboxKey = GlobalKey();
   bool _finalized = false;
+
+  /// Once-Flag: XP/Achievements für dieses Duell wurden bereits verbucht.
+  /// Der Summary wird vom 250-ms-Ticker ständig neu gebaut — ohne das Flag
+  /// würde jeder Rebuild erneut XP vergeben (F1).
+  bool _resultApplied = false;
 
   // Show a brief splash when we transition from waiting → playing.
   bool _showConnectSplash = false;
@@ -726,10 +732,24 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   }
 
   Future<void> _submit(DuelMatch m, Question q, int index) async {
-    if (_alreadyAnsweredCurrent(index, _answersFor(_meId))) return;
     final me = _meId;
     final repo = ref.read(duelRepositoryProvider);
     if (me == null || repo == null) return;
+
+    // Spiegelt die FAB-Bedingungen: Der Soft-Keyboard-Return der Letterbox
+    // ruft _submit direkt auf und darf weder ausgeschiedene Spieler noch
+    // gelockte Runden noch Leereingaben durchlassen (F3/F14).
+    final mine = _answersFor(me);
+    if (_alreadyAnsweredCurrent(index, mine)) return;
+    if (!_alive(m, mine)) return;
+    if (m.mode == DuelMode.race && _someoneCorrectAt(index)) return;
+    if (m.inputStyle == AnswerInputStyle.letterbox &&
+        _typed.trim().isEmpty) {
+      return;
+    }
+    if (m.inputStyle != AnswerInputStyle.letterbox && _selectedIndex < 0) {
+      return;
+    }
 
     final picked = m.inputStyle == AnswerInputStyle.letterbox
         ? (answersMatch(_typed, q.correctAnswer) ? q.correctIndex : -1)
@@ -781,6 +801,14 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final iWin = winSign == 1;
     final tie = winSign == null;
     final rematchCode = m.rematchCode;
+
+    // XP + Duell-Statistiken einmalig verbuchen, sobald das Duell
+    // serverseitig finished ist — vorher kann sich der Ausgang durch
+    // nachlaufende Antworten noch ändern (F1).
+    if (!_resultApplied && m.status == DuelStatus.finished) {
+      _resultApplied = true;
+      _applyDuelResult(m, me, won: iWin, correctCount: myCorrect);
+    }
 
     return Scaffold(
       body: ParchmentBackground(
@@ -910,6 +938,46 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
         ),
       ),
     );
+  }
+
+  /// Verbucht das Duell im Spielerprofil: XP (20 pro richtiger Antwort wie
+  /// im Quiz, +50 Siegbonus), totalGamesPlayed, Tages-Streak und die
+  /// Duell-Zähler hinter den Achievements `first_duel_won`/`duel_streak`.
+  /// Post-Frame, weil wir mitten im build() des Summary stecken.
+  void _applyDuelResult(
+    DuelMatch m,
+    List<DuelAnswer> myAnswers, {
+    required bool won,
+    required int correctCount,
+  }) {
+    final records = <AnswerRecord>[
+      for (final a in myAnswers)
+        if (a.questionIndex < _questions.length)
+          AnswerRecord(
+            questionId: _questions[a.questionIndex].id,
+            selectedIndex: a.selectedIndex,
+            wasCorrect: a.wasCorrect,
+            timeTaken: a.timeTaken,
+            points: a.points,
+          ),
+    ];
+    final session = GameSession(
+      id: 'duel-${m.code}',
+      mode: GameMode.vsOnline,
+      questions: _questions,
+      startedAt: m.startedAt ?? DateTime.now(),
+      inputStyle: m.inputStyle,
+      answers: records,
+    );
+    final xp = correctCount * 20 + (won ? 50 : 0);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(profileNotifierProvider.notifier).applySessionResult(
+            session: session,
+            xpGained: xp,
+            wonDuel: won,
+          );
+    });
   }
 
   Future<void> _startRematch() async {

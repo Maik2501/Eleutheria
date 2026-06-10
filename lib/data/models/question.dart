@@ -94,7 +94,11 @@ class Question {
           .firstOrNull;
       if (category == null) return null;
       final options = optionsRaw.map((e) => e.toString()).toList();
+      // Obergrenze 4: Die Quiz-UI indexiert ['A','B','C','D'] hart — eine
+      // Row mit 5+ Optionen würde jeden Client crashen und auch noch im
+      // Cache landen (F8).
       if (options.length < 2 ||
+          options.length > 4 ||
           correctIndex < 0 ||
           correctIndex >= options.length) {
         return null;

@@ -54,7 +54,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
 
 ## 2. Backend & Spiel-Integrität (Supabase)
 
-- [ ] 🔴 **B1 — Leaderboard ist vollständig fälschbar.** *(adversarial verifiziert)*
+- [x] 🔴 **B1 — Leaderboard ist vollständig fälschbar.** *(Migration 0012: Relations-Checks, 250-P/Frage-Cap, Modus-Caps, 40/h-Rate-Limit — noch auf Prod anwenden)*
   `lib/data/repositories/score_repository.dart:61-79` sendet rein clientberechnete Werte;
   serverseitig existieren nur `>= 0`-Checks und Enum-Membership (`0002_app_tables.sql:78-83`)
   plus die Identitäts-Policy aus 0006. Keine Plausibilitätsprüfung, keine Relation
@@ -65,7 +65,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   `raw_score <= answered * MAX_PUNKTE`, modusabhängige Caps + Insert-Rate-Limit.
   **Fix (sauber):** SECURITY-DEFINER-RPC, die den Score serverseitig nachrechnet.
 
-- [ ] 🔴 **B2 — Duell-Spieler können unterschiedliche Fragen sehen.**
+- [x] 🔴 **B2 — Duell-Spieler können unterschiedliche Fragen sehen.** *(erledigt: order('id') im Fetch + kanonische Sortierung vor seeded Sampling + Regressionstest)*
   Beide Clients lösen die Fragen lokal aus `question_seed` auf
   (`duel_match_screen.dart:127-135` → `question_repository.dart:randomBatch`). Deterministisch
   ist das nur bei identischem Pool in identischer Reihenfolge — seit der Content-Pipeline gilt
@@ -125,7 +125,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
 
 ## 3. Flutter — High-Funde
 
-- [ ] 🔴 **F1 — Duelle vergeben nie XP, zwei Achievements unerreichbar.** *(manuell verifiziert)*
+- [x] 🔴 **F1 — Duelle vergeben nie XP, zwei Achievements unerreichbar.** *(erledigt: applySessionResult im Summary mit Once-Flag, 20 XP/richtige + 50 Siegbonus)*
   `applySessionResult` wird im Duell-Code nie aufgerufen (einziger Aufrufer:
   `quiz_screen.dart:380`, läuft nie mit `vsOnline`). `duelsWon`/`bestDuelStreak` bleiben 0 →
   Achievements `first_duel_won` ("Erster Sieg") und `duel_streak` ("Eristik") sind unerreichbar;
@@ -141,7 +141,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   auf `playing` geflippt, läuft aber mit niemandem und hängt für immer.
   **Fix (eine Zeile):** `DuelMatchScreen(key: ValueKey(code), code: code)` im Route-Builder.
 
-- [ ] 🔴 **F3 — Ausgeschiedene Duell-Spieler können weiter antworten und punkten.**
+- [x] 🔴 **F3 — Ausgeschiedene Duell-Spieler können weiter antworten und punkten.** *(erledigt: _submit spiegelt FAB-Bedingungen — alive/locked/Leereingabe; deckt auch F14 im Duell-Pfad)*
   Letterbox-Submit `duel_match_screen.dart:728-737` prüft nur `_alreadyAnsweredCurrent` —
   nicht Leben/Lock (das tut nur der FAB); die Server-RPC validiert Leben nie. Ein Spieler ohne
   Leben spielt per Return-Taste weiter und nimmt im Race-Modus dem Überlebenden Runden weg.
@@ -155,7 +155,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   Flawless unerreichbar). **Fix:** je ein Early-Return als erste Zeile beider Methoden
   (`if (state.revealed) …` bzw. `if (!state.revealed) return;`).
 
-- [ ] 🔴 **F5 — Defekte Crossword-Remote-Row → gecachter Crash-Loop.** *(empirisch bestätigt)*
+- [x] 🔴 **F5 — Defekte Crossword-Remote-Row → gecachter Crash-Loop.** *(erledigt: Bounds/Konflikt/Leer-Validierung in tryFromJson + Grid-Forcierung im try/catch; ein defektes Wort verwirft das ganze Puzzle)*
   `crossword_puzzle.dart:124,130-154`: `tryFromJson` validiert keine Grid-Grenzen; das Grid wird
   lazy gebaut (`late final`), der RangeError entkommt dem try/catch und fliegt erst beim Öffnen
   des Modus. Der Cache wird **vor** dem ersten Grid-Bau geschrieben (`providers.dart:104-107`)
@@ -165,7 +165,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   **Fix:** Validierung in `tryFromJson` (Bounds, leere Antworten, Konflikte) + dort einmal
   `puzzle.grid;` forcieren, damit Restfehler gefangen werden und die Row verworfen wird.
 
-- [ ] 🔴 **F6 — Crossword-Fortschritt wird bei Content-Refresh gewischt.**
+- [x] 🔴 **F6 — Crossword-Fortschritt wird bei Content-Refresh gewischt.** *(erledigt: Screen hält Pool-Snapshot über seine Lebensdauer; Refresh greift beim nächsten Besuch)*
   `crosswordProvider` ist auf die Puzzle-**Instanz** gekeyt (kein `==`/`hashCode`); der
   30-Minuten-Refresh bei App-Resume (`griphos_app.dart:37-41`) und der Bootstrap-Pull ersetzen
   den Pool mit neuen Instanzen → neuer Controller, leeres Grid — selbst bei identischem Content.
@@ -182,7 +182,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   (abgebrochener Write), katastrophale Wirkung. **Fix:** try/catch mit Fallback auf
   `PlayerProfile.fresh` (defekten Blob optional unter Quarantäne-Key sichern).
 
-- [ ] 🟡 **F8 — Remote-Frage mit >4 Optionen crasht das Quiz — und wird gecacht.**
+- [x] 🟡 **F8 — Remote-Frage mit >4 Optionen crasht das Quiz — und wird gecacht.** *(erledigt: options.length > 4 wird in tryFromJson verworfen)*
   `question.dart:97` prüft nur Untergrenze, DB-Check (`0010:43`) ebenso; die UI indexiert
   `['A','B','C','D']` hart (`quiz_screen.dart:50,262-267`). Eine 5-Optionen-Row aus
   Studio/CMS crasht jeden Client beim Sampling, auch offline aus dem Cache.

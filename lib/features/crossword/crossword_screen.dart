@@ -29,9 +29,22 @@ class _CrosswordScreenState extends ConsumerState<CrosswordScreen> {
   int _puzzleIndex = 0;
   bool _showLetterFeedback = false;
 
+  /// Pool-Snapshot für die Lebensdauer dieses Screens. Der 30-Minuten-
+  /// Content-Refresh bei App-Resume ersetzt den Pool durch neue Instanzen —
+  /// da der Controller auf die Puzzle-Instanz gekeyt ist, würde ein
+  /// Live-`watch` mitten im Lösen Controller + Fortschritt wegwerfen (F6).
+  /// Der nächste Screen-Besuch holt sich den frischen Pool.
+  late final List<CrosswordPuzzle> _puzzles;
+
+  @override
+  void initState() {
+    super.initState();
+    _puzzles = ref.read(crosswordPoolProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final puzzles = ref.watch(crosswordPoolProvider);
+    final puzzles = _puzzles;
     if (puzzles.isEmpty) {
       // Defensive: sollte nie passieren (Bundle hat 2 Demos), aber im
       // Falle eines verkorksten Caches lieber leeren Screen als Crash.

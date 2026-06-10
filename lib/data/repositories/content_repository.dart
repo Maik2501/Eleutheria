@@ -18,7 +18,13 @@ class RemoteContentRepository {
   final SupabaseClient _client;
 
   Future<List<Question>> fetchQuestions() async {
-    final rows = await _client.from('questions').select();
+    // order('id'): Ohne ORDER BY ist die Zeilenreihenfolge in Postgres
+    // instabil — Duell/Daily lösen Fragen aber per Seed aus der Pool-
+    // Reihenfolge auf und müssen auf allen Geräten identisch sein (B2).
+    final rows = await _client.from('questions').select().order(
+          'id',
+          ascending: true,
+        );
     return (rows as List)
         .map((r) => Question.tryFromJson(Map<String, dynamic>.from(r as Map)))
         .whereType<Question>()
@@ -26,7 +32,10 @@ class RemoteContentRepository {
   }
 
   Future<List<CrosswordPuzzle>> fetchCrosswordPuzzles() async {
-    final rows = await _client.from('crossword_puzzles').select();
+    final rows = await _client.from('crossword_puzzles').select().order(
+          'id',
+          ascending: true,
+        );
     return (rows as List)
         .map((r) =>
             CrosswordPuzzle.tryFromJson(Map<String, dynamic>.from(r as Map)),)

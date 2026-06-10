@@ -57,6 +57,13 @@ class QuestionRepository {
       maxDifficulty: maxDifficulty,
       letterboxFriendlyOnly: letterboxFriendlyOnly,
     );
+    // Seeded Sampling (Daily, Duell) muss unabhängig von der Pool-Reihenfolge
+    // sein: zwei Geräte können denselben Inhalt in unterschiedlicher
+    // Reihenfolge geladen haben (Cache vs. Remote vs. Bundle). Kanonische
+    // Sortierung nach id macht den Seed-Lauf deterministisch (B2).
+    if (seed != null) {
+      candidates.sort((a, b) => a.id.compareTo(b.id));
+    }
     final rng = math.Random(seed ?? DateTime.now().millisecondsSinceEpoch);
     final useWeighting = seed == null && history != null && history.isNotEmpty;
 

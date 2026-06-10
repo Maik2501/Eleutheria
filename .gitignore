@@ -44,6 +44,18 @@ lib/data/seed/*.dart.bak.*
 scripts/__pycache__/
 *.pyc
 
-# Secrets (do NOT commit)
+# Secrets (do NOT commit) — Audit B8
 .env
+.env.*
+!.env.example
 codemagic.yaml.local
+
+# Schlüsselmaterial & Provisioning (App-Store-/Play-Workflows)
+*.pem
+*.p8
+*.p12
+*.mobileprovision
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist

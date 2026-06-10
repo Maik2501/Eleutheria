@@ -39,16 +39,20 @@ die Frage beim Upload entfällt damit. Die App nutzt nur Standard-TLS (exempt).
 
 ## 5. Server-Seite vor dem Build
 
-- [ ] Migration `0011_account_deletion.sql` auf dem Prod-Supabase anwenden
-      (als postgres/Superuser — die RPC braucht DELETE auf `auth.users`).
-      Smoke-Test: mit Wegwerf-Session `select delete_account();` via
-      authentifiziertem RPC-Call, prüfen dass profiles/scores/duels-Rows
-      des Users weg sind.
-- [ ] Danach in der App testen: Einstellungen → Konto löschen →
-      App landet im Profil-Setup, Anzeigename ist wieder reservierbar.
+- [x] ~~Migration 0011 anwenden~~ — erledigt: Eigene **Prod-Instanz**
+      `https://api.griphos.maikpickl.de` steht (2026-06-10), Migrationen
+      0001–0011 angewendet, `delete_account()`-RPC end-to-end verifiziert
+      (anonymer Signup → Profil → RPC → User + Profil weg).
+      Details: `docs/SUPABASE_PROD_SETUP.md`.
+- [ ] In der App (TestFlight, Prod-Build) testen: Einstellungen → Konto
+      löschen → App landet im Profil-Setup, Anzeigename wieder reservierbar.
 
 ## 6. Build-Hinweise (Codemagic)
 
+- **Release-Builds gegen PROD bauen:** `SUPABASE_URL` + `SUPABASE_ANON_KEY`
+  aus `.env.prod` als Codemagic-Env-Vars setzen (bzw.
+  `--dart-define-from-file=.env.prod`). Lokale Entwicklung bleibt auf der
+  Dev-Instanz (`.env`).
 - pubspec-Build-Code bumpen (aktuell `0.1.0+7`) — die App-Version im
   Feedback kommt jetzt automatisch aus dem Bundle, kein `env.dart`-Sync mehr.
 - Nach diesem Stand einmal `flutter pub get` auf dem Build-Server

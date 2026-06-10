@@ -101,7 +101,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   Weltlesbar, mit freiem `display_name` beschreibbar (`0002:165-172`), von keinem Code-Pfad
   genutzt — latente Missbrauchsfläche.
 
-- [ ] ⚪ **B8 — `.gitignore` um Credential-Patterns ergänzen.** *(verifiziert)*
+- [x] ⚪ **B8 — `.gitignore` um Credential-Patterns ergänzen.** *(erledigt: .env.*-Varianten, Key-/Provisioning-Dateien, google-services)*
   `.env.*`-Varianten, `*.pem/.p8/.p12/.mobileprovision`, Root-Level-Keystores,
   `google-services.json`/`GoogleService-Info.plist` würden aktuell committet (Exposure heute: null,
   rein präventiv — gerade `.p8`-ASC-Keys im App-Store-Workflow relevant).

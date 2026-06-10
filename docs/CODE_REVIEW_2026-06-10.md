@@ -248,7 +248,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   meldet generisch "versuche es gleich noch einmal" — Retry kann nie klappen, Feedback geht
   verloren. **Fix:** Server-Regex client-seitig spiegeln, Inline-Fehler.
 
-- [ ] 🟡 **F19 — Leaderboard: Re-Query bei jedem Rebuild + doppelte Requests pro Tab-Wechsel.**
+- [x] 🟡 **F19 — Leaderboard: Re-Query bei jedem Rebuild + doppelte Requests pro Tab-Wechsel.** *(erledigt im Zuge des Filter-Redesigns: Future im Feld, Dedupe per Tab-Index)*
   `leaderboard_screen.dart:205-210` erzeugt den Future im `build()`; Tab-Listener feuert
   doppelt; rein kosmetische Toggles refetchen — Spinner-Flackern und unnötige Last auf dem
   Self-Hosted-Server. **Fix:** Future in Feld halten, nur bei echten Filter-Änderungen neu erzeugen.

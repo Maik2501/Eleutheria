@@ -7,7 +7,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/models/difficulty_band.dart';
 import '../../data/repositories/score_repository.dart';
-import '../../shared/widgets/chapter_heading.dart';
 import '../../shared/widgets/parchment_background.dart';
 
 /// Reads from the Supabase `scores` table.
@@ -26,6 +25,7 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tab;
+  int _lastTabIndex = 0;
 
   // Filter-State
   _ModeGroup _modeGroup = _ModeGroup.all;
@@ -34,17 +34,24 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   _BandFilter _band = _BandFilter.all;
   _RangeFilter _range = _RangeFilter.allTime;
 
-  /// Zeigt die Modifier-Zeilen (Variant + Antwortart) unterhalb des
-  /// aktiven Modus. Klick auf einen anderen Modus expandiert
-  /// automatisch, Klick auf den **bereits aktiven** Modus toggelt nur
-  /// die Sichtbarkeit — die aktuell gewählten Modifier bleiben aktiv.
-  bool _modifiersExpanded = false;
+  /// Gehaltener Future statt `_load()` direkt im build: Rebuilds (Ticker,
+  /// Menü-Toggles, Tab-Animation) lösen so keine Re-Queries mehr aus —
+  /// neu gefetcht wird nur bei echter Filter-/Tab-Änderung (F19).
+  late Future<List<ScoreEntry>> _future;
 
   @override
   void initState() {
     super.initState();
     _tab = TabController(length: 2, vsync: this);
-    _tab.addListener(() => setState(() {}));
+    // Der TabController notified pro Wechsel mehrfach (Animationsstart/-ende).
+    // Dedupe über den Index statt über indexIsChanging: genau ein Refetch
+    // pro echtem Tab-Wechsel, gefeuert ab der ersten Notification (F19).
+    _tab.addListener(() {
+      if (_tab.index == _lastTabIndex) return;
+      _lastTabIndex = _tab.index;
+      setState(() => _future = _load());
+    });
+    _future = _load();
   }
 
   @override
@@ -71,21 +78,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     );
   }
 
-  void _onModeTap(_ModeGroup g) {
+  /// Filter ändern + genau einen Refetch auslösen.
+  void _applyFilter(VoidCallback mutate) {
     setState(() {
-      if (_modeGroup == g) {
-        // Klick auf den aktiven Modus = Modifier ein-/ausklappen.
-        // Bisherige Variant/InputStyle-Auswahl bleibt erhalten und
-        // filtert weiter — sie ist nur unsichtbar.
-        _modifiersExpanded = !_modifiersExpanded;
-      } else {
-        _modeGroup = g;
-        // Bei Modus-Wechsel: Variant zurücksetzen (sie ist mode-spezifisch),
-        // InputStyle bleibt (orthogonal). Modifier automatisch öffnen,
-        // sofern es welche zu zeigen gibt.
-        _variant = null;
-        _modifiersExpanded = g.hasModifiers;
-      }
+      mutate();
+      _future = _load();
     });
   }
 
@@ -104,15 +101,6 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         child: SafeArea(
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(24, 8, 24, 12),
-                child: ChapterHeading(
-                  eyebrow: 'Bestenliste',
-                  title: 'Pure & Casual',
-                  subtitle:
-                      'Pure: Sessions ohne Joker. Casual: Joker-Fragen werden mit 50 % gewertet.',
-                ),
-              ),
               TabBar(
                 controller: _tab,
                 labelColor: palette.burgundy,
@@ -124,88 +112,105 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   Tab(text: 'Casual'),
                 ],
               ),
-              const SizedBox(height: 12),
-              _FilterRow(
-                label: 'Modus',
-                children: [
-                  for (final g in _ModeGroup.values)
-                    _Chip(
-                      label: g.label,
-                      active: _modeGroup == g,
-                      // Pfeil-Indikator nur am aktiven Modus mit
-                      // Modifiern, damit klar ist: zweiter Klick toggelt.
-                      trailingIcon: (_modeGroup == g && g.hasModifiers)
-                          ? (_modifiersExpanded
-                              ? Icons.expand_less_rounded
-                              : Icons.expand_more_rounded)
-                          : null,
-                      onTap: () => _onModeTap(g),
-                    ),
-                ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 10),
+                child: Text(
+                  _isPureTab
+                      ? 'Nur Läufe mit ausgeschalteten Jokern.'
+                      : 'Joker-Fragen zählen zur Hälfte.',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.sans(
+                    fontSize: 12,
+                    color: palette.inkMuted,
+                  ),
+                ),
               ),
-              if (_modifiersExpanded && _modeGroup.hasModifiers) ...[
-                if (_modeGroup.variants.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  _FilterRow(
-                    label: 'Variante',
+              // Eine Zeile Menü-Chips statt fünf gestapelter Filter-Reihen:
+              // Default-Zustand zeigt den Kategorienamen (neutral), eine
+              // aktive Auswahl den gewählten Wert (burgund).
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                     children: [
-                      _Chip(
-                        label: 'Alle',
-                        active: _variant == null,
-                        onTap: () => setState(() => _variant = null),
+                      _MenuChip<_ModeGroup>(
+                        placeholder: 'Modus',
+                        valueLabel: _modeGroup == _ModeGroup.all
+                            ? null
+                            : _modeGroup.label,
+                        selected: _modeGroup,
+                        entries: [
+                          for (final g in _ModeGroup.values)
+                            (value: g, label: g.label),
+                        ],
+                        onSelected: (g) => _applyFilter(() {
+                          if (_modeGroup != g) _variant = null;
+                          _modeGroup = g;
+                        }),
                       ),
-                      for (final v in _modeGroup.variants)
-                        _Chip(
-                          label: v.label,
-                          active: _variant?.key == v.key,
-                          onTap: () => setState(() => _variant = v),
+                      if (_modeGroup.variants.isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        _MenuChip<_VariantOption?>(
+                          placeholder: 'Variante',
+                          valueLabel: _variant?.label,
+                          selected: _variant,
+                          entries: [
+                            (value: null, label: 'Alle'),
+                            for (final v in _modeGroup.variants)
+                              (value: v, label: v.label),
+                          ],
+                          onSelected: (v) =>
+                              _applyFilter(() => _variant = v),
                         ),
+                      ],
+                      const SizedBox(width: 8),
+                      _MenuChip<_InputStyleFilter>(
+                        placeholder: 'Antwortart',
+                        valueLabel: _inputStyle == _InputStyleFilter.all
+                            ? null
+                            : _inputStyle.label,
+                        selected: _inputStyle,
+                        entries: [
+                          for (final s in _InputStyleFilter.values)
+                            (value: s, label: s.label),
+                        ],
+                        onSelected: (s) =>
+                            _applyFilter(() => _inputStyle = s),
+                      ),
+                      const SizedBox(width: 8),
+                      _MenuChip<_BandFilter>(
+                        placeholder: 'Schwierigkeit',
+                        valueLabel:
+                            _band == _BandFilter.all ? null : _band.label,
+                        selected: _band,
+                        entries: [
+                          for (final b in _BandFilter.values)
+                            (value: b, label: b.label),
+                        ],
+                        onSelected: (b) => _applyFilter(() => _band = b),
+                      ),
+                      const SizedBox(width: 8),
+                      _MenuChip<_RangeFilter>(
+                        placeholder: 'Zeitraum',
+                        valueLabel: _range == _RangeFilter.allTime
+                            ? null
+                            : _range.label,
+                        selected: _range,
+                        entries: [
+                          for (final r in _RangeFilter.values)
+                            (value: r, label: r.label),
+                        ],
+                        onSelected: (r) => _applyFilter(() => _range = r),
+                      ),
                     ],
                   ),
-                ],
-                const SizedBox(height: 8),
-                _FilterRow(
-                  label: 'Antwortart',
-                  children: [
-                    for (final s in _InputStyleFilter.values)
-                      _Chip(
-                        label: s.label,
-                        active: _inputStyle == s,
-                        onTap: () => setState(() => _inputStyle = s),
-                      ),
-                  ],
                 ),
-              ],
-              const SizedBox(height: 8),
-              _FilterRow(
-                label: 'Schwierigkeit',
-                children: [
-                  for (final b in _BandFilter.values)
-                    _Chip(
-                      label: b.label,
-                      active: _band == b,
-                      onTap: () => setState(() => _band = b),
-                    ),
-                ],
               ),
-              const SizedBox(height: 8),
-              _FilterRow(
-                label: 'Zeitraum',
-                children: [
-                  for (final r in _RangeFilter.values)
-                    _Chip(
-                      label: r.label,
-                      active: _range == r,
-                      onTap: () => setState(() => _range = r),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
               Expanded(
                 child: FutureBuilder<List<ScoreEntry>>(
-                  // Re-fetch when tab/filter change — Future ist hier idiomatisch
-                  // einfacher als ein Provider, weil Filter-State lokal liegt.
-                  future: _load(),
+                  future: _future,
                   builder: (context, snap) {
                     if (snap.connectionState != ConnectionState.done) {
                       return Center(
@@ -283,9 +288,6 @@ enum _ModeGroup {
     }
   }
 
-  /// Hat dieser Modus überhaupt Modifier zum Aus-/Einklappen?
-  /// `Alle` hat keine — Klick darauf macht nichts Besonderes.
-  bool get hasModifiers => this != _ModeGroup.all;
 }
 
 /// Antwortart-Filter (`input_style` in `scores`). Orthogonal zum
@@ -350,100 +352,101 @@ enum _RangeFilter {
 
 // ───────────────────────── UI bits ─────────────────────────
 
-class _FilterRow extends StatelessWidget {
-  const _FilterRow({required this.label, required this.children});
-  final String label;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.palette;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 6),
-            child: Text(
-              label.toUpperCase(),
-              style: AppTypography.eyebrow(palette.gold),
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final c in children) ...[c, const SizedBox(width: 8)],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip({
-    required this.label,
-    required this.active,
-    required this.onTap,
-    this.trailingIcon,
+/// Kompakter Filter-Chip, der beim Tippen ein verankertes Auswahlmenü
+/// öffnet. Im Default-Zustand ([valueLabel] == null) zeigt er neutral den
+/// [placeholder]; mit aktiver Auswahl den gewählten Wert in Burgund —
+/// aktive Filter sind so auf einen Blick erkennbar.
+class _MenuChip<T> extends StatelessWidget {
+  const _MenuChip({
+    required this.placeholder,
+    required this.valueLabel,
+    required this.selected,
+    required this.entries,
+    required this.onSelected,
   });
 
-  final String label;
-  final bool active;
-  final VoidCallback onTap;
-
-  /// Optionales Icon rechts neben dem Label — wird z. B. genutzt, um
-  /// am aktiven Modus den Expand/Collapse-Zustand seiner Modifier
-  /// anzuzeigen.
-  final IconData? trailingIcon;
+  final String placeholder;
+  final String? valueLabel;
+  final T selected;
+  final List<({T value, String label})> entries;
+  final ValueChanged<T> onSelected;
 
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: active
-                ? palette.burgundy.withValues(alpha: 0.16)
-                : palette.page,
-            border: Border.all(
-              color: active
-                  ? palette.burgundy.withValues(alpha: 0.55)
-                  : palette.divider,
-            ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                label,
-                style: AppTypography.sans(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: active ? palette.burgundy : palette.ink,
+    final active = valueLabel != null;
+    return PopupMenuButton<T>(
+      tooltip: placeholder,
+      position: PopupMenuPosition.under,
+      color: palette.page,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: palette.divider),
+      ),
+      itemBuilder: (_) => [
+        for (final e in entries)
+          PopupMenuItem<T>(
+            value: e.value,
+            height: 42,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    e.label,
+                    style: AppTypography.sans(
+                      fontSize: 13.5,
+                      fontWeight: e.value == selected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      color: e.value == selected
+                          ? palette.burgundy
+                          : palette.ink,
+                    ),
+                  ),
                 ),
-              ),
-              if (trailingIcon != null) ...[
-                const SizedBox(width: 4),
-                Icon(
-                  trailingIcon,
-                  size: 16,
-                  color: active ? palette.burgundy : palette.ink,
-                ),
+                if (e.value == selected)
+                  Icon(
+                    Icons.check_rounded,
+                    size: 16,
+                    color: palette.burgundy,
+                  ),
               ],
-            ],
+            ),
           ),
+      ],
+      onSelected: onSelected,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        padding: const EdgeInsets.fromLTRB(14, 8, 10, 8),
+        decoration: BoxDecoration(
+          color: active
+              ? palette.burgundy.withValues(alpha: 0.16)
+              : palette.page,
+          border: Border.all(
+            color: active
+                ? palette.burgundy.withValues(alpha: 0.55)
+                : palette.divider,
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              valueLabel ?? placeholder,
+              style: AppTypography.sans(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: active ? palette.burgundy : palette.ink,
+              ),
+            ),
+            const SizedBox(width: 2),
+            Icon(
+              Icons.expand_more_rounded,
+              size: 17,
+              color: active ? palette.burgundy : palette.inkMuted,
+            ),
+          ],
         ),
       ),
     );

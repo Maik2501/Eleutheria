@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Supabase (Duelle, Leaderboard, Content-Sync). Debug/Profile erben sie
+         übers Merging nicht in den Release-Build — sie muss hier stehen. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Griphos"
         android:name="${applicationName}"

@@ -9,16 +9,13 @@ class Env {
   static const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   static const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 
-  /// App-Version, wird in Feedback-Submissions mitgeschickt, damit du im
-  /// Backend siehst, gegen welchen Build sich eine Rückmeldung richtet.
-  /// Manuell mit `pubspec.yaml: version` synchron halten (zusammen mit dem
-  /// Build-Code-Bump vor TestFlight).
-  static const appVersion = '0.1.0+5';
-
   /// PayPal.me-Link für die "Unterstützung"-Karte in den Einstellungen.
-  /// Leerstring → die Karte wird ausgeblendet (z. B. für Beta-Tests vor
-  /// Account-Setup). Format: `https://paypal.me/<dein-name>`.
-  static const donatePayPalUrl = 'https://paypal.me/maikpickl';
+  /// Leerstring → die Karte wird ausgeblendet. Format: `https://paypal.me/<name>`.
+  ///
+  /// Für die App-Store-Erst-Einreichung bewusst leer (Apple 3.1.1-Grauzone,
+  /// siehe docs/CODE_REVIEW_2026-06-10.md A3). Nach dem Approval per Update
+  /// wieder aktivieren bzw. durch IAP-Tip ersetzen.
+  static const donatePayPalUrl = '';
 
   /// True wenn beide Werte gesetzt sind und Supabase initialisiert werden kann.
   static bool get hasSupabase =>

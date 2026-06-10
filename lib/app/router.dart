@@ -107,8 +107,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/duel/:code',
-        builder: (_, state) =>
-            DuelMatchScreen(code: state.pathParameters['code']!.toUpperCase()),
+        builder: (_, state) {
+          final code = state.pathParameters['code']!.toUpperCase();
+          // ValueKey erzwingt frischen State bei Code-Wechsel — ohne ihn
+          // recycelt go_router das Element und Rematch hängt am alten Duell.
+          return DuelMatchScreen(key: ValueKey(code), code: code);
+        },
       ),
       GoRoute(
         path: '/result',

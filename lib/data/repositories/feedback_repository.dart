@@ -2,9 +2,8 @@ import 'dart:developer' as dev;
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../env.dart';
 
 /// Welche Art von Rückmeldung wird eingereicht.
 ///
@@ -91,7 +90,7 @@ class FeedbackRepository {
       'question_id': questionId,
       'message': trimmed,
       'contact_email': (email == null || email.isEmpty) ? null : email,
-      'app_version': Env.appVersion,
+      'app_version': await _appVersion(),
       'platform': _platformKey(),
     };
 
@@ -111,6 +110,22 @@ class FeedbackRepository {
         stackTrace: st,
       );
       return false;
+    }
+  }
+
+  /// Version + Build-Code zur Laufzeit aus dem Bundle (z. B. `0.1.0+7`).
+  /// Ersetzt die frühere hartkodierte Konstante, deren manueller Sync mit
+  /// der pubspec mehrfach gerissen ist.
+  static String? _cachedVersion;
+
+  static Future<String> _appVersion() async {
+    final cached = _cachedVersion;
+    if (cached != null) return cached;
+    try {
+      final info = await PackageInfo.fromPlatform();
+      return _cachedVersion = '${info.version}+${info.buildNumber}';
+    } catch (_) {
+      return 'unknown';
     }
   }
 

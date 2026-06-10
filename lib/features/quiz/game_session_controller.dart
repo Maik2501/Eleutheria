@@ -320,6 +320,10 @@ class GameSessionController extends StateNotifier<GameSessionState> {
   /// feedback, and appends an [AnswerRecord] to the session. Returns the
   /// resulting record for animation/branch logic.
   AnswerRecord submit({int? overrideIndex}) {
+    // Doppel-Tap oder Timeout-Race nach bereits erfolgtem Submit: idempotent
+    // den vorhandenen Record zurückgeben statt doppelt zu werten. `revealed`
+    // wird nur hier unten gesetzt, der letzte Record existiert also immer.
+    if (state.revealed) return state.session.answers.last;
     final q = state.session.currentQuestion;
     if (q == null) {
       throw StateError('No active question');
@@ -365,6 +369,9 @@ class GameSessionController extends StateNotifier<GameSessionState> {
 
   /// Move on to the next question, or finish the session.
   void next() {
+    // Doppel-Tap auf "Weiter": ohne Reveal gibt es nichts weiterzuschalten —
+    // sonst wird still eine Frage übersprungen.
+    if (!state.revealed) return;
     if (rushOutOfLives) {
       finishNow();
       return;

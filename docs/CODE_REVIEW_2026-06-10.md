@@ -29,7 +29,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   Rejection-Grund. **Fix:** Settings-Eintrag + SECURITY-DEFINER-RPC, die die `auth.users`-Row
   des Callers löscht (profiles/scores cascaden), danach lokal aussignieren.
 
-- [ ] 🟡 **A3 — PayPal-Spendenlink (Apple 3.1.1 / 3.2.1-Grauzone).**
+- [x] 🟡 **A3 — PayPal-Spendenlink (Apple 3.1.1 / 3.2.1-Grauzone).** *(erledigt: Leerstring für v1; nach Approval als IAP-Tip neu bewerten)*
   `lib/env.dart:21` + Settings-Karte. Persönliche Spendenlinks an den Entwickler sind ein
   bekannter Rejection-Trigger. Der Ausweg ist schon gebaut: Leerstring blendet die Karte aus.
   **Empfehlung:** Für die Erst-Einreichung `donatePayPalUrl = ''`, nach Approval per Update erneut probieren.
@@ -41,7 +41,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   Connect muss deklarieren: anonyme User-ID, Display-Name, Scores, Feedback-Texte, optionale
   Kontakt-E-Mail. Datenschutzerklärungs-URL wird ohnehin benötigt.
 
-- [ ] 🟡 **A5 — Versions-Drift `Env.appVersion`.**
+- [x] 🟡 **A5 — Versions-Drift `Env.appVersion`.** *(erledigt: package_info_plus zur Laufzeit, Konstante entfernt)*
   `lib/env.dart:16` meldet `0.1.0+5`, pubspec ist bei `0.1.0+7` — alle Feedback-Submissions
   taggen den falschen Build; der manuelle Sync ist bereits zweimal gerissen.
   **Fix:** `package_info_plus` zur Laufzeit oder Version als `--dart-define` durchreichen.
@@ -91,7 +91,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   Anonyme Sessions sind gratis mintbar; unbegrenzte 4-KB-Inserts gegen den Self-Hosted-Postgres
   (`0008_feedback.sql:49-55`). **Fix:** Insert-RPC oder Trigger mit N Zeilen pro UID/Stunde.
 
-- [ ] 🔴 **B6 — Android-Release-Builds haben kein Internet.**
+- [x] 🔴 **B6 — Android-Release-Builds haben kein Internet.** *(erledigt: INTERNET-Permission im Main-Manifest)*
   Die `INTERNET`-Permission steht nur in den debug-/profile-Manifesten;
   `android/app/src/main/AndroidManifest.xml` hat keine. Jeder Release-Build läuft komplett
   offline (Supabase, Duelle, Leaderboard, Content-Sync tot). Für iOS irrelevant, für jeden
@@ -133,7 +133,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   **Fix:** Im Duell-Summary einmalig (Once-Flag) `GameSession(mode: vsOnline)` bauen und
   `applySessionResult(wonDuel: iWin)` aufrufen.
 
-- [ ] 🔴 **F2 — Rematch-Kette bricht ab der zweiten Revanche.** *(manuell verifiziert)*
+- [x] 🔴 **F2 — Rematch-Kette bricht ab der zweiten Revanche.** *(erledigt: ValueKey(code) im Route-Builder)*
   `router.dart:108-112` gibt `DuelMatchScreen` keinen Key; bei `context.go('/duel/NEU')` aus
   einem Match heraus behält go_router den Page-Key des Pfad-Patterns → State wird wiederverwendet,
   `initState` läuft nicht, kein `didUpdateWidget` vorhanden — Subscriptions/Presence hängen am
@@ -148,7 +148,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   Zusätzlich submittet Return mit leerem Feld eine falsche Antwort (= verbranntes Leben).
   **Fix:** In `_submit` die FAB-Bedingungen spiegeln: `!alive || locked || _typed.trim().isEmpty → return`.
 
-- [ ] 🔴 **F4 — Quiz: `submit()` und `next()` ohne `revealed`-Guard.** *(manuell verifiziert)*
+- [x] 🔴 **F4 — Quiz: `submit()` und `next()` ohne `revealed`-Guard.** *(erledigt: Early-Returns in beiden Methoden)*
   `game_session_controller.dart:322` / `:367`. Doppel-Tap/Timeout-Race erzeugt doppelte
   AnswerRecords (doppelte Punkte; in Endless zwei Herzen für eine falsche Antwort; aufgeblähte
   Leaderboard-Werte). Doppel-Tap auf "Weiter" überspringt still eine Frage ("9 von 10",
@@ -175,7 +175,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
 
 ## 4. Flutter — Medium
 
-- [ ] 🟡 **F7 — Korruptes Profil-JSON brickt die App permanent.** *(manuell verifiziert)*
+- [x] 🟡 **F7 — Korruptes Profil-JSON brickt die App permanent.** *(erledigt: try/catch + Quarantäne-Key + Fallback auf fresh)*
   `profile_repository.dart:40-41` parst ohne try/catch → `ProfileNotifier.build` wirft →
   `AsyncError` für immer: leere Settings-/Profil-Screens, alle Mutationen (inkl. XP nach jedem
   Spiel) werden still verworfen, nichts überschreibt den kaputten Blob je. Seltener Trigger

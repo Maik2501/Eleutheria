@@ -37,8 +37,22 @@ class ProfileRepository {
       await save(p);
       return p;
     }
-    final json = jsonDecode(raw) as Map<String, dynamic>;
-    final existing = _fromJson(json);
+    final PlayerProfile existing;
+    try {
+      final json = jsonDecode(raw) as Map<String, dynamic>;
+      existing = _fromJson(json);
+    } catch (_) {
+      // Korrupter Blob (z. B. abgebrochener Write beim App-Kill): ohne diesen
+      // Fallback wirft ProfileNotifier.build für immer und die App ist
+      // permanent gebrickt — Original zur Diagnose sichern, frisch starten.
+      await _prefs.setString('${_key}_quarantined', raw);
+      final p = PlayerProfile.fresh(
+        id: authUid ?? const Uuid().v4(),
+        displayName: 'Schülerin der Philosophie',
+      );
+      await save(p);
+      return p;
+    }
 
     // Migration: war die App schon mal mit einer lokalen UUID gestartet und
     // bekommt jetzt eine Supabase-UID? Dann ID austauschen, Rest behalten.

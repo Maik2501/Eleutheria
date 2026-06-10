@@ -41,7 +41,7 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen>
   late final TabController _tab;
   final _codeCtrl = TextEditingController();
 
-  DuelConfig _config = DuelConfig.threeMinutes;
+  DuelConfig _config = DuelConfig.standard;
   bool _busy = false;
   String? _error;
 
@@ -60,6 +60,22 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen>
       vsync: this,
       initialIndex: widget.initialTabIndex.clamp(0, 1),
     );
+    // Zuletzt verwendete Lobby-Einstellungen wiederherstellen. Werte, die
+    // keinem Preset-Chip entsprechen, landen im "Eigene …"-Zustand.
+    final saved = ref.read(duelConfigStoreProvider).load();
+    if (saved != null) {
+      _config = saved;
+      final t = saved.timeLimitSeconds;
+      if (t != null && !_TimeChips._presets.containsKey(t)) {
+        _customTime = true;
+        _customTimeSeconds = t;
+      }
+      final l = saved.livesPerPlayer;
+      if (l != null && !_LivesChips._presets.contains(l)) {
+        _customLives = true;
+        _customLivesValue = l;
+      }
+    }
   }
 
   @override
@@ -82,6 +98,8 @@ class _DuelLobbyScreenState extends ConsumerState<DuelLobbyScreen>
     });
     try {
       final match = await repo.createDuel(hostId: profile.id, config: _config);
+      // Erfolgreich verwendete Konfiguration als neuen Lobby-Standard merken.
+      await ref.read(duelConfigStoreProvider).save(_config);
       if (!mounted) return;
       context.push('/duel/${match.code}');
     } catch (e) {

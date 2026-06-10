@@ -51,6 +51,16 @@ class DuelConfig {
 
   // ─── Convenience: preset configs that the lobby UI uses ───
 
+  /// Standard beim Öffnen der Lobby (solange nichts gespeichert ist):
+  /// Race, 3 Minuten, Leben ohne Limit.
+  static const standard = DuelConfig(
+    mode: DuelMode.race,
+    timeLimitSeconds: 180,
+    livesPerPlayer: null,
+    inputStyle: AnswerInputStyle.multipleChoice,
+    difficultyBand: DifficultyBand.salon,
+  );
+
   static const oneMinute = DuelConfig(
     mode: DuelMode.race,
     timeLimitSeconds: 60,
@@ -93,6 +103,35 @@ class DuelConfig {
         difficultyBand: difficultyBand ?? this.difficultyBand,
         questionCount: questionCount ?? this.questionCount,
       );
+
+  /// JSON-Roundtrip für die lokale Persistenz der zuletzt verwendeten
+  /// Lobby-Einstellungen (siehe DuelConfigStore).
+  Map<String, dynamic> toJson() => {
+        'mode': mode.name,
+        'time_limit_seconds': timeLimitSeconds,
+        'lives_per_player': livesPerPlayer,
+        'input_style': inputStyle.key,
+        'difficulty_band': difficultyBand.name,
+        'question_count': questionCount,
+      };
+
+  static DuelConfig? tryFromJson(Map<String, dynamic> json) {
+    try {
+      return DuelConfig(
+        mode: DuelMode.fromKey(json['mode'] as String?),
+        timeLimitSeconds: (json['time_limit_seconds'] as num?)?.toInt(),
+        livesPerPlayer: (json['lives_per_player'] as num?)?.toInt(),
+        inputStyle: AnswerInputStyle.fromKey(json['input_style'] as String?),
+        difficultyBand: DifficultyBand.values.firstWhere(
+          (b) => b.name == json['difficulty_band'],
+          orElse: () => DifficultyBand.salon,
+        ),
+        questionCount: (json['question_count'] as num?)?.toInt() ?? 100,
+      );
+    } catch (_) {
+      return null;
+    }
+  }
 
   String get timeLabel {
     final s = timeLimitSeconds;

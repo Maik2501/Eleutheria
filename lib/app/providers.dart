@@ -17,6 +17,7 @@ import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_history_repository.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/repositories/score_repository.dart';
+import '../data/repositories/duel_config_store.dart';
 import '../data/repositories/profile_setup_flag.dart';
 import '../data/repositories/supabase_profile_repository.dart';
 import '../data/seed/questions_seed.dart';
@@ -189,6 +190,11 @@ final feedbackRepositoryProvider = Provider<FeedbackRepository?>((ref) {
 /// (wiederkehrender Nutzer). Siehe [ProfileSetupFlag].
 final profileSetupFlagProvider = Provider<ProfileSetupFlag>(
   (ref) => ProfileSetupFlag(ref.watch(sharedPreferencesProvider)),
+);
+
+/// Zuletzt verwendete Duell-Lobby-Konfiguration (lokal persistiert).
+final duelConfigStoreProvider = Provider<DuelConfigStore>(
+  (ref) => DuelConfigStore(ref.watch(sharedPreferencesProvider)),
 );
 
 /// Lädt das Remote-Profil einmalig beim App-Start. Wird vom Router-Gate

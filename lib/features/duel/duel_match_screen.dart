@@ -53,6 +53,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   StreamSubscription<DuelMatch>? _matchSub;
   StreamSubscription<List<DuelAnswer>>? _answersSub;
   Timer? _ticker;
+  Timer? _resubTimer;
 
   DuelMatch? _match;
   List<Question> _questions = const [];
@@ -63,7 +64,13 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   String _typed = '';
   DateTime _questionStartedAt = DateTime.now();
   final GlobalKey<LetterboxInputState> _letterboxKey = GlobalKey();
+
+  /// finish() ist nicht mehr fire-and-forget (F23): _finalized wird erst
+  /// nach Server-Erfolg gesetzt, Fehlschläge werden gedrosselt erneut
+  /// versucht (der 250-ms-Ticker liefert die Gelegenheiten).
   bool _finalized = false;
+  bool _finishInFlight = false;
+  DateTime? _lastFinishAttempt;
 
   /// Once-Flag: XP/Achievements für dieses Duell wurden bereits verbucht.
   /// Der Summary wird vom 250-ms-Ticker ständig neu gebaut — ohne das Flag
@@ -74,11 +81,27 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   bool _showConnectSplash = false;
   DuelStatus? _prevStatus;
 
+  // Stream-Robustheit (F11): transienter Ausfall → Banner + Resubscribe
+  // mit Backoff; fataler Fehler (unbekannter/beendeter Code) → Exit-Scaffold.
+  bool _streamBroken = false;
+  int _resubAttempts = 0;
+  String? _fatalError;
+
+  /// Server-Clock-Offset (F21), einmalig per RPC bestimmt. Alle geteilten
+  /// Zeitvergleiche (Session-Timer, Runden-Pausen, Feedback-Fenster) laufen
+  /// über [_now] statt der lokalen Uhr — Clock-Skew beendet sonst Sessions
+  /// einseitig zu früh.
+  Duration _serverOffset = Duration.zero;
+
+  DateTime get _now => DateTime.now().toUtc().add(_serverOffset);
+
   // Presence-tracking: detect when the opponent's tab disconnects.
   RealtimeChannel? _presence;
   Set<String> _presentUserIds = {};
   DateTime? _opponentLostAt;
   bool _opponentDisconnected = false;
+  bool _opponentSeenOnce = false;
+  bool _presenceRetryScheduled = false;
   static const _disconnectGracePeriod = Duration(seconds: 30);
 
   @override
@@ -86,9 +109,19 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     super.initState();
     _subscribe();
     _setupPresence();
+    _syncServerClock();
     _ticker = Timer.periodic(const Duration(milliseconds: 250), (_) {
       if (mounted) setState(() {});
     });
+  }
+
+  Future<void> _syncServerClock() async {
+    final serverTime = await ref.read(duelRepositoryProvider)?.serverNow();
+    if (serverTime != null && mounted) {
+      setState(
+        () => _serverOffset = serverTime.difference(DateTime.now().toUtc()),
+      );
+    }
   }
 
   void _setupPresence() {
@@ -114,6 +147,18 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     channel.subscribe((status, _) async {
       if (status == RealtimeSubscribeStatus.subscribed) {
         await channel.track({'user_id': me});
+      } else if (status == RealtimeSubscribeStatus.channelError ||
+          status == RealtimeSubscribeStatus.timedOut) {
+        // Presence-Setup fehlgeschlagen → retry, sonst würde der Gegner
+        // nach Ablauf der Grace-Period fälschlich ausgetimet (F22).
+        if (_presenceRetryScheduled) return;
+        _presenceRetryScheduled = true;
+        Future.delayed(const Duration(seconds: 5), () {
+          _presenceRetryScheduled = false;
+          if (!mounted) return;
+          Supabase.instance.client.removeChannel(channel);
+          _setupPresence();
+        });
       }
     });
     _presence = channel;
@@ -123,33 +168,63 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final repo = ref.read(duelRepositoryProvider);
     final qRepo = ref.read(questionRepositoryProvider);
     if (repo == null) return;
-    _matchSub = repo.watchDuel(widget.code).listen((m) {
-      if (!mounted) return;
-      final justConnected =
-          _prevStatus == DuelStatus.waiting && m.status == DuelStatus.playing;
-      _prevStatus = m.status;
-      setState(() {
-        _match = m;
-        if (_questions.isEmpty && m.status != DuelStatus.waiting) {
-          _questions = repo.resolveQuestions(
-            m.questionSeed,
-            questions: qRepo,
-            count: m.questionCount,
-            band: m.difficultyBand,
-            letterboxFriendlyOnly: m.inputStyle == AnswerInputStyle.letterbox,
-          );
-        }
-        if (justConnected) _showConnectSplash = true;
-      });
-      if (justConnected) {
-        Future.delayed(const Duration(milliseconds: 1400), () {
-          if (mounted) setState(() => _showConnectSplash = false);
+    _matchSub = repo.watchDuel(widget.code).listen(
+      (m) {
+        if (!mounted) return;
+        _streamBroken = false;
+        _resubAttempts = 0;
+        final justConnected =
+            _prevStatus == DuelStatus.waiting && m.status == DuelStatus.playing;
+        _prevStatus = m.status;
+        setState(() {
+          _match = m;
+          if (_questions.isEmpty && m.status != DuelStatus.waiting) {
+            _questions = repo.resolveQuestions(
+              m.questionSeed,
+              questions: qRepo,
+              count: m.questionCount,
+              band: m.difficultyBand,
+              letterboxFriendlyOnly: m.inputStyle == AnswerInputStyle.letterbox,
+            );
+          }
+          if (justConnected) _showConnectSplash = true;
         });
-      }
-    });
-    _answersSub = repo.watchAnswers(widget.code).listen((rows) {
-      if (!mounted) return;
-      setState(() => _allAnswers = rows);
+        if (justConnected) {
+          Future.delayed(const Duration(milliseconds: 1400), () {
+            if (mounted) setState(() => _showConnectSplash = false);
+          });
+        }
+      },
+      onError: _handleStreamIssue,
+      onDone: () => _handleStreamIssue(null),
+    );
+    _answersSub = repo.watchAnswers(widget.code).listen(
+      (rows) {
+        if (!mounted) return;
+        setState(() => _allAnswers = rows);
+      },
+      onError: _handleStreamIssue,
+      onDone: () => _handleStreamIssue(null),
+    );
+  }
+
+  /// F11: Geschlossene/fehlerhafte Realtime-Streams froren das Match bisher
+  /// still ein. Fatale Fehler (Code unbekannt, Lobby beendet) zeigen jetzt
+  /// einen Exit-Screen, alles andere resubscribed mit Backoff.
+  void _handleStreamIssue(Object? error) {
+    if (!mounted) return;
+    if (error is DuelException) {
+      setState(() => _fatalError = error.message);
+      return;
+    }
+    setState(() => _streamBroken = true);
+    _matchSub?.cancel();
+    _answersSub?.cancel();
+    final delaySeconds = (2 * (_resubAttempts + 1)).clamp(2, 20);
+    _resubAttempts++;
+    _resubTimer?.cancel();
+    _resubTimer = Timer(Duration(seconds: delaySeconds), () {
+      if (mounted) _subscribe();
     });
   }
 
@@ -158,6 +233,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     _matchSub?.cancel();
     _answersSub?.cancel();
     _ticker?.cancel();
+    _resubTimer?.cancel();
     final ch = _presence;
     if (ch != null) {
       ch.untrack();
@@ -169,14 +245,30 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   /// Tracks how long the opponent has been missing from the presence channel.
   /// Returns true once the grace period has expired — at that point we treat
   /// the duel as won by us via timeout.
+  ///
+  /// F22-Härtung: Eine frische Antwort im Answer-Stream zählt als
+  /// Anwesenheit (Presence kann haken, während Daten fließen), und der
+  /// Countdown armiert erst, nachdem der Gegner einmal präsent war —
+  /// sonst timet ein fehlgeschlagenes Presence-Setup ihn sofort aus.
   bool _checkOpponentDisconnected(DuelMatch m) {
     final opp = _opponentId;
     if (opp == null) return false;
-    final present = _presentUserIds.contains(opp);
+    var present = _presentUserIds.contains(opp);
+    if (!present) {
+      final answers = _answersFor(opp);
+      if (answers.isNotEmpty) {
+        final newest = answers
+            .map((a) => a.submittedAt)
+            .reduce((a, b) => a.isAfter(b) ? a : b);
+        if (_now.difference(newest) < _disconnectGracePeriod) present = true;
+      }
+    }
     if (present) {
+      _opponentSeenOnce = true;
       _opponentLostAt = null;
       return false;
     }
+    if (!_opponentSeenOnce) return false;
     _opponentLostAt ??= DateTime.now();
     return DateTime.now().difference(_opponentLostAt!) >=
         _disconnectGracePeriod;
@@ -228,8 +320,65 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     );
     if (confirm == true) {
       final repo = ref.read(duelRepositoryProvider);
-      await repo?.finish(m.code);
+      try {
+        // Aufgeben heißt: die Gegenseite gewinnt — serverseitig persistiert,
+        // damit beide Summaries denselben Ausgang zeigen (F10).
+        await repo?.finish(
+          m.code,
+          winnerId: _opponentId,
+          reason: 'surrender',
+        );
+        _finalized = true;
+      } catch (_) {
+        // Netzfehler: Duell läuft weiter, der Spieler kann es erneut
+        // versuchen — besser als ein lokal beendetes, serverseitig
+        // hängendes Duell.
+      }
     }
+  }
+
+  /// Sieger nach Punkten, Tiebreak Anzahl richtiger Antworten;
+  /// `null` = Unentschieden. Wird beim Finish persistiert (F10).
+  String? _winnerByScore(List<DuelAnswer> mine, List<DuelAnswer> theirs) {
+    final myScore = mine.fold<int>(0, (s, a) => s + a.points);
+    final oppScore = theirs.fold<int>(0, (s, a) => s + a.points);
+    if (myScore != oppScore) {
+      return myScore > oppScore ? _meId : _opponentId;
+    }
+    final myCorrect = mine.where((a) => a.wasCorrect).length;
+    final oppCorrect = theirs.where((a) => a.wasCorrect).length;
+    if (myCorrect != oppCorrect) {
+      return myCorrect > oppCorrect ? _meId : _opponentId;
+    }
+    return null;
+  }
+
+  /// F23: finish() mit Erfolgskontrolle statt fire-and-forget. _finalized
+  /// wird erst nach Server-Bestätigung gesetzt; Fehlschläge versucht der
+  /// nächste Ticker-Build erneut (gedrosselt auf alle 3 Sekunden).
+  void _requestFinish(DuelMatch m, {String? winnerId, String? reason}) {
+    if (_finalized || _finishInFlight || m.status != DuelStatus.playing) {
+      return;
+    }
+    final last = _lastFinishAttempt;
+    if (last != null &&
+        DateTime.now().difference(last) < const Duration(seconds: 3)) {
+      return;
+    }
+    _lastFinishAttempt = DateTime.now();
+    _finishInFlight = true;
+    unawaited(() async {
+      try {
+        await ref
+            .read(duelRepositoryProvider)
+            ?.finish(m.code, winnerId: winnerId, reason: reason);
+        _finalized = true;
+      } catch (_) {
+        // Fehlgeschlagen — der nächste Ticker-Build versucht es erneut.
+      } finally {
+        _finishInFlight = false;
+      }
+    }());
   }
 
   // ─── Identity helpers ────────────────────────────────────────────────────
@@ -273,7 +422,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     if (t == null) return null;
     final start = m.startedAt;
     if (start == null) return t.toDouble();
-    final rawElapsed = DateTime.now().toUtc().difference(start);
+    final rawElapsed = _now.difference(start);
     final effective = rawElapsed - _accumulatedPauseTime(m);
     return t - effective.inMilliseconds / 1000.0;
   }
@@ -320,7 +469,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   bool _parallelInFeedback(List<DuelAnswer> mine) {
     final latest = _myLatestParallelAnswer(mine);
     if (latest == null) return false;
-    final age = DateTime.now().toUtc().difference(latest.submittedAt);
+    final age = _now.difference(latest.submittedAt);
     return age < _parallelFeedbackDuration;
   }
 
@@ -396,7 +545,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   bool _isInPostRoundPause(DuelMatch m, int index) {
     final resolvedAt = _roundResolvedAt(m, index);
     if (resolvedAt == null) return false;
-    return DateTime.now().toUtc().difference(resolvedAt) < _postRoundPause;
+    return _now.difference(resolvedAt) < _postRoundPause;
   }
 
   /// Pause time charged against the shared game clock so far. Each resolved
@@ -412,7 +561,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     for (var i = 0; i <= maxIdx; i++) {
       final resolvedAt = _roundResolvedAt(m, i);
       if (resolvedAt == null) continue;
-      final age = DateTime.now().toUtc().difference(resolvedAt);
+      final age = _now.difference(resolvedAt);
       total += age >= _postRoundPause
           ? _postRoundPause
           : (age.isNegative ? Duration.zero : age);
@@ -434,10 +583,9 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     } else {
       winner = _RoundWinner.opponent;
     }
-    final secondsLeft = (_postRoundPause -
-            DateTime.now().toUtc().difference(resolvedAt))
-        .inMilliseconds /
-        1000.0;
+    final secondsLeft =
+        (_postRoundPause - _now.difference(resolvedAt)).inMilliseconds /
+            1000.0;
     return _RoundOutcome(
       winner: winner,
       correctAnswer: _questions[index].correctAnswer,
@@ -451,6 +599,11 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
   Widget build(BuildContext context) {
     final palette = context.palette;
     final m = _match;
+
+    // F11: unbekannter/beendeter Duell-Code → Exit statt Endlos-Spinner.
+    if (_fatalError != null) {
+      return _CancelledScaffold(reason: _fatalError!);
+    }
 
     if (m == null) {
       return const Scaffold(
@@ -500,21 +653,18 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final bothDead = !iAmAlive && (_opponentId == null || !oppAlive);
 
     if (timeOut || bothDead) {
-      // Auto-finalize on server once, then show summary.
-      if (!_finalized && m.status == DuelStatus.playing) {
-        _finalized = true;
-        ref.read(duelRepositoryProvider)?.finish(m.code);
-      }
+      _requestFinish(
+        m,
+        winnerId: _winnerByScore(mine, theirs),
+        reason: timeOut ? 'timeout' : 'completed',
+      );
       return _buildSummary(m, mine, theirs);
     }
 
     // Opponent disconnected for longer than the grace period -> we win.
     if (_checkOpponentDisconnected(m)) {
       _opponentDisconnected = true;
-      if (!_finalized && m.status == DuelStatus.playing) {
-        _finalized = true;
-        ref.read(duelRepositoryProvider)?.finish(m.code);
-      }
+      _requestFinish(m, winnerId: _meId, reason: 'disconnect');
       return _buildSummary(m, mine, theirs);
     }
 
@@ -523,10 +673,20 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final myIdx = m.mode == DuelMode.race ? raceIdx : _parallelIndex(mine);
     final atEnd = myIdx >= _questions.length;
     if (atEnd) {
-      if (!_finalized && m.status == DuelStatus.playing) {
-        _finalized = true;
-        ref.read(duelRepositoryProvider)?.finish(m.code);
+      // F24: Im Parallel-Modus beendet der Schnellere das Duell nicht mehr
+      // für beide — er wartet, bis die Gegenseite fertig ist; Zeit/Leben/
+      // Disconnect greifen über die Pfade oben weiterhin.
+      final oppDone = _opponentId == null ||
+          !oppAlive ||
+          theirs.length >= _questions.length;
+      if (m.mode == DuelMode.parallel && !oppDone) {
+        return _buildParallelWaiting(m, mine, theirs, timeRem);
       }
+      _requestFinish(
+        m,
+        winnerId: _winnerByScore(mine, theirs),
+        reason: 'completed',
+      );
       return _buildSummary(m, mine, theirs);
     }
 
@@ -588,6 +748,7 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                   hasOpponent: _opponentId != null,
                 ),
                 const SizedBox(height: 12),
+                if (_streamBroken) const _ReconnectBanner(),
                 if (_opponentDisconnectSecondsLeft() != null)
                   _DisconnectWarningBanner(
                     secondsLeft: _opponentDisconnectSecondsLeft()!,
@@ -789,18 +950,31 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
     final myCorrect = me.where((a) => a.wasCorrect).length;
     final oppCorrect = opp.where((a) => a.wasCorrect).length;
 
-    // Sieg-Logik: Disconnect-Timeout gewinnt lokal sofort, sonst Score und
-    // Korrekte als Tiebreak.
-    final int? winSign = _opponentDisconnected
-        ? 1
-        : oppScore == myScore
-            ? (myCorrect == oppCorrect
-                ? null
-                : (myCorrect > oppCorrect ? 1 : -1))
-            : (myScore > oppScore ? 1 : -1);
+    // Sieg-Logik: server-authoritativ, sobald finish_reason persistiert ist
+    // (F10) — beide Geräte zeigen denselben Ausgang. Fallback auf lokale
+    // Berechnung für Duelle aus der Zeit vor Migration 0013.
+    final int? winSign;
+    if (m.finishReason != null) {
+      winSign = m.winnerId == null ? null : (m.winnerId == _meId ? 1 : -1);
+    } else if (_opponentDisconnected) {
+      winSign = 1;
+    } else if (oppScore == myScore) {
+      winSign = myCorrect == oppCorrect
+          ? null
+          : (myCorrect > oppCorrect ? 1 : -1);
+    } else {
+      winSign = myScore > oppScore ? 1 : -1;
+    }
     final iWin = winSign == 1;
     final tie = winSign == null;
     final rematchCode = m.rematchCode;
+    final note = switch (m.finishReason) {
+      'disconnect' => 'Verbindung verloren — das Duell wurde gewertet.',
+      'surrender' => 'Das Duell wurde aufgegeben.',
+      _ => _opponentDisconnected
+          ? 'Mitspielerin hat die Verbindung verloren.'
+          : null,
+    };
 
     // XP + Duell-Statistiken einmalig verbuchen, sobald das Duell
     // serverseitig finished ist — vorher kann sich der Ausgang durch
@@ -843,10 +1017,10 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                     letterSpacing: -0.6,
                   ),
                 ),
-                if (_opponentDisconnected) ...[
+                if (note != null) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Mitspielerin hat die Verbindung verloren.',
+                    note,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: palette.inkMuted,
@@ -978,6 +1152,67 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
             wonDuel: won,
           );
     });
+  }
+
+  /// F24: Wartebildschirm für den schnelleren Parallel-Spieler — das Duell
+  /// endet erst, wenn beide fertig sind (oder Zeit/Leben/Disconnect greifen).
+  Widget _buildParallelWaiting(
+    DuelMatch m,
+    List<DuelAnswer> mine,
+    List<DuelAnswer> theirs,
+    double? timeRem,
+  ) {
+    final palette = context.palette;
+    final myScore = mine.fold<int>(0, (s, a) => s + a.points);
+    return Scaffold(
+      appBar: AppBar(title: Text(m.mode.label)),
+      body: ParchmentBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Center(child: WaxSeal(symbol: '⌛', size: 80)),
+                const SizedBox(height: 20),
+                Text(
+                  'Fertig!',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.serif(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    color: palette.ink,
+                    letterSpacing: -0.4,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Du hast alle Fragen beantwortet — warte, bis deine '
+                  'Mitspielerin fertig ist.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: palette.inkMuted, fontSize: 13.5),
+                ),
+                const SizedBox(height: 22),
+                Text(
+                  '$myScore Punkte · Mitspielerin bei Frage ${theirs.length + 1} von ${_questions.length}',
+                  textAlign: TextAlign.center,
+                  style: AppTypography.sans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: palette.ink,
+                  ),
+                ),
+                if (timeRem != null) ...[
+                  const SizedBox(height: 14),
+                  Center(child: _TimerStrip(secondsLeft: timeRem)),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _startRematch() async {
@@ -1384,6 +1619,51 @@ class _LivesIndicator extends StatelessWidget {
                 Icon(Icons.favorite_rounded, size: 13, color: palette.burgundy),
           ),
       ],
+    );
+  }
+}
+
+/// F11: Hinweis, dass die Realtime-Verbindung gerade neu aufgebaut wird —
+/// das Match friert nicht mehr still ein.
+class _ReconnectBanner extends StatelessWidget {
+  const _ReconnectBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: palette.gold.withValues(alpha: 0.14),
+        border: Border.all(color: palette.gold.withValues(alpha: 0.5)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 14,
+            height: 14,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: palette.gold,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Verbindung unterbrochen — verbinde neu …',
+              style: TextStyle(
+                color: palette.inkSoft,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

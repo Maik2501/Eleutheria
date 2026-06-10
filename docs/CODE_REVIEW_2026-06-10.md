@@ -194,21 +194,21 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   Quiz-Rush-Session tot. **Fix:** `AppLifecycleState` beobachten, Hintergrund-Dauer wie die
   Reveal-Pause auf `_pausedTotal` buchen.
 
-- [ ] 🟡 **F10 — Duell: Backgrounding → Disconnect-Timeout, beide sehen "Gewonnen".**
+- [x] 🟡 **F10 — Duell: Backgrounding → Disconnect-Timeout, beide sehen "Gewonnen".** *(erledigt: winner_id/finish_reason in Migration 0013, Trigger-validiert; Summary rendert server-authoritativ)*
   supabase_flutter trennt den Realtime-Socket beim Pausieren; nach >30 s Hintergrund erklärt
   der Gegner per Presence-Timeout lokal den Sieg (`duel_match_screen.dart:774-781`), der
   Zurückkehrende rendert den Score-basierten Sieger — der Ausgang wird nie persistiert, beide
   Seiten können sich als Gewinner sehen. **Fix:** `winner_id`/`finish_reason` serverseitig
   schreiben (Trigger-validiert) und beide Summaries daraus rendern.
 
-- [ ] 🟡 **F11 — Duell: Realtime-Streams ohne `onError`/`onDone`.**
+- [x] 🟡 **F11 — Duell: Realtime-Streams ohne `onError`/`onDone`.** *(erledigt: Resubscribe mit Backoff + Reconnect-Banner; unbekannter Code → Exit-Scaffold)*
   `duel_match_screen.dart:120,144`: Schlägt der automatische Re-Fetch nach einem Reconnect fehl,
   schließt der Stream permanent — das Match friert still ein ("warte auf Mitspielerin" für
   immer). Ungültiger/abgelaufener Duell-Code → unhandled Error + Endlos-Spinner ohne Exit
   (`watchDuel` wirft in den Stream). **Fix:** onError/onDone mit Resubscribe-Backoff bzw.
   Fehler-Scaffold mit Exit-Button.
 
-- [ ] 🟡 **F12 — Beidseitiges "Revanche"-Tippen strandet beide Spieler.**
+- [x] 🟡 **F12 — Beidseitiges "Revanche"-Tippen strandet beide Spieler.** *(erledigt: Attach mit select().maybeSingle(); Race-Verlierer cancelt und joint die Revanche der Gegenseite)*
   `duel_repository.dart:141-148`: Attach ohne `.select()`-Erfolgskontrolle — der Verlierer des
   Races merkt nichts, beide erzeugen eigene Lobbys und warten allein. **Fix:**
   `.select().maybeSingle()`; bei `null` eigenes Duell canceln und dem `rematch_code` des
@@ -257,13 +257,13 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   autoDispose-Family: Wechsel zu Puzzle B disposed Controller A; zurückwechseln → leeres Grid.
   **Fix:** `ref.keepAlive()` für die Session bzw. explizite Invalidierung beim Verlassen.
 
-- [ ] 🟡 **F21 — Duell: gesamtes Shared-Timing vertraut der lokalen Uhr.**
+- [x] 🟡 **F21 — Duell: gesamtes Shared-Timing vertraut der lokalen Uhr.** *(erledigt: server_now()-RPC, einmaliger Offset, alle geteilten Vergleiche über _now)*
   `duel_match_screen.dart:270-272` u. a. vergleichen Server-Timestamps mit lokalem `now()`:
   Clock-Skew beendet Sessions einseitig zu früh (Gegners letzte Antwort wird mit "duel is not
   active" abgelehnt), dehnt/überspringt Runden-Pausen. **Fix:** einmaligen Server-Offset
   bestimmen und auf alle Vergleiche anwenden.
 
-- [ ] 🟡 **F22 — Duell: Presence-Logik angreifbar/fehlanfällig.**
+- [x] 🟡 **F22 — Duell: Presence-Logik angreifbar/fehlanfällig.** *(erledigt: frische Antwort zählt als Anwesenheit, Presence-Setup-Retry, Countdown erst nach erstem Kontakt; Payload-Trust bleibt bis B4)*
   Kein Cross-Check gegen den Antwort-Stream (Timeout-Sieg, während Antworten sichtbar
   eintreffen); schlägt `_setupPresence` initial fehl, wird der Gegner immer nach 30 s
   ausgetimet; der Presence-Channel ist öffentlich und vertraut dem client-gelieferten
@@ -271,13 +271,13 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
   **Fix:** jüngste Gegner-Antwort als Anwesenheit werten; Presence-Setup retryen; Countdown erst
   armen, wenn der Gegner einmal präsent war.
 
-- [ ] 🟡 **F23 — Duell: `finish()` fire-and-forget, kein Server-Timeout für hängende Duelle.**
+- [x] 🟡 **F23 — Duell: `finish()` fire-and-forget, kein Server-Timeout für hängende Duelle.** *(erledigt: finish awaited mit Retry-Drosselung; pg_cron-Job cancelt verwaiste Lobbys/Duelle)*
   `_finalized` wird vor dem Erfolg gesetzt, Fehlschlag wird nie retried; es gibt keinen
   `playing → cancelled/expired`-Pfad — hängende Rows akzeptieren `submit_duel_answer` unbegrenzt
   und sind nie rematch-fähig. **Fix:** finish awaiten + bei Fehler zurücksetzen; Server-Cron,
   der alte `playing`-Duelle cancelt.
 
-- [ ] 🟡 **F24 — Duell Parallel-Modus: der Schnellere beendet das Duell für beide.**
+- [x] 🟡 **F24 — Duell Parallel-Modus: der Schnellere beendet das Duell für beide.** *(erledigt: Wartebildschirm "Fertig!" bis beide durch sind; Zeit/Leben/Disconnect greifen weiter)*
   `duel_match_screen.dart:517-525`: eigener Antwort-Count am Pool-Ende triggert `finish()` —
   der Langsamere wird mit Restzeit mitten in der Frage abgeschnitten (In-Flight-Submit wirft).
   **Fix:** am Ende lokal locken ("Fertig — warte…") und erst beenden, wenn beide fertig/Zeit um.

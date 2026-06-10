@@ -114,12 +114,31 @@ class DuelRepository {
     );
   }
 
-  Future<void> finish(String code) async {
+  /// Beendet ein laufendes Duell und persistiert den Ausgang (F10):
+  /// [winnerId] null = Unentschieden, [reason] aus
+  /// completed/timeout/surrender/disconnect. Beide Clients rendern den
+  /// Summary aus diesen Feldern statt aus lokaler Berechnung.
+  Future<void> finish(String code, {String? winnerId, String? reason}) async {
     await _client
         .from('duels')
-        .update({'status': 'finished'})
+        .update({
+          'status': 'finished',
+          'winner_id': winnerId,
+          'finish_reason': reason,
+        })
         .eq('code', code)
         .eq('status', 'playing');
+  }
+
+  /// Aktuelle Serverzeit für den Clock-Offset (F21). `null` bei Fehlern —
+  /// der Aufrufer rechnet dann mit Offset 0 weiter.
+  Future<DateTime?> serverNow() async {
+    try {
+      final res = await _client.rpc<dynamic>('server_now');
+      return DateTime.parse(res as String).toUtc();
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Host cancels an open lobby (or timeout expires).
@@ -134,18 +153,37 @@ class DuelRepository {
   /// Creates a new duel with the same config as [original], then writes
   /// the new code onto the old duel's `rematch_code` column so the opposite
   /// player sees the invitation via their existing watchDuel subscription.
+  ///
+  /// Race-sicher (F12): Tippen beide gleichzeitig "Revanche", gewinnt genau
+  /// ein Attach. Der Verlierer cancelt seine eigene Lobby und tritt der
+  /// Revanche der Gegenseite bei — beide landen im selben Duell.
   Future<DuelMatch> createRematch({
     required DuelMatch original,
     required String hostId,
   }) async {
     final rematch = await createDuel(hostId: hostId, config: original.config);
-    await _client
+    final attached = await _client
         .from('duels')
         .update({'rematch_code': rematch.code})
         .eq('code', original.code)
         .eq('status', 'finished')
-        .isFilter('rematch_code', null);
-    return rematch;
+        .isFilter('rematch_code', null)
+        .select()
+        .maybeSingle();
+    if (attached != null) return rematch;
+
+    // Race verloren — aufräumen und der bestehenden Revanche beitreten.
+    await cancel(rematch.code);
+    final row = await _client
+        .from('duels')
+        .select('rematch_code')
+        .eq('code', original.code)
+        .single();
+    final theirCode = row['rematch_code'] as String?;
+    if (theirCode == null) {
+      throw const DuelException('Revanche fehlgeschlagen — nochmal versuchen.');
+    }
+    return joinDuel(code: theirCode, guestId: hostId);
   }
 
   /// Build the same question set both players see, given the seed.
@@ -191,6 +229,8 @@ class DuelMatch {
     required this.difficultyBand,
     required this.startedAt,
     required this.rematchCode,
+    this.winnerId,
+    this.finishReason,
   });
 
   final String code;
@@ -210,6 +250,14 @@ class DuelMatch {
   /// Set on this duel when a rematch is created — the new duel code.
   /// Watch this on both clients to surface the rematch invitation.
   final String? rematchCode;
+
+  /// Persistierter Ausgang (F10): null bei Unentschieden ODER bei Duellen,
+  /// die vor Migration 0013 beendet wurden — [finishReason] unterscheidet:
+  /// ist sie gesetzt, ist der Ausgang server-authoritativ.
+  final String? winnerId;
+
+  /// 'completed' | 'timeout' | 'surrender' | 'disconnect' | null (legacy).
+  final String? finishReason;
 
   bool get hasGuest => guestId != null;
 
@@ -241,6 +289,8 @@ class DuelMatch {
             ? null
             : DateTime.parse(r['started_at'] as String).toUtc(),
         rematchCode: r['rematch_code'] as String?,
+        winnerId: r['winner_id'] as String?,
+        finishReason: r['finish_reason'] as String?,
       );
 
   static DifficultyBand _bandFromKey(String? key) =>

@@ -66,6 +66,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
 
     switch (result) {
       case ReservationOk():
+        // Setup-Flag sofort persistieren — nicht erst über den Refetch des
+        // remoteProfileProvider, der könnte direkt danach offline scheitern.
+        await ref.read(profileSetupFlagProvider).markDone();
         // Lokales Profil mit neuem Namen aktualisieren …
         await ref.read(profileNotifierProvider.notifier).renameTo(input);
         // … und das Gate aufmerken lassen, dass Remote jetzt existiert.

@@ -11,9 +11,15 @@ import '../../shared/widgets/primary_button.dart';
 import '../home/home_screen.dart';
 import 'profile_setup_screen.dart';
 
+/// Session-lokaler Notausgang: Nutzer hat im Retry-Screen "Offline
+/// weiterspielen" gewählt. Resettet beim nächsten App-Start.
+final _offlineBypassProvider = StateProvider<bool>((_) => false);
+
 /// Decides what the root route shows:
 /// * Splash while the remote profile is being fetched
-/// * Retry screen on network errors
+/// * Retry screen on network errors — but only on the very first launch;
+///   returning users (setup flag set) fall through to [HomeScreen] so a
+///   server outage never locks them out of the offline modes
 /// * [ProfileSetupScreen] when no remote profile exists for this user
 /// * [HomeScreen] otherwise — and syncs the local display name from server
 class ProfileGate extends ConsumerWidget {
@@ -44,10 +50,21 @@ class ProfileGate extends ConsumerWidget {
 
     return remote.when(
       loading: () => const _Splash(),
-      error: (err, _) => _RetryScreen(
-        message: 'Verbindung zum Server fehlgeschlagen.',
-        onRetry: () => ref.invalidate(remoteProfileProvider),
-      ),
+      error: (err, _) {
+        // Wiederkehrende Nutzer nicht aussperren: Setup war schon mal
+        // erfolgreich, also direkt ins Home — Offline-Modi funktionieren
+        // ohne Server, Online-Features degradieren einzeln.
+        if (ref.read(profileSetupFlagProvider).isDone) {
+          return const HomeScreen();
+        }
+        if (ref.watch(_offlineBypassProvider)) return const HomeScreen();
+        return _RetryScreen(
+          message: 'Verbindung zum Server fehlgeschlagen.',
+          onRetry: () => ref.invalidate(remoteProfileProvider),
+          onPlayOffline: () =>
+              ref.read(_offlineBypassProvider.notifier).state = true,
+        );
+      },
       data: (profile) =>
           profile == null ? const ProfileSetupScreen() : const HomeScreen(),
     );
@@ -113,10 +130,15 @@ class _Splash extends StatelessWidget {
 }
 
 class _RetryScreen extends StatelessWidget {
-  const _RetryScreen({required this.message, required this.onRetry});
+  const _RetryScreen({
+    required this.message,
+    required this.onRetry,
+    required this.onPlayOffline,
+  });
 
   final String message;
   final VoidCallback onRetry;
+  final VoidCallback onPlayOffline;
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +171,18 @@ class _RetryScreen extends StatelessWidget {
                     label: 'Erneut versuchen',
                     icon: Icons.refresh_rounded,
                     onPressed: onRetry,
+                  ),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: onPlayOffline,
+                    child: Text(
+                      'Offline weiterspielen',
+                      style: AppTypography.sans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: palette.inkMuted,
+                      ),
+                    ),
                   ),
                 ],
               ),

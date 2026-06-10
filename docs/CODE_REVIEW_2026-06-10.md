@@ -12,7 +12,7 @@ im Code bzw. empirisch (Dart-Probes) bestätigt. Zeilenangaben beziehen sich auf
 
 ## 1. App-Store-Einreichung (Apple-Review-Risiken)
 
-- [ ] 🔴 **A1 — Offline-Aussperrung wiederkehrender Nutzer.**
+- [x] 🔴 **A1 — Offline-Aussperrung wiederkehrender Nutzer.** *(erledigt: Setup-Flag + "Offline weiterspielen"-Button; Retry-Screen blockiert nur noch den Erststart)*
   `lib/features/onboarding/profile_gate.dart:45-53` blockiert die App hinter einem Retry-Screen,
   wenn der Profil-Fetch fehlschlägt; `fetchMine()` (`supabase_profile_repository.dart:16-26`)
   fängt Netzwerkfehler nicht. Neue Nutzer ohne Session kommen offline durch, **wiederkehrende

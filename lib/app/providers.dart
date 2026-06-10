@@ -17,6 +17,7 @@ import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_history_repository.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/repositories/score_repository.dart';
+import '../data/repositories/profile_setup_flag.dart';
 import '../data/repositories/supabase_profile_repository.dart';
 import '../data/seed/questions_seed.dart';
 import '../data/models/question.dart';
@@ -183,6 +184,13 @@ final feedbackRepositoryProvider = Provider<FeedbackRepository?>((ref) {
   }
 });
 
+/// Lokales "Setup abgeschlossen"-Flag — entscheidet, ob das ProfileGate bei
+/// Netzwerkfehlern blockieren darf (Erststart) oder durchwinken muss
+/// (wiederkehrender Nutzer). Siehe [ProfileSetupFlag].
+final profileSetupFlagProvider = Provider<ProfileSetupFlag>(
+  (ref) => ProfileSetupFlag(ref.watch(sharedPreferencesProvider)),
+);
+
 /// Lädt das Remote-Profil einmalig beim App-Start. Wird vom Router-Gate
 /// ausgewertet, um zu entscheiden, ob die Profil-Setup-UI gezeigt werden muss.
 ///
@@ -190,11 +198,15 @@ final feedbackRepositoryProvider = Provider<FeedbackRepository?>((ref) {
 /// - `AsyncData(profile)` mit Daten → Setup ist erledigt, weiter zum Home
 /// - `AsyncData(null)` → noch kein Remote-Profil, Setup-UI zeigen
 /// - `AsyncData(null)` bei fehlendem Repo (kein Supabase) → Offline-Modus, kein Gate
-/// - `AsyncError` → Netzwerkproblem, UI muss Retry anbieten
+/// - `AsyncError` → Netzwerkproblem; Gate zeigt Retry nur beim Erststart
 final remoteProfileProvider = FutureProvider<RemoteProfile?>((ref) async {
   final repo = ref.watch(supabaseProfileRepositoryProvider);
   if (repo == null) return null;
-  return repo.fetchMine();
+  final profile = await repo.fetchMine();
+  if (profile != null) {
+    await ref.read(profileSetupFlagProvider).markDone();
+  }
+  return profile;
 });
 
 /// Live, mutable player profile. Use [profileNotifierProvider.notifier] to

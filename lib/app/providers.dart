@@ -17,6 +17,7 @@ import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_history_repository.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/repositories/score_repository.dart';
+import '../core/haptics.dart';
 import '../data/repositories/duel_config_store.dart';
 import '../data/repositories/profile_setup_flag.dart';
 import '../data/repositories/supabase_profile_repository.dart';
@@ -139,6 +140,9 @@ Future<void> refreshRemoteContent(WidgetRef ref) async {
     await cache.writeCrosswordPuzzles(ps);
     ref.read(crosswordPoolProvider.notifier).state = ps;
   }
+  // Beide Fetches sind durch (sonst hätten sie geworfen): Abgleich stempeln,
+  // auch wenn der Server leer ist oder nichts Neues kam.
+  await cache.markSynced();
 }
 
 /// Per-device cache of which questions the player has answered correctly
@@ -226,11 +230,14 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
   @override
   Future<PlayerProfile> build() async {
     _repo = ref.watch(profileRepositoryProvider);
-    return _repo.load();
+    final p = await _repo.load();
+    Haptics.enabled = p.hapticsEnabled;
+    return p;
   }
 
   Future<void> _persist(PlayerProfile p) async {
     state = AsyncData(p);
+    Haptics.enabled = p.hapticsEnabled;
     await _repo.save(p);
   }
 

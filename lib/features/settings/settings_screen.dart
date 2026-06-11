@@ -242,11 +242,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               value: p.hapticsEnabled,
               onChanged: notifier.setHaptics,
             ),
-            _ToggleTile(
-              label: 'Geräusche',
-              value: p.soundsEnabled,
-              onChanged: notifier.setSounds,
-            ),
+            // Geräusche-Toggle entfernt: Es gibt (noch) keine Sounds in der
+            // App — ein Schalter ohne Wirkung verwirrt nur (Launch-Bug 2).
+            // profile.soundsEnabled bleibt persistiert für später.
             const SizedBox(height: 32),
             Text('RÜCKMELDUNG',
                 style: AppTypography.eyebrow(palette.inkMuted),),
@@ -278,15 +276,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 showEmailField: true,
                 messageHint:
                     'Zitat / Frage \nQuelle (Werk, Kapitel, Jahr) \nWarum eine schöne Frage?',
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Bist du gerade über TestFlight unterwegs? Ein Screenshot innerhalb der TestFlight-App schickt zusätzlich Bildkontext direkt an Apple.',
-              style: TextStyle(
-                fontSize: 11.5,
-                color: palette.inkMuted,
-                height: 1.45,
               ),
             ),
             const SizedBox(height: 32),

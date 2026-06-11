@@ -114,6 +114,14 @@ class ContentCache {
     await _prefs.setString(_kSyncedAt, DateTime.now().toIso8601String());
   }
 
+  /// Stempelt einen erfolgreichen Abgleich — auch wenn der Server nichts
+  /// (Neues) geliefert hat. Ohne das blieb die "zuletzt synchronisiert"-
+  /// Anzeige nach einem Refresh gegen leere Content-Tabellen stehen
+  /// (Launch-Bug 3).
+  Future<void> markSynced() async {
+    await _prefs.setString(_kSyncedAt, DateTime.now().toIso8601String());
+  }
+
   Future<void> clear() async {
     await _prefs.remove(_kQuestions);
     await _prefs.remove(_kPuzzles);

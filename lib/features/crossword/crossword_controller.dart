@@ -1,7 +1,7 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'models/crossword_puzzle.dart';
+import '../../core/haptics.dart';
 
 /// Per-puzzle UI state: typed grid, focused cell, focus direction, solved
 /// words.
@@ -182,7 +182,7 @@ class CrosswordController extends StateNotifier<CrosswordState> {
     final solved = state.puzzle.isSolved(newTyped);
     state = state.copyWith(typed: newTyped, completed: solved);
 
-    HapticFeedback.selectionClick();
+    Haptics.selection();
     if (!solved) _advance();
   }
 
@@ -198,7 +198,7 @@ class CrosswordController extends StateNotifier<CrosswordState> {
       newTyped2[state.focusRow][state.focusCol] = '';
       state = state.copyWith(typed: newTyped2);
     }
-    HapticFeedback.lightImpact();
+    Haptics.light();
   }
 
   /// Reveal the active word — fills in the correct letters.
@@ -207,7 +207,7 @@ class CrosswordController extends StateNotifier<CrosswordState> {
     final w = _activeWord();
     if (w == null) return;
     _fillWord(w);
-    HapticFeedback.mediumImpact();
+    Haptics.medium();
   }
 
   void _fillWord(CrosswordWord w) {

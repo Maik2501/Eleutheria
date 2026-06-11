@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,6 +10,7 @@ import '../../data/models/player_profile.dart';
 import '../../data/models/question.dart';
 import '../letterbox/answer_normalization.dart';
 import '../letterbox/letterbox_joker.dart';
+import '../../core/haptics.dart';
 
 /// Configuration for starting a new session.
 class GameConfig {
@@ -283,7 +283,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
         revealedLetterIndices: revealed,
         fiftyFiftyUses: state.fiftyFiftyUses + 1,
       );
-      HapticFeedback.lightImpact();
+      Haptics.light();
       return;
     }
 
@@ -295,7 +295,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
       eliminatedIndices: {wrong[0], wrong[1]},
       fiftyFiftyUses: state.fiftyFiftyUses + 1,
     );
-    HapticFeedback.lightImpact();
+    Haptics.light();
   }
 
   // ─── Answering ───
@@ -303,7 +303,7 @@ class GameSessionController extends StateNotifier<GameSessionState> {
     if (state.revealed) return;
     if (state.eliminatedIndices.contains(index)) return;
     state = state.copyWith(selectedIndex: index);
-    HapticFeedback.selectionClick();
+    Haptics.selection();
   }
 
   /// Submits a typed answer (letterbox mode). The match is case- and
@@ -360,9 +360,9 @@ class GameSessionController extends StateNotifier<GameSessionState> {
     }
 
     if (wasCorrect) {
-      HapticFeedback.mediumImpact();
+      Haptics.medium();
     } else {
-      HapticFeedback.heavyImpact();
+      Haptics.heavy();
     }
     return record;
   }

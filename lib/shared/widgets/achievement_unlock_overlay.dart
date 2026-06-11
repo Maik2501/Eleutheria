@@ -6,7 +6,6 @@ import '../../core/theme/app_typography.dart';
 import '../../data/models/achievement.dart';
 import '../../data/services/achievement_engine.dart';
 import 'wax_seal.dart';
-import '../../core/haptics.dart';
 
 /// Modal celebration that announces freshly-unlocked achievement tiers.
 ///
@@ -56,15 +55,6 @@ class _UnlockSheet extends StatefulWidget {
 
 class _UnlockSheetState extends State<_UnlockSheet> {
   @override
-  void initState() {
-    super.initState();
-    // Haptic on appear — heavy impact lines up with the seal landing.
-    Future<void>.delayed(const Duration(milliseconds: 120), () {
-      Haptics.heavy();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final palette = context.palette;
     final tint = widget.unlock.tier.level.tint;
@@ -76,10 +66,7 @@ class _UnlockSheetState extends State<_UnlockSheet> {
       elevation: 0,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {
-          Haptics.selection();
-          Navigator.of(context).pop();
-        },
+        onTap: () => Navigator.of(context).pop(),
         child: Container(
           padding: const EdgeInsets.fromLTRB(28, 30, 28, 24),
           decoration: BoxDecoration(

@@ -5,7 +5,6 @@ import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
 import '../../data/repositories/feedback_repository.dart';
-import '../../core/haptics.dart';
 
 /// Modal-Bottom-Sheet für Rückmeldungen aus allen drei Touchpoints:
 ///   * Antwortkarte → "Frage melden"   (mit Kategorien, optional Freitext)
@@ -151,7 +150,6 @@ class _FeedbackSheetState extends ConsumerState<FeedbackSheet> {
     }
 
     setState(() => _submitting = true);
-    Haptics.selection();
 
     final ok = await repo.submit(
       type: widget.type,

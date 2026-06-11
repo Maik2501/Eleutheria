@@ -235,15 +235,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               disabledEntries: const {'en'},
               onChanged: notifier.setLocale,
             ),
-            const SizedBox(height: 32),
-            _ToggleTile(
-              label: 'Vibrations-Feedback',
-              value: p.hapticsEnabled,
-              onChanged: notifier.setHaptics,
-            ),
-            // Geräusche-Toggle entfernt: Es gibt (noch) keine Sounds in der
-            // App — ein Schalter ohne Wirkung verwirrt nur (Launch-Bug 2).
-            // profile.soundsEnabled bleibt persistiert für später.
+            // Vibrations- und Geräusche-Toggle entfernt: Sounds gibt es
+            // (noch) keine, und das Haptik-Feedback flog in 1.0.1+11 komplett
+            // raus. profile.hapticsEnabled/soundsEnabled bleiben persistiert.
             const SizedBox(height: 32),
             Text('RÜCKMELDUNG',
                 style: AppTypography.eyebrow(palette.inkMuted),),
@@ -665,42 +659,3 @@ class _SegmentedRow extends StatelessWidget {
   }
 }
 
-class _ToggleTile extends StatelessWidget {
-  const _ToggleTile({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String label;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = context.palette;
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: palette.page,
-        border: Border.all(color: palette.divider),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: SwitchListTile(
-        contentPadding: EdgeInsets.zero,
-        value: value,
-        onChanged: onChanged,
-        activeThumbColor: palette.gold,
-        title: Text(
-          label,
-          style: AppTypography.sans(
-            fontWeight: FontWeight.w500,
-            fontSize: 15,
-            color: palette.ink,
-          ),
-        ),
-      ),
-    );
-  }
-}

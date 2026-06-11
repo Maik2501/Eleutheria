@@ -24,7 +24,6 @@ import '../quiz/widgets/answer_option_button.dart';
 import '../quiz/widgets/question_prompt_card.dart';
 import 'duel_lobby_screen.dart';
 import 'duel_repository.dart';
-import '../../core/haptics.dart';
 
 /// Live duel — handles both modes (race + parallel) on a shared timer.
 class DuelMatchScreen extends ConsumerStatefulWidget {
@@ -808,7 +807,6 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
                                       optionLetter: _letters[i],
                                       onTap: () {
                                         if (iAmLocked) return;
-                                        Haptics.selection();
                                         setState(() => _selectedIndex = i);
                                       },
                                       isSelected: _selectedIndex == i,
@@ -930,7 +928,6 @@ class _DuelMatchScreenState extends ConsumerState<DuelMatchScreen> {
         : 0;
     final pts = base + bonus;
 
-    Haptics.medium();
     await repo.submitAnswer(
       code: widget.code,
       playerId: me,

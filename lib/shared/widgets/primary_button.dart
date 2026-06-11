@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_typography.dart';
-import '../../core/haptics.dart';
 
-/// Primary CTA: gradient burgundy with subtle press shrink + haptic.
+/// Primary CTA: gradient burgundy with subtle press shrink.
 class PrimaryButton extends StatefulWidget {
   const PrimaryButton({
     super.key,
@@ -31,7 +30,6 @@ class _PrimaryButtonState extends State<PrimaryButton> {
   void _setPressed(bool v) {
     if (_pressed == v) return;
     setState(() => _pressed = v);
-    if (v) Haptics.light();
   }
 
   @override
@@ -132,12 +130,7 @@ class SecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.palette;
     final btn = OutlinedButton(
-      onPressed: onPressed == null
-          ? null
-          : () {
-              Haptics.selection();
-              onPressed!();
-            },
+      onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         foregroundColor: palette.ink,
         side: BorderSide(color: palette.divider, width: 1.2),

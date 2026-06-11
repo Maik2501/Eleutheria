@@ -17,7 +17,6 @@ import '../data/repositories/profile_repository.dart';
 import '../data/repositories/question_history_repository.dart';
 import '../data/repositories/question_repository.dart';
 import '../data/repositories/score_repository.dart';
-import '../core/haptics.dart';
 import '../data/repositories/duel_config_store.dart';
 import '../data/repositories/profile_setup_flag.dart';
 import '../data/repositories/supabase_profile_repository.dart';
@@ -239,14 +238,11 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
   @override
   Future<PlayerProfile> build() async {
     _repo = ref.watch(profileRepositoryProvider);
-    final p = await _repo.load();
-    Haptics.enabled = p.hapticsEnabled;
-    return p;
+    return _repo.load();
   }
 
   Future<void> _persist(PlayerProfile p) async {
     state = AsyncData(p);
-    Haptics.enabled = p.hapticsEnabled;
     await _repo.save(p);
   }
 
@@ -282,13 +278,6 @@ class ProfileNotifier extends AsyncNotifier<PlayerProfile> {
     final p = state.value;
     if (p == null) return;
     p.themeMode = mode;
-    await _persist(p);
-  }
-
-  Future<void> setHaptics(bool enabled) async {
-    final p = state.value;
-    if (p == null) return;
-    p.hapticsEnabled = enabled;
     await _persist(p);
   }
 

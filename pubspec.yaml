@@ -38,10 +38,10 @@ dependencies:
   uuid: ^4.4.0
 
   # Externe Links öffnen (z. B. PayPal.me für Spenden)
-  url_launcher: ^6.3.0
 
   cupertino_icons: ^1.0.8
   package_info_plus: ^10.1.0
+  in_app_purchase: ^3.3.0
 
 dev_dependencies:
   flutter_test:

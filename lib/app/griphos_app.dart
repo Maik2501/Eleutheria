@@ -25,6 +25,9 @@ class _GriphosAppState extends ConsumerState<GriphosApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // StoreKit-Listener früh starten: schließt auch Transaktionen ab, die
+    // beim letzten App-Lauf liegen geblieben sind (z. B. Ask-to-Buy).
+    ref.read(tipServiceProvider).init();
   }
 
   @override

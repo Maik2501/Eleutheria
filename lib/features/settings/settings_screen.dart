@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/providers.dart';
 import '../../core/theme/app_colors.dart';
@@ -10,7 +10,6 @@ import '../../core/theme/app_typography.dart';
 import '../../data/models/answer_input_style.dart';
 import '../../data/models/difficulty_band.dart';
 import '../../data/repositories/feedback_repository.dart';
-import '../../env.dart';
 import '../../shared/widgets/parchment_background.dart';
 import '../feedback/feedback_sheet.dart';
 
@@ -294,13 +293,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   : 'Zuletzt synchronisiert: ${_formatSyncTime(lastSyncedAt)}',
               onTap: _refreshing ? () {} : _refreshContent,
             ),
-            if (Env.donatePayPalUrl.isNotEmpty) ...[
-              const SizedBox(height: 32),
-              Text('UNTERSTÜTZUNG',
-                  style: AppTypography.eyebrow(palette.inkMuted),),
-              const SizedBox(height: 10),
-              const _DonationCard(),
-            ],
+            // Blendet sich selbst aus, solange die IAP-Produkte nicht
+            // verfügbar sind (kein Store, Produkte noch nicht angelegt).
+            const _TipSection(),
             const SizedBox(height: 32),
             Text('ÜBER GRIPHOS',
                 style: AppTypography.eyebrow(palette.inkMuted),),
@@ -356,91 +351,154 @@ String _formatSyncTime(DateTime when) {
   return '${when.day}.${when.month}.${when.year}';
 }
 
-/// "Unterstützung"-Karte mit warmer Akademie-Optik: kurzer Dank-Text +
-/// PayPal-Button. Tap öffnet den Link über [url_launcher] in der externen
-/// App/Browser-Sitzung. Der Aufrufer rendert die Karte nur, wenn ein
-/// echter PayPal-Link konfiguriert ist (siehe [Env.donatePayPalUrl]).
-class _DonationCard extends StatelessWidget {
-  const _DonationCard();
+/// "Unterstützung"-Sektion mit StoreKit-Trinkgeld (App-Store-konforme
+/// Ablösung des PayPal-Links, Audit A3). Lädt die Produkte beim ersten
+/// Aufbau; solange der Store nichts liefert (kein Netz, Produkte noch
+/// nicht in App Store Connect angelegt), rendert sie sich gar nicht.
+class _TipSection extends ConsumerStatefulWidget {
+  const _TipSection();
 
-  Future<void> _openPayPal(BuildContext context) async {
-    final uri = Uri.parse(Env.donatePayPalUrl);
-    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!ok && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('PayPal konnte nicht geöffnet werden.'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+  @override
+  ConsumerState<_TipSection> createState() => _TipSectionState();
+}
+
+class _TipSectionState extends ConsumerState<_TipSection> {
+  List<ProductDetails> _products = const [];
+  bool _buying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final service = ref.read(tipServiceProvider);
+    service.onThanks = _showThanks;
+    service.loadProducts().then((products) {
+      if (mounted) setState(() => _products = products);
+    });
+  }
+
+  @override
+  void dispose() {
+    ref.read(tipServiceProvider).onThanks = null;
+    super.dispose();
+  }
+
+  void _showThanks() {
+    if (!mounted) return;
+    setState(() => _buying = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Vielen Dank für deine Unterstützung! ♥'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Future<void> _buy(ProductDetails product) async {
+    if (_buying) return;
+    setState(() => _buying = true);
+    try {
+      await ref.read(tipServiceProvider).buy(product);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Kauf konnte nicht gestartet werden.'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      // Abbruch im Store-Sheet liefert kein onThanks — Button wieder
+      // freigeben, sobald der Call zurück ist.
+      if (mounted) setState(() => _buying = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_products.isEmpty) return const SizedBox.shrink();
     final palette = context.palette;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
-      decoration: BoxDecoration(
-        color: palette.page,
-        border: Border.all(color: palette.gold.withValues(alpha: 0.45)),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 32),
+        Text('UNTERSTÜTZUNG', style: AppTypography.eyebrow(palette.inkMuted)),
+        const SizedBox(height: 10),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+          decoration: BoxDecoration(
+            color: palette.page,
+            border: Border.all(color: palette.gold.withValues(alpha: 0.45)),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: palette.gold.withValues(alpha: 0.14),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.favorite_rounded,
-                  color: palette.gold,
-                  size: 20,
+              Row(
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: palette.gold.withValues(alpha: 0.14),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.favorite_rounded,
+                      color: palette.gold,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Spende einen Kaffee',
+                      style: AppTypography.serif(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: palette.ink,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Ich hoffe, du hast Freude an Griphos. Das Erstellen und '
+                'die Pflege der App kosten viel Zeit — wenn du mich '
+                'unterstützen möchtest, freue ich mich über ein kleines '
+                'Trinkgeld. Es schaltet nichts frei und ist rein freiwillig.',
+                style: TextStyle(
+                  color: palette.inkSoft,
+                  fontSize: 13.5,
+                  height: 1.5,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Spende einen Kaffee',
-                  style: AppTypography.serif(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: palette.ink,
-                    letterSpacing: -0.2,
-                  ),
-                ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  for (final (i, product) in _products.indexed) ...[
+                    if (i > 0) const SizedBox(width: 8),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _buying ? null : () => _buy(product),
+                        child: Text(
+                          product.price,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            'Ich hoffe, du hast Freude an Griphos. Das Erstellen und '
-            'die Pflege der App kosten viel Zeit — wenn du mich '
-            'unterstützen möchtest, würde ich mich über eine kleine Spende '
-            'sehr freuen.',
-            style: TextStyle(
-              color: palette.inkSoft,
-              fontSize: 13.5,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 14),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: () => _openPayPal(context),
-              icon: const Icon(Icons.open_in_new_rounded, size: 18),
-              label: const Text('Mit PayPal unterstützen'),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

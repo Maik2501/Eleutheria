@@ -27,6 +27,7 @@ import '../features/crossword/models/crossword_puzzle.dart';
 import '../features/crossword/models/puzzle_seed.dart';
 import '../data/seed/philosophers_seed.dart';
 import '../data/services/achievement_engine.dart';
+import '../data/services/tip_service.dart';
 import '../env.dart';
 
 /// Set during bootstrap in main.dart, then injected via override.
@@ -200,6 +201,14 @@ final profileSetupFlagProvider = Provider<ProfileSetupFlag>(
 final duelConfigStoreProvider = Provider<DuelConfigStore>(
   (ref) => DuelConfigStore(ref.watch(sharedPreferencesProvider)),
 );
+
+/// Trinkgeld-Käufe (StoreKit). Der globale Purchase-Listener wird beim
+/// App-Start in [GriphosApp] initialisiert.
+final tipServiceProvider = Provider<TipService>((ref) {
+  final service = TipService();
+  ref.onDispose(service.dispose);
+  return service;
+});
 
 /// Lädt das Remote-Profil einmalig beim App-Start. Wird vom Router-Gate
 /// ausgewertet, um zu entscheiden, ob die Profil-Setup-UI gezeigt werden muss.
